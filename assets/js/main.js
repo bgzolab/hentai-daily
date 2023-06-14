@@ -6,7 +6,7 @@ const datesAreOnSameDay = (first, second) =>
     first.getFullYear() === second.getFullYear() &&
     first.getMonth() === second.getMonth() &&
     first.getDate() === second.getDate();
-const birthday = new Date("2023", "06", "13");
+const birthday = new Date("2023", "05", "13");
 
 function openAllDetails(){
     // Toggle open all details elements, onload
@@ -33,7 +33,7 @@ function getCurrentPageDate(){
         console.log("Current page is at index, so peace is that, right?")
         return new Date();
     }
-    return new Date(year, month, day)
+    return new Date(year, month-1, day)
 }
 
 
@@ -44,13 +44,15 @@ function time_control(interval) {
     targetDate.setDate(targetDate.getDate() + interval);
     
     if( targetDate.getTime() < birthday.getTime() ){
-        // console.log(targetDate )
-        // console.log(birthday  )
+        console.log(targetDate + targetDate.getTime() )
+        console.log(birthday + birthday.getTime()  )
         // console.log(targetDate < birthday )
         alert("I'm sorry, I don't have page yestoday! 😭");
         return;
     }
     if( targetDate.getTime()  > today.getTime() ){
+        console.log(targetDate + targetDate.getTime() )
+        console.log(today + today.getTime()  )
         alert("Cherish the moment! ✨");
         return;
     }

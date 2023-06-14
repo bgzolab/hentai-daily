@@ -580,7 +580,7 @@ a:hover {
 }
 
 .rss-link::after{
-  content: url('/assets/imgs/share.svg');
+  content: url('../imgs/share.svg');
   display: inline-block;
   position: absolute;
   height: 100%;
