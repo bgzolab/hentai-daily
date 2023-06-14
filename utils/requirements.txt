@@ -3,3 +3,5 @@ opml
 
 feedparser
 requests
+feedgen
+pytz

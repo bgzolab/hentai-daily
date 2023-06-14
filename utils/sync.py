@@ -4,8 +4,14 @@ import opml
 import re
 import time
 import datetime
+import json
+import os
+import pytz
 
+from feedgen.feed import FeedGenerator
 from template import TEMPLATE_CONTENT_PARENT, TEMPLATE_CONTENT_CHILD, TEMPLATE_POST
+
+timezone = pytz.timezone('Asia/Singapore')
 
 rss_feed_dict = {}
 def init_rss_feed_dict(config_rss_opml):
@@ -50,13 +56,11 @@ def get_rss_content_dict():
 
 def entry_to_dict(entry):
     timestamp = time.mktime(entry.published_parsed)
-
     return {
         "title":        entry.title_detail.value,
         "url":          entry.links[0].href,
         "summary":      format_forum(entry.summary_detail.value),
-        "publish_date": entry.published,
-        "timestamp": round(timestamp)
+        "timestamp":    round(timestamp)
     }
 
 
@@ -70,8 +74,8 @@ def format_forum(content):
     return content
 
 
-def output_content_within_day(content_dict, day, target_filename):
-    previous_timestamp = (datetime.datetime.today() - datetime.timedelta(days=day)).timestamp()
+def output_content_within_day(content_dict, start, interval_days, target_filename):
+    previous_timestamp = (start - datetime.timedelta(days=interval_days)).timestamp()
     contents_with_level = ""
 
     for key in content_dict.keys():
@@ -99,11 +103,53 @@ def output_content_within_day(content_dict, day, target_filename):
         file.write(contents_with_level)
 
 
+def output_archive(rss_content_dict , archive_filename):
+    os.makedirs(os.path.dirname(archive_filename), exist_ok=True)
+    str_dict = json.dumps(rss_content_dict)
+
+    with open(archive_filename, "w") as file:
+        file.write(str_dict)
+
+
+def output_feed_within_day(rss_content_dict , start, interval_days, feed_directory):
+    previous_timestamp = (start - datetime.timedelta(days=interval_days)).timestamp()
+
+    for key in rss_content_dict.keys():
+        feed_filename = feed_directory + key + '.xml'
+
+        fg = FeedGenerator()
+        fg.title(key + ' made by bGZo')
+        fg.link( href='http://rss.bgzo.cc', rel='alternate' )
+        fg.description('Have fun )')
+
+        for content in rss_content_dict[key]:
+            if(content['timestamp'] < int(previous_timestamp)):
+                break
+            fe = fg.add_entry()
+            fe.id(content['url'])
+            fe.link(href=content['url'], rel='alternate')
+            fe.title(content['title'])
+            fe.description(content['summary'])
+            fe.pubDate(timezone.localize(datetime.datetime.utcfromtimestamp(content['timestamp'])))
+        
+        os.makedirs(os.path.dirname(feed_filename), exist_ok=True)
+        fg.rss_file(feed_filename)
+
+
 if __name__ == '__main__':
     config_rss_opml = "config/rss.opml"
     target_filename =  '_posts/' \
         + datetime.datetime.today().strftime("%Y-%m-%d") + '-' + 'daily.md'
-    interval_day = 2
+    now = datetime.datetime.now()
+    start = datetime.datetime(now.year, now.month, now.day, 5, 0, 0)
+    interval_days = 1
+    archive_filename = 'api/archives/' + datetime.datetime.today().strftime("%Y/%m/%d") + '.json'
+    feed_directory = 'api/feeds/'
+
 
     init_rss_feed_dict( config_rss_opml )
-    output_content_within_day(get_rss_content_dict(), interval_day, target_filename)
+    rss_content_dict = get_rss_content_dict()
+
+    output_archive(rss_content_dict , archive_filename)
+    output_content_within_day(rss_content_dict , start, interval_days, target_filename)
+    output_feed_within_day(rss_content_dict , start, interval_days, feed_directory)
