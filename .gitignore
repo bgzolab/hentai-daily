@@ -1,0 +1,11 @@
+.vscode/
+node_modules/
+_site/
+__pycache__/
+test/
+config/
+
+assets/css/custom.css
+package-lock.json
+# package.json
+# tailwind.config.js

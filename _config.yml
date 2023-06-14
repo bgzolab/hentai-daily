@@ -1,0 +1,16 @@
+title: RSS Reader
+description: Combind some interesting information
+author: bGZo
+permalink: :year/:month/:day.html
+highlighter: rouge
+markdown: kramdown
+kramdown:
+    hard_wrap: true
+exclude:
+  - node_modules
+  - package-lock.json
+  - package.json
+  - test
+  - config
+  - utils
+  - tailwind.config.js

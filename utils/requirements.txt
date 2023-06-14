@@ -1,0 +1,5 @@
+pyyaml
+opml
+
+feedparser
+requests
