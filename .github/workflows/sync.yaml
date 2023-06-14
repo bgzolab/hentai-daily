@@ -40,7 +40,7 @@ jobs:
             git config user.name bgzo
             git config user.email bgzo@outlook.com
             git add .
-            git commit -m "Sync Feed"
+            git commit -m "Sync feed"
             git push
           else
             echo "no changes";

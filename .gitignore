@@ -3,7 +3,8 @@ node_modules/
 _site/
 __pycache__/
 test/
-config/
+
+config/fetch.yaml
 
 assets/css/custom.css
 package-lock.json

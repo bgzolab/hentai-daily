@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="1.0">
+<head>
+<title>Feed Subscriptions</title>
+</head>
+<body>
+    <outline title="NSFW" text="NSFW">
+        <outline text="绅士之庭" title="绅士之庭" type="rss" xmlUrl="https://gmgard.com/rss" htmlUrl="https://gmgard.com/Rss" />
+        <outline text="南＋South Plus" title="南＋South Plus" type="rss" xmlUrl="https://www.south-plus.net/rss.php?fid=135" htmlUrl="https://www.south-plus.net"/>
+        <outline text="琉璃神社" title="琉璃神社" type="rss" xmlUrl="https://www.hacg.sbs/wp/feed" htmlUrl="https://www.acg.gy"/>
+    </outline>
+</body>
+</opml>
