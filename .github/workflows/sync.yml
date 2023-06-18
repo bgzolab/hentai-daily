@@ -3,9 +3,12 @@ name: sync
 on:
   workflow_dispatch:
   push:
-    branches: [ rss_reader ]
+    branches: [ main ]
   schedule:
-    - cron:  '0 21 * * *'
+    - cron:  '0 5 * * *'
+
+env:
+  TZ: Asia/Singapore
 
 jobs:
   sync:
