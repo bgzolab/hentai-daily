@@ -49,10 +49,9 @@ def get_rss_content_dict():
                 except Exception as e:
                     print(e)
         # Sort for each tag
-        sorted(content_dict[key], key = lambda i: i['timestamp'])
+        content_dict[key]=sorted(content_dict[key], key = lambda i: i['timestamp'], reverse=True)
         print("Sort the content of " + key +" successfully! Congradulations! 🎉")
     return content_dict
-
 
 def entry_to_dict(entry):
     timestamp = time.mktime(entry.published_parsed)

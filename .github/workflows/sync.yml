@@ -5,16 +5,20 @@ on:
   push:
     branches: [ main ]
   schedule:
-    - cron:  '0 5 * * *'
-
-env:
-  TZ: Asia/Singapore
+    - cron:  '0 21 * * *'
 
 jobs:
   sync:
     name: Build
     runs-on: ubuntu-latest
     steps:
+      - name: Set TimeZone
+        uses: szenius/set-timezone@v1.2
+        with:
+          timezoneLinux: "Asia/Singapore"
+          timezoneMacos: "Asia/Singapore"
+          timezoneWindows: "Singapore Standard Time"
+
       - name: Checkout
         uses: actions/checkout@v2
 
