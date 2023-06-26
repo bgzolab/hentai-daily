@@ -10,6 +10,7 @@ import pytz
 
 from feedgen.feed import FeedGenerator
 from template import TEMPLATE_CONTENT_PARENT, TEMPLATE_CONTENT_CHILD, TEMPLATE_POST
+from tw4gamers import get_4gamers_info_by_number
 
 timezone = pytz.timezone('Asia/Singapore')
 
@@ -44,13 +45,21 @@ def get_rss_content_dict():
                 try:
                     content_dict[key].append(content)
                 except KeyError as e:
-                    print(key + "cannot found, so create it!")
+                    print(key + " cannot be found, so create it!😜")
                     content_dict[key]= [content]
                 except Exception as e:
                     print(e)
         # Sort for each tag
         content_dict[key]=sorted(content_dict[key], key = lambda i: i['timestamp'], reverse=True)
         print("Sort the content of " + key +" successfully! Congradulations! 🎉")
+    return content_dict
+
+def add_sources(content_dict, key, entries_list):
+    try:
+        content_dict[key] += entries_list
+    except KeyError as e:
+        print(key + " cannot be found, so create it!😜")
+        content_dict[key]= entries_list
     return content_dict
 
 def entry_to_dict(entry):
@@ -62,11 +71,9 @@ def entry_to_dict(entry):
         "timestamp":    round(timestamp)
     }
 
-
 def format_forum(content):
     # www.gmgard.com
     content = re.sub(r"(static\.gmgard)(.com|.moe|.us)(\/Images\/)thumbs", r"\1\2\3upload", content)
-
     # www.south-plus.net
     content = re.sub(r"\[img\](.*?)p_w_picpath(.*?)\[\/img\]", r"<img src='\1\\images\2'/>", content)
     content = re.sub(r"\[img\](.*?)\[\/img\]", r"<img src='\1'/>", content)
@@ -145,9 +152,11 @@ if __name__ == '__main__':
     archive_filename = 'api/archives/' + datetime.datetime.today().strftime("%Y/%m/%d") + '.json'
     feed_directory = 'api/feeds/'
 
-
     init_rss_feed_dict( config_rss_opml )
     rss_content_dict = get_rss_content_dict()
+
+    # https://www.4gamers.com.tw
+    rss_content_dict = add_sources(rss_content_dict, 'NSFW', get_4gamers_info_by_number(9))
 
     output_archive(rss_content_dict , archive_filename)
     output_content_within_day(rss_content_dict , start, interval_days, target_filename)

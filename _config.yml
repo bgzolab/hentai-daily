@@ -2,10 +2,11 @@ title: RSS Reader
 description: Combind some interesting information
 author: bGZo
 permalink: :year/:month/:day.html
+future: true
 highlighter: rouge
 markdown: kramdown
 kramdown:
-    hard_wrap: true
+  hard_wrap: true
 exclude:
   - node_modules
   - package-lock.json
