@@ -6,4 +6,4 @@ requests
 feedgen
 pytz
 
-BeautifulSoup
+beautifulsoup4
