@@ -5,3 +5,5 @@ feedparser
 requests
 feedgen
 pytz
+
+BeautifulSoup

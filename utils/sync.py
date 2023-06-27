@@ -11,6 +11,8 @@ import pytz
 from feedgen.feed import FeedGenerator
 from template import TEMPLATE_CONTENT_PARENT, TEMPLATE_CONTENT_CHILD, TEMPLATE_POST
 from tw4gamers import get_4gamers_info_by_number
+from dlsite import get_dlsite_game_ranking_with_limit
+from dlsite import get_dlsite_voice_ranking_with_limit
 
 timezone = pytz.timezone('Asia/Singapore')
 
@@ -155,8 +157,19 @@ if __name__ == '__main__':
     init_rss_feed_dict( config_rss_opml )
     rss_content_dict = get_rss_content_dict()
 
-    # https://www.4gamers.com.tw
-    rss_content_dict = add_sources(rss_content_dict, 'NSFW', get_4gamers_info_by_number(9))
+    # FIXME: Without sort
+    rss_content_dict = add_sources( 
+        rss_content_dict, 
+        'NSFW',
+        get_4gamers_info_by_number(9))
+    rss_content_dict = add_sources(
+        rss_content_dict,
+        'DLsite Game Ranking',
+        get_dlsite_game_ranking_with_limit(10))
+    rss_content_dict = add_sources( 
+        rss_content_dict,
+        'DLsite Voice Ranking',
+        get_dlsite_voice_ranking_with_limit(10))
 
     output_archive(rss_content_dict , archive_filename)
     output_content_within_day(rss_content_dict , start, interval_days, target_filename)
