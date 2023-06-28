@@ -1,12 +1,9 @@
 title: RSS Reader
 description: Combind some interesting information
 author: bGZo
-permalink: :year/:month/:day.html
-future: true
-highlighter: rouge
-markdown: kramdown
-kramdown:
-  hard_wrap: true
+
+# Handling Reading
+encoding            : utf-8
 exclude:
   - node_modules
   - package-lock.json
@@ -15,3 +12,19 @@ exclude:
   - config
   - utils
   - tailwind.config.js
+
+# Filtering Content
+future              : true
+
+# Conversion
+markdown            : kramdown
+highlighter         : rouge
+
+# Outputting
+permalink           : :year/:month/:day.html
+timezone            : Asia/Singapore
+
+# Markdown Processors
+kramdown:
+  hard_wrap         : true
+  show_warnings     : true
