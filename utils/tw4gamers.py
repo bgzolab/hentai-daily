@@ -15,7 +15,7 @@ def package_content(title, url, summary, timestamp):
         "title":    title,
         "url":      url,
         "summary":  summary,
-        "timestamp":timestamp
+        "timestamp":timestamp/1000
     }
 
 def get_4gamers_info_by_number(number = 9):

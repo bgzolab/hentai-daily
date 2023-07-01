@@ -19,12 +19,12 @@ timezone = pytz.timezone('Asia/Singapore')
 today = datetime.datetime.today()
 
 def entry_to_dict(entry):
-    timestamp = time.mktime(entry.published_parsed)
+    timestamp = time.mktime(entry.published_parsed) # Float
     return {
         "title":        entry.title_detail.value,
         "url":          entry.links[0].href,
         "summary":      format_forum(entry.summary_detail.value),
-        "timestamp":    round(timestamp)
+        "timestamp":    round(timestamp) # get_safe_round_timestamp
     }
 
 def format_forum(content):
@@ -35,11 +35,26 @@ def format_forum(content):
     content = re.sub(r"\[img\](.*?)\[\/img\]", r"<img src='\1'/>", content)
     return content
 
-def get_time_from_timestamp_offset_gmt(timestamp, gmt=8):
-    return get_utc_from_timestamp(timestamp) + datetime.timedelta(hours=gmt)
+# FIXME: Does it matters?
+# def get_safe_round_timestamp(timestamp):
+#     now = round(get_time_from_timestamp_offset_gmt(today.timestamp()).timestamp())
+#     if(now < round(timestamp)):
+#         timestamp /= 1000.0
+#         print('😜 Convert time to sencond.')
+#     return round(timestamp)
 
-def get_utc_from_timestamp(timestamp):
-    return datetime.datetime.utcfromtimestamp(timestamp)
+def get_time_from_timestamp_offset_gmt(timestamp, gmt=8):
+    return get_safe_utc_from_timestamp(timestamp) + datetime.timedelta(hours=gmt)
+
+def get_safe_utc_from_timestamp(timestamp):
+    target = today
+    try:
+        target = datetime.datetime.utcfromtimestamp(timestamp)
+    except ValueError:
+        print('😜 Convert time to sencond.')
+        timestamp /= 1000.0
+        target = datetime.datetime.utcfromtimestamp(timestamp)
+    return target
 
 
 ################
@@ -65,7 +80,7 @@ def get_rss_content_dict():
         for address in rss_feed_dict[key]:
             contents_array = []
             feed = feedparser.parse(address)
-            print("Scan " + address + " successfully! Congradulations! 🎉")
+            print("Scan " + address + " successfully. Congradulations. 🎉")
             # TODO: Add try exception of feed, such as
             # {'bozo': True, 'entries': [], 'feed': {}, 'headers': {}, 'bozo_exception': URLError(ConnectionRefusedError(111, 'Connection refused'))}
             entries = feed.entries
@@ -78,15 +93,7 @@ def get_rss_content_dict():
                     content_dict[key]= [content]
                 except Exception as e:
                     print("Unknown error" + str(e))
-        # FIXME:The sort function is only working for the rss source
-        #       Please put this function independent. So basically it's
-        #       okey right now.
-        content_dict[key] = sorted(
-            content_dict[key], 
-            key = lambda i: i['timestamp'], 
-            reverse=True
-        )
-        print("Sort the content of " + key +" successfully! Congradulations! 🎉")
+
     return content_dict
 
 def add_sources(content_dict, key, entries_list):
@@ -97,6 +104,15 @@ def add_sources(content_dict, key, entries_list):
         content_dict[key]= entries_list
     return content_dict
 
+def sort_content_dict(content_dict):
+    for key in content_dict.keys():
+        content_dict[key] = sorted(
+            content_dict[key], 
+            key = lambda i: i['timestamp'], 
+            reverse=True
+        )
+        print("Sort the content of " + key +" successfully. Congradulations. 🎉")
+    return content_dict
 
 ##########
 # Output #
@@ -128,6 +144,7 @@ def output_content_within_day(content_dict, start, interval_days, target_filenam
     with open(target_filename, "w") as file:
         file.write(TEMPLATE_POST.format(title, updated))
         file.write(contents_with_level)
+    print("Output contents of API successfully. Congradulations. 🎉")
 
 ## apis/archives
 def output_archive(rss_content_dict , archive_filename):
@@ -136,6 +153,7 @@ def output_archive(rss_content_dict , archive_filename):
 
     with open(archive_filename, "w") as file:
         file.write(str_dict)
+    print("Output archives of API successfully. Congradulations. 🎉")
 
 ## apis/feeds
 def output_feed_within_day(rss_content_dict , start, interval_days, feed_directory):
@@ -161,6 +179,7 @@ def output_feed_within_day(rss_content_dict , start, interval_days, feed_directo
             
         os.makedirs(os.path.dirname(feed_filename), exist_ok=True)
         fg.rss_file(feed_filename)
+    print("Output feeds of API successfully. Congradulations. 🎉")
 
 
 if __name__ == '__main__':
@@ -177,7 +196,7 @@ if __name__ == '__main__':
 
     rss_content_dict = add_sources( 
         rss_content_dict, 
-        'NSFW',
+        'News',
         get_4gamers_info_by_number(9))
     rss_content_dict = add_sources(
         rss_content_dict,
@@ -191,6 +210,9 @@ if __name__ == '__main__':
         rss_content_dict,
         'DLsite Comic Ranking',
         get_dlsite_comic_ranking_with_limit(5))
-    output_archive(rss_content_dict , archive_filename)
-    output_content_within_day(rss_content_dict , start, interval_days, target_filename)
-    output_feed_within_day(rss_content_dict , start, interval_days, feed_directory)
+
+    rss_content_dict = sort_content_dict(rss_content_dict)
+
+    output_archive(rss_content_dict, archive_filename)
+    output_content_within_day(rss_content_dict, start, interval_days, target_filename)
+    output_feed_within_day(rss_content_dict, start, interval_days, feed_directory)
