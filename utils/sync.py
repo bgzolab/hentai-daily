@@ -13,6 +13,7 @@ from template import TEMPLATE_CONTENT_PARENT, TEMPLATE_CONTENT_CHILD, TEMPLATE_P
 from tw4gamers import get_4gamers_info_by_number
 from dlsite import get_dlsite_game_ranking_with_limit
 from dlsite import get_dlsite_voice_ranking_with_limit
+from dlsite import get_dlsite_comic_ranking_with_limit
 
 timezone = pytz.timezone('Asia/Singapore')
 today = datetime.datetime.today()
@@ -61,7 +62,6 @@ def get_rss_content_dict():
     content_dict = {}
 
     for key in rss_feed_dict.keys():
-        # Work for every tag 'key'
         for address in rss_feed_dict[key]:
             contents_array = []
             feed = feedparser.parse(address)
@@ -78,7 +78,9 @@ def get_rss_content_dict():
                     content_dict[key]= [content]
                 except Exception as e:
                     print("Unknown error" + str(e))
-        # Sort for each tag
+        # FIXME:The sort function is only working for the rss source
+        #       Please put this function independent. So basically it's
+        #       okey right now.
         content_dict[key] = sorted(
             content_dict[key], 
             key = lambda i: i['timestamp'], 
@@ -180,12 +182,15 @@ if __name__ == '__main__':
     rss_content_dict = add_sources(
         rss_content_dict,
         'DLsite Game Ranking',
-        get_dlsite_game_ranking_with_limit(10))
+        get_dlsite_game_ranking_with_limit(5))
     rss_content_dict = add_sources( 
         rss_content_dict,
         'DLsite Voice Ranking',
-        get_dlsite_voice_ranking_with_limit(10))
-
+        get_dlsite_voice_ranking_with_limit(5))
+    rss_content_dict = add_sources( 
+        rss_content_dict,
+        'DLsite Comic Ranking',
+        get_dlsite_comic_ranking_with_limit(5))
     output_archive(rss_content_dict , archive_filename)
     output_content_within_day(rss_content_dict , start, interval_days, target_filename)
     output_feed_within_day(rss_content_dict , start, interval_days, feed_directory)
