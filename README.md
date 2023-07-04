@@ -22,6 +22,6 @@ Request Address: `http://rss.bgzo.cc`
 ## TODOs
 
 - [x] Support more sources, like DLSITE & 4GAMER.
-  - [ ] Any good  welcome to post on issues )
+  - [ ] Any good websites if you know, welcome to post on issues )
 - [x] Support APIs.
 - [ ] More usable.

@@ -4,8 +4,6 @@ _site/
 __pycache__/
 test/
 
-config/fetch.yaml
-
 assets/css/custom.css
 package-lock.json
 # package.json
