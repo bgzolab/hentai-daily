@@ -19,7 +19,8 @@ def package_content(title, url, summary, timestamp):
     }
 
 def get_4gamers_info_by_number(number = 9):
-    address = 'http://www.4gamers.com.tw/site/api/news/option-cfg/gentlemen-latest?pageSize=' + str(number)
+    address = 'https://www.4gamers.com.tw/site/api/news/option-cfg/gentlemen-topic?nextStart=0&pageSize=' + str(number)
+    # address = 'http://www.4gamers.com.tw/site/api/news/option-cfg/gentlemen-latest?pageSize=' + str(number)
     content_list = []
     responses = requests.get(address, request_headers).json()['data']['results']
     for response in responses:
