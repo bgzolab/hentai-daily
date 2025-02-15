@@ -37,7 +37,9 @@ def get_dlsite_ranking_with_limit_from(html_doc, limit):
     works = soup.find_all("a", "work_thumb_box")
     descriptions = soup.find_all("dd", "work_text")
 
-    for i in range(limit):
+    safe_limit = min(len(works), len(descriptions), limit)
+
+    for i in range(safe_limit):
         work            = works[i]
         description     = descriptions[i]
         work_url        = work['href']
@@ -65,18 +67,18 @@ def get_dlsite_ranking_with_limit_from(html_doc, limit):
 
 def get_dlsite_game_ranking_with_limit(limit=10):
     dlsite_game  = 'https://www.dlsite.com/maniax/ranking/day?category=game&sort=sale&date=30d/&lang[0]=zh_tw&lang[1]=zh_cn'
-    reponse = session.get(dlsite_game, headers=request_headers)
-    return get_dlsite_ranking_with_limit_from(reponse.text, limit)
+    res = session.get(dlsite_game, headers=request_headers)
+    return get_dlsite_ranking_with_limit_from(res.text, limit)
 
 def get_dlsite_comic_ranking_with_limit(limit=10):
     dlsite_comic = 'https://www.dlsite.com/maniax/ranking/day?category=comic&sort=sale&date=30d/&lang[0]=zh_tw&lang[1]=zh_cn'
-    reponse = session.get(dlsite_comic, headers=request_headers)
-    return get_dlsite_ranking_with_limit_from(reponse.text, limit)
+    res = session.get(dlsite_comic, headers=request_headers)
+    return get_dlsite_ranking_with_limit_from(res.text, limit)
 
 def get_dlsite_voice_ranking_with_limit(limit=10):
     dlsite_voice = 'https://www.dlsite.com/maniax/ranking/day?category=voice&sort=sale&date=30d/&lang[0]=zh_tw&lang[1]=zh_cn'
-    reponse = session.get(dlsite_voice, headers=request_headers)
-    return get_dlsite_ranking_with_limit_from(reponse.text, limit)
+    res = session.get(dlsite_voice, headers=request_headers)
+    return get_dlsite_ranking_with_limit_from(res.text, limit)
 
 
 if __name__ == '__main__':
