@@ -5,6 +5,7 @@ __pycache__/
 test/
 .jekyll-cache/
 .venv/
+.idea/
 
 assets/css/custom.css
 package-lock.json

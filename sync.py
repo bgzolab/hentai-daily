@@ -13,6 +13,7 @@ import logging
 from feedgen.feed import FeedGenerator
 
 from interceptor.request import MySession
+from sources.mingqiceping import get_mingqiceping_post
 from utils.template import TEMPLATE_CONTENT_PARENT, TEMPLATE_CONTENT_CHILD, TEMPLATE_POST
 from sources.tw4gamers import get_4gamers_info_by_number
 from utils.sources.dlsite import get_dlsite_game_ranking_with_limit
@@ -100,7 +101,7 @@ def get_rss_content_dict():
                 try:
                     content_dict[key].append(content)
                 except KeyError as e:
-                    logging.info(key + " cannot be found, so create it!😜")
+                    # key cannot be found, so init it
                     content_dict[key]= [content]
                 except Exception as e:
                     logging.info("Unknown error" + str(e))
@@ -213,6 +214,11 @@ if __name__ == '__main__':
         rss_content_dict, 
         'News',
         get_4gamers_info_by_number(9))
+
+    rss_content_dict = add_sources(
+        rss_content_dict,
+        'News',
+        get_mingqiceping_post())
 
     rss_content_dict = add_sources(
         rss_content_dict,
