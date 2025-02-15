@@ -1,7 +1,10 @@
-import requests
 import re
 import datetime
 from bs4 import BeautifulSoup
+
+from interceptor.request import MySession
+
+session = MySession()
 
 request_headers={
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
@@ -62,20 +65,20 @@ def get_dlsite_ranking_with_limit_from(html_doc, limit):
 
 def get_dlsite_game_ranking_with_limit(limit=10):
     dlsite_game  = 'https://www.dlsite.com/maniax/ranking/day?category=game&sort=sale&date=30d/&lang[0]=zh_tw&lang[1]=zh_cn'
-    reponse = requests.get(dlsite_game, request_headers)
+    reponse = session.get(dlsite_game, headers=request_headers)
     return get_dlsite_ranking_with_limit_from(reponse.text, limit)
 
 def get_dlsite_comic_ranking_with_limit(limit=10):
     dlsite_comic = 'https://www.dlsite.com/maniax/ranking/day?category=comic&sort=sale&date=30d/&lang[0]=zh_tw&lang[1]=zh_cn'
-    reponse = requests.get(dlsite_comic, request_headers)
+    reponse = session.get(dlsite_comic, headers=request_headers)
     return get_dlsite_ranking_with_limit_from(reponse.text, limit)
 
 def get_dlsite_voice_ranking_with_limit(limit=10):
     dlsite_voice = 'https://www.dlsite.com/maniax/ranking/day?category=voice&sort=sale&date=30d/&lang[0]=zh_tw&lang[1]=zh_cn'
-    reponse = requests.get(dlsite_voice, request_headers)
+    reponse = session.get(dlsite_voice, headers=request_headers)
     return get_dlsite_ranking_with_limit_from(reponse.text, limit)
 
 
-# if __name__ == '__main__':
-#     html_doc = open('./utils/temp.html', 'r')
-#     print(get_dlsite_ranking_with_limit_from(html_doc, 10))
+if __name__ == '__main__':
+    html_doc = open('./utils/temp.html', 'r')
+    print(get_dlsite_ranking_with_limit_from(html_doc, 10))

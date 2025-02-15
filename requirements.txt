@@ -1,0 +1,9 @@
+pyyaml~=6.0.1
+opml~=0.5
+
+feedparser~=6.0.11
+requests~=2.31.0
+feedgen~=1.0.0
+pytz~=2024.1
+
+beautifulsoup4~=4.12.3

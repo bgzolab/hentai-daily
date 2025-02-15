@@ -3,6 +3,8 @@ node_modules/
 _site/
 __pycache__/
 test/
+.jekyll-cache/
+.venv/
 
 assets/css/custom.css
 package-lock.json

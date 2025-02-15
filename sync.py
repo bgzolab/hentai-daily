@@ -1,5 +1,6 @@
+import sys
+
 import feedparser
-import yaml
 import opml
 import re
 import time
@@ -7,16 +8,25 @@ import datetime
 import json
 import os
 import pytz
+import logging
 
 from feedgen.feed import FeedGenerator
-from template import TEMPLATE_CONTENT_PARENT, TEMPLATE_CONTENT_CHILD, TEMPLATE_POST
-from tw4gamers import get_4gamers_info_by_number
-from dlsite import get_dlsite_game_ranking_with_limit
-from dlsite import get_dlsite_voice_ranking_with_limit
-from dlsite import get_dlsite_comic_ranking_with_limit
 
+from interceptor.request import MySession
+from utils.template import TEMPLATE_CONTENT_PARENT, TEMPLATE_CONTENT_CHILD, TEMPLATE_POST
+from sources.tw4gamers import get_4gamers_info_by_number
+from utils.sources.dlsite import get_dlsite_game_ranking_with_limit
+from utils.sources.dlsite import get_dlsite_voice_ranking_with_limit
+from utils.sources.dlsite import get_dlsite_comic_ranking_with_limit
+
+
+# -------------------------Global variables Start-----------------------------
 timezone = pytz.timezone('Asia/Singapore')
 today = datetime.datetime.today()
+logging.basicConfig(level=logging.INFO, stream=sys.stdout)
+session = MySession()
+# -------------------------Global variables End-----------------------------
+
 
 def entry_to_dict(entry):
     timestamp = time.mktime(entry.published_parsed) # Float
@@ -51,7 +61,7 @@ def get_safe_utc_from_timestamp(timestamp):
     try:
         target = datetime.datetime.utcfromtimestamp(timestamp)
     except ValueError:
-        print('😜 Convert time to sencond.')
+        logging.info('😜 Convert time to sencond.')
         timestamp /= 1000.0
         target = datetime.datetime.utcfromtimestamp(timestamp)
     return target
@@ -78,21 +88,22 @@ def get_rss_content_dict():
 
     for key in rss_feed_dict.keys():
         for address in rss_feed_dict[key]:
-            contents_array = []
-            feed = feedparser.parse(address)
-            print("Scan " + address + " successfully. Congradulations. 🎉")
             # TODO: Add try exception of feed, such as
             # {'bozo': True, 'entries': [], 'feed': {}, 'headers': {}, 'bozo_exception': URLError(ConnectionRefusedError(111, 'Connection refused'))}
+
+            feed = feedparser.parse(address)
             entries = feed.entries
+            logging.info("Scan RSS: %s with entries: %s", address, entries)
+
             for entry in entries:
                 content = entry_to_dict(entry)
                 try:
                     content_dict[key].append(content)
                 except KeyError as e:
-                    print(key + " cannot be found, so create it!😜")
+                    logging.info(key + " cannot be found, so create it!😜")
                     content_dict[key]= [content]
                 except Exception as e:
-                    print("Unknown error" + str(e))
+                    logging.info("Unknown error" + str(e))
 
     return content_dict
 
@@ -100,7 +111,7 @@ def add_sources(content_dict, key, entries_list):
     try:
         content_dict[key] += entries_list
     except KeyError as e:
-        print(key + " cannot be found, so create it!😜")
+        logging.info(key + " cannot be found, so create it!😜")
         content_dict[key]= entries_list
     return content_dict
 
@@ -111,7 +122,7 @@ def sort_content_dict(content_dict):
             key = lambda i: i['timestamp'], 
             reverse=True
         )
-        print("Sort the content of " + key +" successfully. Congradulations. 🎉")
+        logging.info("Sort the content of " + key )
     return content_dict
 
 ##########
@@ -122,10 +133,11 @@ def output_content_within_day(content_dict, start, interval_days, target_filenam
     contents_with_level = ""
 
     for key in content_dict.keys():
-        key_sorted_content =""
-        
+        key_sorted_content = ""
+        key_sorted_content_index = 0
+
         for content in content_dict[key]:
-            if(content['timestamp'] < int(previous_timestamp)):
+            if content['timestamp'] < int(previous_timestamp):
                 break
             key_sorted_content += TEMPLATE_CONTENT_CHILD.format(
                 content['title'],
@@ -133,18 +145,20 @@ def output_content_within_day(content_dict, start, interval_days, target_filenam
                 get_time_from_timestamp_offset_gmt(content['timestamp']).strftime('%Y%m%d %H:%M:%S'),
                 content['summary']
             ) + "\n"
+            key_sorted_content_index += 1
 
-        contents_with_level += TEMPLATE_CONTENT_PARENT.format(
-                key,
-                key_sorted_content
-            ) + "\n"
+        if key_sorted_content != "":
+            contents_with_level += TEMPLATE_CONTENT_PARENT.format(
+                    key + '(' +  str(key_sorted_content_index) + ')',
+                    key_sorted_content
+                ) + "\n"
 
-    title = today.strftime("%Y%m%d") + ' RSS Reader'
+    title = today.strftime("%Y%m%d") + ' Hentai Reader'
     updated =  today.strftime("%Y-%m-%d")
     with open(target_filename, "w") as file:
         file.write(TEMPLATE_POST.format(title, updated))
         file.write(contents_with_level)
-    print("Output contents of API successfully. Congradulations. 🎉")
+    logging.info("Output contents of API")
 
 ## apis/archives
 def output_archive(rss_content_dict , archive_filename):
@@ -153,7 +167,7 @@ def output_archive(rss_content_dict , archive_filename):
 
     with open(archive_filename, "w") as file:
         file.write(str_dict)
-    print("Output archives of API successfully. Congradulations. 🎉")
+    logging.info("Output archives of API successfully")
 
 ## apis/feeds
 def output_feed_within_day(rss_content_dict , start, interval_days, feed_directory):
@@ -179,17 +193,18 @@ def output_feed_within_day(rss_content_dict , start, interval_days, feed_directo
             
         os.makedirs(os.path.dirname(feed_filename), exist_ok=True)
         fg.rss_file(feed_filename)
-    print("Output feeds of API successfully. Congradulations. 🎉")
-
+    logging.info("Output feeds of API successfully")
 
 if __name__ == '__main__':
     config_rss_opml = "config/rss.opml"
     target_filename =  '_posts/' + today.strftime("%Y-%m-%d") + '-' + 'daily.md'
+    archive_filename = 'api/archives/' + today.strftime("%Y/%m/%d") + '.json'
+    feed_directory = 'api/feeds/'
+    DLSITE_LIMIT=5
+
     now = datetime.datetime.now()
     start = datetime.datetime(now.year, now.month, now.day, 5, 0, 0)
     interval_days = 1
-    archive_filename = 'api/archives/' + today.strftime("%Y/%m/%d") + '.json'
-    feed_directory = 'api/feeds/'
 
     init_rss_feed_dict( config_rss_opml )
     rss_content_dict = get_rss_content_dict()
@@ -198,18 +213,21 @@ if __name__ == '__main__':
         rss_content_dict, 
         'News',
         get_4gamers_info_by_number(9))
+
     rss_content_dict = add_sources(
         rss_content_dict,
         'DLsite Game Ranking',
-        get_dlsite_game_ranking_with_limit(5))
+        get_dlsite_game_ranking_with_limit(DLSITE_LIMIT))
+
     rss_content_dict = add_sources( 
         rss_content_dict,
         'DLsite Voice Ranking',
-        get_dlsite_voice_ranking_with_limit(5))
+        get_dlsite_voice_ranking_with_limit(DLSITE_LIMIT))
+
     rss_content_dict = add_sources( 
         rss_content_dict,
         'DLsite Comic Ranking',
-        get_dlsite_comic_ranking_with_limit(5))
+        get_dlsite_comic_ranking_with_limit(DLSITE_LIMIT))
 
     rss_content_dict = sort_content_dict(rss_content_dict)
 

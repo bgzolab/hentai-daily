@@ -1,4 +1,6 @@
-import requests
+from interceptor.request import MySession
+
+session = MySession()
 
 request_headers={
     "Accept": "application/json, text/plain, */*",
@@ -22,7 +24,7 @@ def get_4gamers_info_by_number(number = 9):
     address = 'https://www.4gamers.com.tw/site/api/news/option-cfg/gentlemen-topic?nextStart=0&pageSize=' + str(number)
     # address = 'http://www.4gamers.com.tw/site/api/news/option-cfg/gentlemen-latest?pageSize=' + str(number)
     content_list = []
-    responses = requests.get(address, request_headers).json()['data']['results']
+    responses = session.get(address, headers=request_headers).json()['data']['results']
     for response in responses:
         content_list.append(
             package_content(

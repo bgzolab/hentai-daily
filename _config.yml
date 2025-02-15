@@ -1,5 +1,5 @@
 title: RSS Reader
-description: Combind some interesting information
+description: Combind hentai information in one
 author: bGZo
 
 # Handling Reading
@@ -12,6 +12,8 @@ exclude:
   - config
   - utils
   - tailwind.config.js
+  - README.md
+  - LICENCE
 
 # Filtering Content
 future              : true

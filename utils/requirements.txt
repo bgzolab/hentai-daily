@@ -1,9 +1,0 @@
-pyyaml
-opml
-
-feedparser
-requests
-feedgen
-pytz
-
-beautifulsoup4
