@@ -43,6 +43,7 @@ class MySession(requests.Session):
         logging.info("Request: %s, %s, %s", request.method, request.url, body)
 
         res = super(MySession, self).send(request, **kwargs)
+        res.encoding = 'utf-8' # res.apparent_encoding
 
         content_type = res.headers.get("Content-Type", "")
         if "text/html" in content_type:
