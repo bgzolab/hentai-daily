@@ -1,4 +1,4 @@
-from interceptor.request import MySession
+from utils.interceptor.request import MySession
 
 session = MySession()
 
