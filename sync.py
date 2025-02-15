@@ -12,10 +12,9 @@ import logging
 
 from feedgen.feed import FeedGenerator
 
-from interceptor.request import MySession
-from sources.mingqiceping import get_mingqiceping_post
 from utils.template import TEMPLATE_CONTENT_PARENT, TEMPLATE_CONTENT_CHILD, TEMPLATE_POST
-from sources.tw4gamers import get_4gamers_info_by_number
+from utils.sources.mingqiceping import get_mingqiceping_post
+from utils.sources.tw4gamers import get_4gamers_info_by_number
 from utils.sources.dlsite import get_dlsite_game_ranking_with_limit
 from utils.sources.dlsite import get_dlsite_voice_ranking_with_limit
 from utils.sources.dlsite import get_dlsite_comic_ranking_with_limit
@@ -25,7 +24,6 @@ from utils.sources.dlsite import get_dlsite_comic_ranking_with_limit
 timezone = pytz.timezone('Asia/Singapore')
 today = datetime.datetime.today()
 logging.basicConfig(level=logging.INFO, stream=sys.stdout)
-session = MySession()
 # -------------------------Global variables End-----------------------------
 
 
