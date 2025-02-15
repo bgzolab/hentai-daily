@@ -1,7 +1,5 @@
 import re
 import datetime
-
-import requests
 from bs4 import BeautifulSoup
 
 from utils.interceptor.request import MySession
@@ -68,18 +66,18 @@ def get_dlsite_ranking_with_limit_from(html_doc, limit):
     return content_list
 
 def get_dlsite_game_ranking_with_limit(limit=10):
-    dlsite_game  = 'https://www.dlsite.com/maniax/ranking/day?category=game&sort=sale&date=30d/&lang[0]=zh_tw&lang[1]=zh_cn'
-    res = requests.get(dlsite_game, headers=request_headers)
+    dlsite_game  = 'https://www.dlsite.com/maniax/ranking/day?category=game&sort=sale&date=30d/&lang&locale=zh_CN'
+    res = session.get(dlsite_game)
     return get_dlsite_ranking_with_limit_from(res.text, limit)
 
 def get_dlsite_comic_ranking_with_limit(limit=10):
-    dlsite_comic = 'https://www.dlsite.com/maniax/ranking/day?category=comic&sort=sale&date=30d/&lang[0]=zh_tw&lang[1]=zh_cn'
-    res = requests.get(dlsite_comic, headers=request_headers)
+    dlsite_comic = 'https://www.dlsite.com/maniax/ranking/day?category=comic&sort=sale&date=30d/&lang&locale=zh_CN'
+    res = session.get(dlsite_comic)
     return get_dlsite_ranking_with_limit_from(res.text, limit)
 
 def get_dlsite_voice_ranking_with_limit(limit=10):
-    dlsite_voice = 'https://www.dlsite.com/maniax/ranking/day?category=voice&sort=sale&date=30d/&lang[0]=zh_tw&lang[1]=zh_cn'
-    res = requests.get(dlsite_voice, headers=request_headers)
+    dlsite_voice = 'https://www.dlsite.com/maniax/ranking/day?category=voice&sort=sale&date=30d/&lang&locale=zh_CN'
+    res = session.get(dlsite_voice)
     return get_dlsite_ranking_with_limit_from(res.text, limit)
 
 
