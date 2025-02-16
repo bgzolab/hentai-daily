@@ -9,6 +9,7 @@
         <!-- <outline text="南＋South Plus" title="南＋South Plus" type="rss" xmlUrl="https://www.south-plus.net/rss.php?fid=135" htmlUrl="https://www.south-plus.net"/> -->
         <outline text="琉璃神社" title="琉璃神社" type="rss" xmlUrl="https://www.hacg.icu/wp/feed" htmlUrl="https://www.acg.gy"/>
         <outline text="灵梦御所" title="灵梦御所" type="rss" xmlUrl="https://blog.reimu.net/feed" htmlUrl="https://t.me/lmys8"/>
+        <outline text="天遊二次元" title="天遊二次元" type="rss" xmlUrl="https://www.tiangal.com/feed" htmlUrl="https://www.tiangal.com"/>
     </outline>
     <outline title="News" text="News">
         <outline text="巴哈姆特@a1102kevin" title="巴哈姆特@a1102kevin" type="rss" xmlUrl="https://rsshub.bgzo.cc/bahamut/creation/a1102kevin" htmlUrl="https://home.gamer.com.tw/creation.php?owner=a1102kevin" />
