@@ -12,6 +12,8 @@ import logging
 
 from feedgen.feed import FeedGenerator
 
+from output import output_rss_feed, get_time_from_timestamp_offset_gmt
+from sources.dlsite import get_dlsite_news
 from utils.template import TEMPLATE_CONTENT_PARENT, TEMPLATE_CONTENT_CHILD, TEMPLATE_POST
 from utils.sources.mingqiceping import get_mingqiceping_post
 from utils.sources.tw4gamers import get_4gamers_info_by_number
@@ -19,22 +21,24 @@ from utils.sources.dlsite import get_dlsite_game_ranking_with_limit
 from utils.sources.dlsite import get_dlsite_voice_ranking_with_limit
 from utils.sources.dlsite import get_dlsite_comic_ranking_with_limit
 
-
 # -------------------------Global variables Start-----------------------------
 timezone = pytz.timezone('Asia/Singapore')
 today = datetime.datetime.today()
 logging.basicConfig(level=logging.INFO, stream=sys.stdout)
+
+
 # -------------------------Global variables End-----------------------------
 
 
 def entry_to_dict(entry):
-    timestamp = time.mktime(entry.published_parsed) # Float
+    timestamp = time.mktime(entry.published_parsed)  # Float
     return {
-        "title":        entry.title_detail.value,
-        "url":          entry.links[0].href,
-        "summary":      format_forum(entry.summary_detail.value),
-        "timestamp":    round(timestamp) # get_safe_round_timestamp
+        "title": entry.title_detail.value,
+        "url": entry.links[0].href,
+        "summary": format_forum(entry.summary_detail.value),
+        "timestamp": round(timestamp)  # get_safe_round_timestamp
     }
+
 
 def format_forum(content):
     # www.gmgard.com
@@ -44,32 +48,13 @@ def format_forum(content):
     content = re.sub(r"\[img\](.*?)\[\/img\]", r"<img src='\1'/>", content)
     return content
 
-# FIXME: Does it matters?
-# def get_safe_round_timestamp(timestamp):
-#     now = round(get_time_from_timestamp_offset_gmt(today.timestamp()).timestamp())
-#     if(now < round(timestamp)):
-#         timestamp /= 1000.0
-#         print('😜 Convert time to sencond.')
-#     return round(timestamp)
-
-def get_time_from_timestamp_offset_gmt(timestamp, gmt=8):
-    return get_safe_utc_from_timestamp(timestamp) + datetime.timedelta(hours=gmt)
-
-def get_safe_utc_from_timestamp(timestamp):
-    target = today
-    try:
-        target = datetime.datetime.utcfromtimestamp(timestamp)
-    except ValueError:
-        logging.info('😜 Convert time to sencond.')
-        timestamp /= 1000.0
-        target = datetime.datetime.utcfromtimestamp(timestamp)
-    return target
-
 
 ################
 # Main Process #
 ################
 rss_feed_dict = {}
+
+
 def init_rss_feed_dict(config_rss_opml):
     # Init to get the feed to rss_feed_dict and 
     # RSS Feed
@@ -81,6 +66,7 @@ def init_rss_feed_dict(config_rss_opml):
         for outline in outlines:
             rss_list.append(outline.xmlUrl)
         rss_feed_dict[dict_id] = rss_list
+
 
 def get_rss_content_dict():
     content_dict = {}
@@ -100,29 +86,34 @@ def get_rss_content_dict():
                     content_dict[key].append(content)
                 except KeyError as e:
                     # key cannot be found, so init it
-                    content_dict[key]= [content]
+                    content_dict[key] = [content]
                 except Exception as e:
                     logging.info("Unknown error" + str(e))
 
     return content_dict
 
-def add_sources(content_dict, key, entries_list):
+
+def add_sources(content_dict, key, entries_list, rss_feed_name):
     try:
         content_dict[key] += entries_list
+        if rss_feed_name is not None:
+            output_rss_feed(entries_list, rss_feed_name)
     except KeyError as e:
         logging.info(key + " cannot be found, so create it!😜")
-        content_dict[key]= entries_list
+        content_dict[key] = entries_list
     return content_dict
+
 
 def sort_content_dict(content_dict):
     for key in content_dict.keys():
         content_dict[key] = sorted(
-            content_dict[key], 
-            key = lambda i: i['timestamp'], 
+            content_dict[key],
+            key=lambda i: i['timestamp'],
             reverse=True
         )
-        logging.info("Sort the content of " + key )
+        logging.info("Sort the content of " + key)
     return content_dict
+
 
 ##########
 # Output #
@@ -148,19 +139,20 @@ def output_content_within_day(content_dict, start, interval_days, target_filenam
 
         if key_sorted_content != "":
             contents_with_level += TEMPLATE_CONTENT_PARENT.format(
-                    key + '(' +  str(key_sorted_content_index) + ')',
-                    key_sorted_content
-                ) + "\n"
+                key + '(' + str(key_sorted_content_index) + ')',
+                key_sorted_content
+            ) + "\n"
 
     title = today.strftime("%Y%m%d") + ' Hentai Reader'
-    updated =  today.strftime("%Y-%m-%d")
+    updated = today.strftime("%Y-%m-%d")
     with open(target_filename, "w") as file:
         file.write(TEMPLATE_POST.format(title, updated))
         file.write(contents_with_level)
     logging.info("Output contents of API")
 
+
 ## apis/archives
-def output_archive(rss_content_dict , archive_filename):
+def output_archive(rss_content_dict, archive_filename):
     os.makedirs(os.path.dirname(archive_filename), exist_ok=True)
     str_dict = json.dumps(rss_content_dict)
 
@@ -168,8 +160,9 @@ def output_archive(rss_content_dict , archive_filename):
         file.write(str_dict)
     logging.info("Output archives of API successfully")
 
+
 ## apis/feeds
-def output_feed_within_day(rss_content_dict , start, interval_days, feed_directory):
+def output_feed_within_day(rss_content_dict, start, interval_days, feed_directory):
     previous_timestamp = (start - datetime.timedelta(days=interval_days)).timestamp()
 
     for key in rss_content_dict.keys():
@@ -177,11 +170,11 @@ def output_feed_within_day(rss_content_dict , start, interval_days, feed_directo
 
         fg = FeedGenerator()
         fg.title(key + ' made by bGZo')
-        fg.link( href='http://rss.bgzo.cc', rel='alternate')
+        fg.link(href='http://rss.bgzo.cc', rel='alternate')
         fg.description('Have fun )')
 
         for content in rss_content_dict[key]:
-            if(content['timestamp'] < int(previous_timestamp)):
+            if (content['timestamp'] < int(previous_timestamp)):
                 break
             fe = fg.add_entry()
             fe.id(content['url'])
@@ -189,49 +182,63 @@ def output_feed_within_day(rss_content_dict , start, interval_days, feed_directo
             fe.title(content['title'])
             fe.description(content['summary'])
             fe.pubDate(timezone.localize(get_time_from_timestamp_offset_gmt(content['timestamp'])))
-            
+
         os.makedirs(os.path.dirname(feed_filename), exist_ok=True)
         fg.rss_file(feed_filename)
     logging.info("Output feeds of API successfully")
 
+
 if __name__ == '__main__':
     config_rss_opml = "config/rss.opml"
-    target_filename =  '_posts/' + today.strftime("%Y-%m-%d") + '-' + 'daily.md'
+    target_filename = '_posts/' + today.strftime("%Y-%m-%d") + '-' + 'daily.md'
     archive_filename = 'api/archives/' + today.strftime("%Y/%m/%d") + '.json'
     feed_directory = 'api/feeds/'
-    DLSITE_LIMIT=5
+    DLSITE_LIMIT = 5
 
     now = datetime.datetime.now()
     start = datetime.datetime(now.year, now.month, now.day, 5, 0, 0)
     interval_days = 1
 
-    init_rss_feed_dict( config_rss_opml )
+    init_rss_feed_dict(config_rss_opml)
     rss_content_dict = get_rss_content_dict()
-
-    rss_content_dict = add_sources( 
-        rss_content_dict, 
-        'News',
-        get_4gamers_info_by_number(9))
 
     rss_content_dict = add_sources(
         rss_content_dict,
         'News',
-        get_mingqiceping_post())
+        get_4gamers_info_by_number(9),
+        "4gamers"
+    )
+
+    rss_content_dict = add_sources(
+        rss_content_dict,
+        'News',
+        get_mingqiceping_post(),
+        "mingqiceping"
+    )
+
+    rss_content_dict = add_sources(
+        rss_content_dict,
+        'News',
+        get_dlsite_news(DLSITE_LIMIT),
+        "dlsite-news")
 
     rss_content_dict = add_sources(
         rss_content_dict,
         'DLsite Game Ranking',
-        get_dlsite_game_ranking_with_limit(DLSITE_LIMIT))
+        get_dlsite_game_ranking_with_limit(DLSITE_LIMIT),
+        None)
 
-    rss_content_dict = add_sources( 
+    rss_content_dict = add_sources(
         rss_content_dict,
         'DLsite Voice Ranking',
-        get_dlsite_voice_ranking_with_limit(DLSITE_LIMIT))
+        get_dlsite_voice_ranking_with_limit(DLSITE_LIMIT),
+        None)
 
-    rss_content_dict = add_sources( 
+    rss_content_dict = add_sources(
         rss_content_dict,
         'DLsite Comic Ranking',
-        get_dlsite_comic_ranking_with_limit(DLSITE_LIMIT))
+        get_dlsite_comic_ranking_with_limit(DLSITE_LIMIT),
+        None)
 
     rss_content_dict = sort_content_dict(rss_content_dict)
 
