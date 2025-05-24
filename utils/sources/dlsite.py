@@ -1,5 +1,7 @@
 import re
 import datetime
+import time
+
 from bs4 import BeautifulSoup
 
 from utils.interceptor.request import MySession
@@ -65,6 +67,34 @@ def get_dlsite_ranking_with_limit_from(html_doc, limit):
         ))
     return content_list
 
+def get_dlsite_news_from(html_doc, limit):
+    content_list = []
+    soup = BeautifulSoup(html_doc, 'html.parser')
+
+    news_list = soup.find_all("a", class_="press_item_inner")
+
+    safe_limit = min(len(news_list), limit)
+
+    for i in range(safe_limit):
+        news = news_list[i]
+
+        news_date       = datetime.datetime.strptime(news.div.p.string, '%Y年%m月%d日')
+        news_timestamp  = int(time.mktime(news_date.timetuple()))
+        news_tag        = news.div.div.span.string
+        news_title      = news.find('p', class_='press_item_text').get_text(strip=True)
+        news_url        = news['href']
+
+        content_list.append(package_content(
+            news_title,
+            news_url,
+            news_tag,
+            news_timestamp
+        ))
+
+    content_list.sort(key=lambda x: x['timestamp'], reverse=True)
+    return content_list
+
+
 def get_dlsite_game_ranking_with_limit(limit=10):
     dlsite_game  = 'https://www.dlsite.com/maniax/ranking/day?category=game&sort=sale&date=30d/&lang&locale=zh_CN'
     res = session.get(dlsite_game)
@@ -80,7 +110,14 @@ def get_dlsite_voice_ranking_with_limit(limit=10):
     res = session.get(dlsite_voice)
     return get_dlsite_ranking_with_limit_from(res.text, limit)
 
+def get_dlsite_news(limit=10):
+    dlsite_news = 'https://info.eisys.co.jp/dlsite?locale=zh_CN'
+    res = session.get(dlsite_news)
+    return get_dlsite_ranking_with_limit_from(res.text, limit)
+
 
 if __name__ == '__main__':
-    html_doc = open('./utils/temp.html', 'r')
-    print(get_dlsite_ranking_with_limit_from(html_doc, 10))
+    html_doc = open('/home/bgzo/workspaces/hentai/utils/temp.html', 'r')
+    # print(get_dlsite_ranking_with_limit_from(html_doc, 10))
+    print(get_dlsite_news_from(html_doc, 10))
+
