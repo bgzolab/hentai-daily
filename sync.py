@@ -170,7 +170,7 @@ def output_feed_within_day(rss_content_dict, start, interval_days, feed_director
 
         fg = FeedGenerator()
         fg.title(key + ' made by bGZo')
-        fg.link(href='http://rss.bgzo.cc', rel='alternate')
+        fg.link(href='http://hentai.bgzo.cc', rel='alternate')
         fg.description('Have fun )')
 
         for content in rss_content_dict[key]:

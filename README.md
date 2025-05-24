@@ -31,11 +31,11 @@ Wants more custom sources support? Welcome to create any [issue](https://github.
 
 <!--## APIs
 
-Request Address: `http://rss.bgzo.cc`
+Request Address: `http://hentai.bgzo.cc`
 
 | Name | Route | Description | Method | Note |
 |-------|------|------|------|------|
-| Feed  | `/feeds/${tag_name_with_hyphen_and_lower}` | RSS feed, return xml | `GET` | `${tag_name_with_slash_and_lower}` is the url string handle by `lower()` and hyphen(`-`). <br/>For example, we have a `DLsite Game Ranking.xml` file in server, then the correct full url address will be `http://rss.bgzo.cc/feeds/alsite-game-ranking.xml`; |
+| Feed  | `/feeds/${tag_name_with_hyphen_and_lower}` | RSS feed, return xml | `GET` | `${tag_name_with_slash_and_lower}` is the url string handle by `lower()` and hyphen(`-`). <br/>For example, we have a `DLsite Game Ranking.xml` file in server, then the correct full url address will be `http://hentai.bgzo.cc/feeds/alsite-game-ranking.xml`; |
 | Contents | `/archives/${year}/${month}/${day}.json` | Contents, return JSON response | `GET` | **NOTE**: The timezone of response is GMT, format it whatever you want |
 -->
 

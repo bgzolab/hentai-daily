@@ -45,7 +45,7 @@ def output_rss_feed(entries_list, rss_feed_name):
 
     fg = FeedGenerator()
     fg.title(rss_feed_name + ' made by bGZo')
-    fg.link(href='http://rss.bgzo.cc', rel='alternate')
+    fg.link(href='http://hentai.bgzo.cc', rel='alternate')
     fg.description('Just have fun, released custom rss feed.')
 
     for content in entries_list:
