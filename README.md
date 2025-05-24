@@ -8,7 +8,7 @@ Hentai news all in one. Support RSS subscribe.
 
 ## Why
 
-1. Separate ==NSFW== contents from pay attention, so you can focus on more real things.
+1. Separate NSFW contents from pay attention, so you can focus on more real things.
 2. RSSHub official instance had been banned or limit by many servers' provider. You could always get the response like: `address no respon`.
 3. Re-release the rss feed with custom function like translate / media replace / web-hook and more.
 
@@ -21,7 +21,7 @@ Hentai news all in one. Support RSS subscribe.
   - [x] https://blog.reimu.net
   - [x] https://gmgard.com
 - [ ] Support APIs.
-  - [x] RSS subscribe.
+  - [x] RSS subscribe: discovered the folder in https://github.com/bGZo/hentai/tree/main/api/feeds to get the feed address. They should update daily.
 - [ ] Rewrite UI/UX using vue. (replace jekyll)
 - [ ] Custom funciotn
   - [ ] Translate 
