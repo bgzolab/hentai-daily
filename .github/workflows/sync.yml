@@ -2,10 +2,11 @@ name: sync
 
 on:
   workflow_dispatch:
-  push:
-    branches: [ main ]
+#  push:
+#    branches: [ main ]
   schedule:
     - cron:  '0 21 * * *'
+    # 东八区每天凌晨5点
 
 jobs:
   sync:
@@ -45,7 +46,7 @@ jobs:
         run: |
           if [ -n "$(git status --porcelain)" ]; then
             git config user.name bgzo
-            git config user.email bgzo@outlook.com
+            git config user.email im@bgzo.cc
             git add .
             git commit -m "Sync feed"
             git push
