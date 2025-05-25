@@ -113,11 +113,11 @@ def get_dlsite_voice_ranking_with_limit(limit=10):
 def get_dlsite_news(limit=10):
     dlsite_news = 'https://info.eisys.co.jp/dlsite?locale=zh_CN'
     res = session.get(dlsite_news)
-    return get_dlsite_ranking_with_limit_from(res.text, limit)
+    return get_dlsite_news_from(res.text, limit)
 
 
 if __name__ == '__main__':
-    html_doc = open('/home/bgzo/workspaces/hentai/utils/temp.html', 'r')
+    # html_doc = open('/home/bgzo/workspaces/hentai/utils/temp.html', 'r')
     # print(get_dlsite_ranking_with_limit_from(html_doc, 10))
-    print(get_dlsite_news_from(html_doc, 10))
+    print(get_dlsite_news(10))
 
