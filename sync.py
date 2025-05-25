@@ -12,8 +12,8 @@ import logging
 
 from feedgen.feed import FeedGenerator
 
-from output import output_rss_feed, get_time_from_timestamp_offset_gmt
-from sources.dlsite import get_dlsite_news
+from utils.output import output_rss_feed, get_time_from_timestamp_offset_gmt
+from utils.sources.dlsite import get_dlsite_news
 from utils.template import TEMPLATE_CONTENT_PARENT, TEMPLATE_CONTENT_CHILD, TEMPLATE_POST
 from utils.sources.mingqiceping import get_mingqiceping_post
 from utils.sources.tw4gamers import get_4gamers_info_by_number
