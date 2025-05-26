@@ -46,8 +46,7 @@ def get_dlsite_ranking_with_limit_from(html_doc, limit):
         description     = descriptions[i]
         work_url        = work['href']
         work_name       = work.img['alt']
-        work_timestamp  = round((datetime.datetime.today() + 
-                            datetime.timedelta(hours=8)).timestamp())
+        work_timestamp  = datetime.datetime.today().timestamp()
 
         try:
             work_img = work.img['src']
