@@ -10,6 +10,7 @@ import os
 import pytz
 import logging
 
+import requests
 from feedgen.feed import FeedGenerator
 
 from utils.output import output_rss_feed, get_time_from_timestamp_offset_gmt
@@ -25,6 +26,14 @@ from utils.sources.dlsite import get_dlsite_comic_ranking_with_limit
 timezone = pytz.timezone('Asia/Singapore')
 today = datetime.datetime.today()
 logging.basicConfig(level=logging.INFO, stream=sys.stdout)
+request_headers={
+    "Accept": "application/json, text/plain, */*",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Accept-Language": "zh,en-US;q=0.9,en;q=0.8,zh-HK;q=0.7,zh-TW;q=0.6,zh-CN;q=0.5",
+    "Cache-Control": "no-cache",
+    "Pragma":"no-cache",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 Edg/116.0.0.0"
+}
 
 
 # -------------------------Global variables End-----------------------------
@@ -73,10 +82,12 @@ def get_rss_content_dict():
 
     for key in rss_feed_dict.keys():
         for address in rss_feed_dict[key]:
-            # TODO: Add try exception of feed, such as
-            # {'bozo': True, 'entries': [], 'feed': {}, 'headers': {}, 'bozo_exception': URLError(ConnectionRefusedError(111, 'Connection refused'))}
+            response = requests.get(address, headers=request_headers)
+            if response.status_code != 200:
+                logging.error('Request %s occurs error, response code: %s', address, response.status_code)
+                continue
 
-            feed = feedparser.parse(address)
+            feed = feedparser.parse(response.content)
             entries = feed.entries
             logging.info("Scan RSS: %s with entries: %s", address, entries)
 
