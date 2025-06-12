@@ -48,9 +48,11 @@ class MySession(requests.Session):
         content_type = res.headers.get("Content-Type", "")
         if "text/html" in content_type:
             response_text = res.text.replace("\n", " ").replace("\r", " ")
-            logging.info("Response: %s", response_text)
+            logging.info("Response Status: %s, Header: %s, Response: %s",
+                         res.status_code, res.headers, response_text)
         else:
-            logging.info("Response: %s", res.text)
+            logging.info("Response Status: %s, Header: %s, Response: %s",
+                         res.status_code, res.headers, res.text)
 
         return res
 
