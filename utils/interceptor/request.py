@@ -46,9 +46,9 @@ class MySession(requests.Session):
         res = super(MySession, self).send(request, **kwargs)
 
         # 手动处理 Brotli 解压
-        if res.headers.get('Content-Encoding') == 'br':
-            res._content = brotli.decompress(res.content)  # 解压二进制内容
-            res.headers['Content-Encoding'] = None  # 移除压缩标记
+        # if res.headers.get('Content-Encoding') == 'br':
+        #     res._content = brotli.decompress(res.content)  # 解压二进制内容
+        #     res.headers['Content-Encoding'] = None  # 移除压缩标记
 
         res.encoding = 'utf-8' # res.apparent_encoding
 
