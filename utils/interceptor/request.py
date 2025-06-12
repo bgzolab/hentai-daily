@@ -8,6 +8,7 @@
 import logging
 import sys
 
+import brotli
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
@@ -43,6 +44,12 @@ class MySession(requests.Session):
         logging.info("Request: %s, %s, %s", request.method, request.url, body)
 
         res = super(MySession, self).send(request, **kwargs)
+
+        # 手动处理 Brotli 解压
+        if res.headers.get('Content-Encoding') == 'br':
+            res._content = brotli.decompress(res.content)  # 解压二进制内容
+            res.headers['Content-Encoding'] = None  # 移除压缩标记
+
         res.encoding = 'utf-8' # res.apparent_encoding
 
         content_type = res.headers.get("Content-Type", "")
