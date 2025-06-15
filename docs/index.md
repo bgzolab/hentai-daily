@@ -5,7 +5,7 @@ layout: home
 hero:
   name: "Hentai Daily"
   text: "Separate NSFW, then you can focus again"
-  tagline: Hentai contents combined with multi sources Debug
+  tagline: Hentai contents combined with multi sources
   actions:
     - theme: brand
       text: Quick Start
