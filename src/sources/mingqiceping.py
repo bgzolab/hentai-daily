@@ -12,7 +12,7 @@ import sys
 
 from bs4 import BeautifulSoup
 
-from utils.interceptor.request import MySession
+from interceptor.request import MySession
 
 session = MySession()
 

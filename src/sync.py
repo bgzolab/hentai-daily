@@ -13,14 +13,15 @@ import logging
 import requests
 from feedgen.feed import FeedGenerator
 
-from utils.output import output_rss_feed, get_time_from_timestamp_offset_gmt
-from utils.sources.dlsite import get_dlsite_news
-from utils.template import TEMPLATE_CONTENT_PARENT, TEMPLATE_CONTENT_CHILD, TEMPLATE_POST
-from utils.sources.mingqiceping import get_mingqiceping_post
-from utils.sources.tw4gamers import get_4gamers_info_by_number
-from utils.sources.dlsite import get_dlsite_game_ranking_with_limit
-from utils.sources.dlsite import get_dlsite_voice_ranking_with_limit
-from utils.sources.dlsite import get_dlsite_comic_ranking_with_limit
+from common.strUtils import *
+from output import output_rss_feed, get_time_from_timestamp_offset_gmt
+from sources.dlsite import get_dlsite_news
+from template import TEMPLATE_CONTENT_PARENT, TEMPLATE_CONTENT_CHILD, TEMPLATE_POST
+from sources.mingqiceping import get_mingqiceping_post
+from sources.tw4gamers import get_4gamers_info_by_number
+from sources.dlsite import get_dlsite_game_ranking_with_limit
+from sources.dlsite import get_dlsite_voice_ranking_with_limit
+from sources.dlsite import get_dlsite_comic_ranking_with_limit
 
 # -------------------------Global variables Start-----------------------------
 timezone = pytz.timezone('Asia/Singapore')
@@ -32,7 +33,8 @@ request_headers={
     "Accept-Language": "zh,en-US;q=0.9,en;q=0.8,zh-HK;q=0.7,zh-TW;q=0.6,zh-CN;q=0.5",
     "Cache-Control": "no-cache",
     "Pragma":"no-cache",
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 Edg/116.0.0.0"
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 Edg/116.0.0.0",
+    "Referer": "",
 }
 
 
@@ -82,6 +84,9 @@ def get_rss_content_dict():
 
     for key in rss_feed_dict.keys():
         for address in rss_feed_dict[key]:
+            # 设置同源
+            request_headers['Referer'] = extract_root_url(address)
+            # 模拟请求
             response = requests.get(address, headers=request_headers)
             if response.status_code != 200:
                 logging.error('Request %s occurs error, response code: %s', address, response.status_code)

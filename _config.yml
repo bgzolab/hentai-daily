@@ -10,7 +10,7 @@ exclude:
   - package.json
   - test
   - config
-  - utils
+  - src
   - tailwind.config.js
   - README.md
   - LICENCE
