@@ -36,7 +36,7 @@ jobs:
 
       - name: Run Script
         run: |
-          python3 sync.py
+          python3 src/sync.py
 
       - name: Run Safe Dir
         run: |
