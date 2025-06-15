@@ -206,7 +206,7 @@ def output_feed_within_day(rss_content_dict, start, interval_days, feed_director
 
 if __name__ == '__main__':
     config_rss_opml = "config/rss.opml"
-    target_filename = '_posts/' + today.strftime("%Y-%m-%d") + '-' + 'daily.md'
+    # target_filename = '_posts/' + today.strftime("%Y-%m-%d") + '-' + 'daily.md'
     archive_filename = 'api/archives/' + today.strftime("%Y/%m/%d") + '.json'
     feed_directory = 'api/feeds/'
     DLSITE_LIMIT = 5
@@ -259,5 +259,5 @@ if __name__ == '__main__':
     rss_content_dict = sort_content_dict(rss_content_dict)
 
     output_archive(rss_content_dict, archive_filename)
-    output_content_within_day(rss_content_dict, start, interval_days, target_filename)
+    # output_content_within_day(rss_content_dict, start, interval_days, target_filename)
     output_feed_within_day(rss_content_dict, start, interval_days, feed_directory)
