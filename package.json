@@ -5,8 +5,9 @@
   },
   "scripts": {
     "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs"
+    "docs:build": "vitepress build docs && npm run copy-files",
+    "docs:preview": "vitepress preview docs",
+    "copy-files": "cp -r ./api ./docs/.vitepress/dist/"
   },
   "dependencies": {
     "markdown-it-task-lists": "^2.1.1"
