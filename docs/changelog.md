@@ -31,9 +31,9 @@ So I have to restart it.
 - [x] https://mingqiceping.com
 - [x] https://blog.reimu.net
 - [x] https://gmgard.com
+- [x] https://www.tiangal.com
 
-
-### APIs 
+### APIs & RSS subscribe support
 
 Address: `http://hentai.bgzo.cc`
 
@@ -42,7 +42,4 @@ Address: `http://hentai.bgzo.cc`
 | Feed  | `/feeds/${tag_name_with_hyphen_and_lower}` | RSS feed, return xml | `GET` | `${tag_name_with_slash_and_lower}` is the url string handle by `lower()` and hyphen(`-`). <br/>For example, we have a `DLsite Game Ranking.xml` file in server, then the correct full url address will be `http://hentai.bgzo.cc/feeds/alsite-game-ranking.xml`; |
 | Contents | `/archives/${year}/${month}/${day}.json` | Contents, return JSON response | `GET` | **NOTE**: The timezone of response is GMT, format it whatever you want |
 
-
-### RSS subscribe support
-
-Discovered the folder in https://github.com/bGZo/hentai/tree/main/api/feeds to get the feed address. They should update daily.
+More you could discovered the folder in https://github.com/bGZo/hentai/tree/main/api/feeds to get the feed address. They should update daily.
