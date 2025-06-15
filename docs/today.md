@@ -3,8 +3,8 @@ title: Today
 outline: deep
 ---
 
-<daily />
+<Today />
 
 <script setup>
-import Debug from '.vitepress/theme/components/debug.vue'
+import Today from '.vitepress/theme/components/today.vue'
 </script>

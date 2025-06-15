@@ -1,9 +1,9 @@
 ---
-title: Today
+title: Debug
 outline: deep
 ---
 
-<daily />
+<Debug />
 
 <script setup>
 import Debug from '.vitepress/theme/components/debug.vue'
