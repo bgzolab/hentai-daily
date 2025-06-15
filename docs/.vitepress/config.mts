@@ -88,7 +88,7 @@ export default defineConfig({
   },
 
   title: "Hentai Daily",
-  description: "Hentai contents combined with multi sources daily",
+  description: "Hentai contents combined with multi sources Debug",
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
