@@ -6,6 +6,7 @@ test/
 .jekyll-cache/
 .venv/
 .idea/
+docs/.vitepress/cache/
 
 assets/css/custom.css
 package-lock.json
