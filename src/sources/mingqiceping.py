@@ -61,7 +61,7 @@ def get_mingqiceping_post(limit=10):
         content_list.append(package_content(
             title,
             article_link,
-            image_url,
+            '<img src=">'+image_url+'<" /img>',
             timestamp
         ))
     return content_list
