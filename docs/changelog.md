@@ -35,7 +35,7 @@ So I have to restart it.
 
 ### APIs & RSS subscribe support
 
-Address: `http://hentai.bgzo.cc`
+Address: `http://hentai.bgzo.cc/api/`
 
 | Name | Route | Description | Method | Note |
 |-------|------|------|------|------|

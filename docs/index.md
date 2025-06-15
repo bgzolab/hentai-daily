@@ -21,7 +21,7 @@ features:
     details: More usefull than RSSHub with response like `address no respon`.
   - title: API support
     details: Browser content via RSS and url fetched.
-    link: /changelog
+    link: /changelog#apis-rss-subscribe-support
   - title: Integration (Next)
     details: Translate ranking and more. 
 ---
