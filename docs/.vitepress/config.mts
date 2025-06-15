@@ -36,7 +36,7 @@ export default defineConfig({
 
         '/api': {
           // target: 'http://hentai.bgzo.cc', // 7
-          target: 'https://raw.githubusercontent.com/bGZo/hentai-daily/refs/heads/main/',
+          target: 'https://raw.githubusercontent.com/bGZo/hentai-daily/refs/heads/vitepress/',
           changeOrigin: true,
           secure: true, // 如果是 https,
           // timeout: 30000, // 增加超时时间到30秒

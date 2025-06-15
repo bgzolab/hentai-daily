@@ -36,7 +36,7 @@ So I have to restart it.
 
 ### APIs & RSS subscribe support
 
-Address: `https://raw.githubusercontent.com/bGZo/hentai-daily/refs/heads/main/api/`
+Address: `https://raw.githubusercontent.com/bGZo/hentai-daily/refs/heads/vitepress/api/`
 
 | Name | Route | Description | Method | Note |
 |-------|------|------|------|------|
