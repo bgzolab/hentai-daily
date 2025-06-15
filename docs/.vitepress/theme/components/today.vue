@@ -1,15 +1,22 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, nextTick  } from 'vue'
+import {onContentUpdated, useData} from "vitepress";
 
+// ========= Response Meta ==============
 interface rssEntity {
-
+  title: string,
+  url: string,
+  summary: string,
+  timestamp: number
 }
-
-
 interface hentaiAPI {
-
+    'Resources': rssEntity[],
+    'News': rssEntity[],
+    'DLsite Game Ranking': rssEntity[],
+    'DLsite Voice Ranking': rssEntity[],
+    'DLsite Comic Ranking': rssEntity[],
 }
-
+// =====================================
 
 const data = ref([])
 const loading = ref(false)
@@ -50,6 +57,7 @@ const fetchData = async () => {
 
     const result = await response.json()
     data.value = result
+    updatePageOutline
 
   } catch (err) {
     error.value = err.message
@@ -62,28 +70,84 @@ const fetchData = async () => {
 // 组件挂载时设置当前日期
 onMounted(() => {
   currentDate.value = getCurrentDate()
+  fetchData()
 })
+
+
+const { page } = useData()
+
+const updatePageOutline = async () => {
+  await nextTick()
+
+  // 获取所有标题元素
+  const headings = Array.from(document.querySelectorAll('h1, h2, h3, h4, h5, h6'))
+    .map((el) => {
+      const level = parseInt(el.tagName[1])
+      const title = el.textContent || ''
+      const anchor = el.id || title.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-')
+
+      // 如果元素没有 id，添加一个
+      if (!el.id) {
+        el.id = anchor
+      }
+
+      return {
+        level,
+        title,
+        anchor: `#${anchor}`
+      }
+    })
+
+  // 更新页面的标题信息
+  if (page.value) {
+    ;(page.value as any).headers = headings
+  }
+}
+onMounted(updatePageOutline)
+onMounted(updatePageOutline)
+onContentUpdated(updatePageOutline)
+
+// onMounted(async () => {
+//   await nextTick()
+//
+//   // 手动触发 VitePress 重新扫描页面标题
+//   if (typeof window !== 'undefined') {
+//     // 获取所有标题元素
+//     const headers = document.querySelectorAll('h1, h2, h3, h4, h5, h6')
+//
+//     // 触发 VitePress 的目录更新事件
+//     const event = new CustomEvent('vitepress:updateOutline', {
+//       detail: { headers }
+//     })
+//     window.dispatchEvent(event)
+//
+//     // 或者尝试直接更新 VitePress 的内部状态
+//     if (window.__vitepress) {
+//       window.__vitepress.updateOutline?.()
+//     }
+//   }
+// })
 
 </script>
 
 <template>
-  <div class="api-demo">
-  <div v-for="(today, index) in data">
-    <h1>
-      {{index}}
-    </h1>
-    <div v-for="(entity, entity_index) in today">
-      <h2> {{entity['title']}}</h2>
-      <div v-html="entity['summary']"></div>
-<!--      {{entity['summary']}}-->
-<!--      {{entity}}-->
-    </div>
-  </div>
+<!--    <div class="table-of-contents">-->
+<!--    <h2>目录</h2>-->
+<!--    <ul>-->
+<!--      <li v-for="(today, index) in data" :key="index">-->
+<!--        <a :href="`#section-${index}`">{{index}}</a>-->
+<!--        <ul>-->
+<!--          <li v-for="(entity, entity_index) in today" :key="entity_index">-->
+<!--            <a :href="`#item-${index}-${entity_index}`">{{entity['title']}}</a>-->
+<!--          </li>-->
+<!--        </ul>-->
+<!--      </li>-->
+<!--    </ul>-->
+<!--  </div>-->
 
-    <h3>API 数据展示</h3>
     <div class="controls">
       <button @click="fetchData" :disabled="loading">
-        {{ loading ? '加载中...' : '获取数据' }}
+        {{ loading ? '加载中...' : '刷新' }}
       </button>
       <span class="date-info">请求日期: {{ currentDate }}</span>
     </div>
@@ -92,21 +156,22 @@ onMounted(() => {
       错误: {{ error }}
     </div>
 
-    <div v-if="data" class="data-display">
-      <h4>API 响应数据:</h4>
-      <pre>{{ JSON.stringify(data, null, 2) }}</pre>
+     <div v-for="(today, index) in data">
+     <h2 :id="`section-${index}`">
+       {{index}}
+    </h2>
+
+   <div v-for="(entity, entity_index) in today" :key="entity_index">
+      <h3 :id="`item-${index}-${entity_index}`">
+        <a :href="`${entity['url']}`" target="_blank">{{entity['title']}}</a>
+      </h3>
+      <div v-html="entity['summary']"></div>
     </div>
   </div>
 
 </template>
 
 <style scoped>
-.api-demo {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 20px;
-  margin: 20px 0;
-}
 
 .controls {
   display: flex;

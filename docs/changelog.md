@@ -1,5 +1,6 @@
 ---
 title: Changelog
+outline: deep
 ---
 
 ## What's Next
@@ -35,7 +36,7 @@ So I have to restart it.
 
 ### APIs & RSS subscribe support
 
-Address: `http://hentai.bgzo.cc/api/`
+Address: `https://raw.githubusercontent.com/bGZo/hentai-daily/refs/heads/main/api/`
 
 | Name | Route | Description | Method | Note |
 |-------|------|------|------|------|
