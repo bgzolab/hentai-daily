@@ -6,6 +6,9 @@ hero:
   name: "Hentai Daily"
   text: "Separate NSFW, then you can focus again"
   tagline: Hentai contents combined with multi sources
+  image:
+    src: /favicon-512x512.png
+    alt: VitePress
   actions:
     - theme: brand
       text: Quick Start

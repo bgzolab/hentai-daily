@@ -1,0 +1,6 @@
+/**
+ * :is() 伪类
+ */
+html.dark :is(img, image) {
+    filter: brightness(.80) contrast(1.1);
+}
