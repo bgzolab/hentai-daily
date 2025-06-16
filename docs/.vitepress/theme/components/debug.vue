@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import {ref, onMounted, computed} from 'vue'
 
 const data = ref([])
 const loading = ref(false)
@@ -28,7 +28,7 @@ const fetchData = async () => {
     const dateStr = getCurrentDate()
     console.log('请求 URL:', apiUrl.value)
     const response = await fetch(apiUrl.value, {
-        // `https://hentai.bgzo.cc/api/archives/${dateStr}.json`
+      // `https://hentai.bgzo.cc/api/archives/${dateStr}.json`
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -60,11 +60,11 @@ onMounted(() => {
 </script>
 
 <template>
-<!--  <div v-for="(today, index) in data">-->
-<!--    <h1>-->
+  <!--  <div v-for="(today, index) in data">-->
+  <!--    <h1>-->
 
-<!--    </h1>-->
-<!--  </div>-->
+  <!--    </h1>-->
+  <!--  </div>-->
   <div class="api-demo">
     <h3>API 数据展示</h3>
     <div class="controls">
