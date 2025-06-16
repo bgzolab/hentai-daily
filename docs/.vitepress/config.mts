@@ -45,6 +45,8 @@ export default defineConfig({
       ['meta', { name: 'theme-color', content: '#ffffff' }],
   ],
 
+  cleanUrls: true,
+
   // via: https://github.com/vuejs/vitepress/issues/1923#issuecomment-1431479500
   markdown: {
     config: (md) => {
