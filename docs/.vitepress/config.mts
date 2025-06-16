@@ -1,14 +1,47 @@
 import { defineConfig } from 'vitepress'
 import taskLists from 'markdown-it-task-lists'
+// https://github.com/vuejs/vitepress/discussions/704
+import footnote from 'markdown-it-footnote'
 
-//
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
+  title: "Hentai Daily",
+  description: "Hentai contents combined with multi sources",
+  themeConfig: {
+    // https://vitepress.dev/reference/default-theme-config
+    nav: [
+      {text: 'Home', link: '/'},
+      {text: 'Today', link: '/today'},
+      {text: 'Changelog', link: '/changelog'},
+    ],
+    socialLinks: [
+      {icon: 'github', link: 'https://github.com/bGZo/hentai-daily'},
+      {icon: 'mastodon', link: 'https://mastodon.social/@bgzo'},
+      {icon: 'bluesky', link: 'https://bsky.app/profile/bgzo.bsky.social'},
+    ],
+  },
+
+  // via: https://github.com/vuejs/vitepress/issues/1923#issuecomment-1431479500
+  markdown: {
+    config: (md) => {
+      md.use(taskLists, footnote, {
+        disabled: false,
+        divWrap: false,
+        divClass: 'checkbox',
+        idPrefix: 'cbx_',
+        ulClass: 'task-list',
+        liClass: 'task-list-item'
+      })
+    }
+  },
+
+  footer: {
+    message: 'Released under the AGPL-3.0 License.',
+    copyright: 'Copyright © 2023-present 菜就多練練'
+  },
+
   vite: {
     server: {
-      // 启用 HTTPS
-      // https: true,
-      // {}, // 使用空对象而不是 true
       proxy: {
         // 测试
         '/get': {
@@ -27,7 +60,6 @@ export default defineConfig({
             proxy.on('proxyRes', (proxyRes, req, res) => {
               console.log('📥 测试代理响应:', proxyRes.statusCode)
             })
-
             proxy.on('error', (err, req, res) => {
               console.log('❌ 测试代理错误:', err.message)
             })
@@ -35,7 +67,7 @@ export default defineConfig({
         },
 
         '/api': {
-          // target: 'http://hentai.bgzo.cc', // 7
+          // target: 'http://hentai.bgzo.cc', // 500 ERROR
           target: 'https://raw.githubusercontent.com/bGZo/hentai-daily/refs/heads/vitepress/',
           changeOrigin: true,
           secure: true, // 如果是 https,
@@ -84,45 +116,6 @@ export default defineConfig({
           // }
         }
       }
-    }
-  },
-
-  title: "Hentai Daily",
-  description: "Hentai contents combined with multi sources Debug",
-  themeConfig: {
-    // https://vitepress.dev/reference/default-theme-config
-    nav: [
-      {text: 'Home', link: '/'},
-      {text: 'Today', link: '/today'},
-      {text: 'Changelog', link: '/changelog'},
-    ],
-
-    // sidebar: [
-    //   {
-    //     text: 'Examples',
-    //     items: [
-    //       { text: 'Markdown Examples', link: '/markdown-examples' },
-    //       { text: 'Runtime API Examples', link: '/api-examples' }
-    //     ]
-    //   }
-    // ],
-
-    socialLinks: [
-      {icon: 'github', link: 'https://github.com/bGZo/hentai-daily'}
-    ],
-  },
-
-  // via: https://github.com/vuejs/vitepress/issues/1923#issuecomment-1431479500
-  markdown: {
-    config: (md) => {
-      md.use(taskLists, {
-        disabled: false,
-        divWrap: false,
-        divClass: 'checkbox',
-        idPrefix: 'cbx_',
-        ulClass: 'task-list',
-        liClass: 'task-list-item'
-      })
     }
   },
 
