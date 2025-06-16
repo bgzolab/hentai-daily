@@ -40,8 +40,7 @@ Then the release of resource changed to telegram.
 
 The refactor of RSSHub break the route of http://home.gamer.com.tw.[^rsshub-pr]
 
-[^rsshub-pr]: via: https://github.com/bGZo/RSSHub/commit/6f57c02538bd2faefbe77566465c2c2c3f3caf3b
-
+[^rsshub-pr]: via: https://github.com/DIYgod/RSSHub/commit/6f57c02538bd2faefbe77566465c2c2c3f3caf3b
 
 ## 2023.12.01 Somthing happened
 
@@ -61,7 +60,7 @@ Then the module of https://www.south-plus.net/rss.php?fid=135 had been hidden. T
 - [x] https://blog.reimu.net
 - [x] https://gmgard.com
 - [x] https://www.tiangal.com
-- [x] https://www.south-plus.net/rss.php?fid=135
+- [x] https://www.south-plus.net
 
 ### APIs & RSS subscribe support
 
