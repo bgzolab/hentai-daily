@@ -2,9 +2,7 @@
 
 Hentai news all in one. Support RSS subscribe.
 
-
-![](https://raw.githack.com/bGZo/assets/dev/2025/202506160119698.png)
-
+![](https://raw.githack.com/bGZo/assets/dev/2025/202506162245177.png)
 
 ## Why
 
