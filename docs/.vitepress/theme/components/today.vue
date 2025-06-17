@@ -20,7 +20,7 @@ interface hentaiAPI {
 
 // =====================================
 
-const data = ref([])
+const data = ref<hentaiAPI>(null)
 const loading = ref(false)
 const error = ref(null)
 const currentDate = ref('')
@@ -59,8 +59,12 @@ const fetchData = async () => {
     }
 
     const result = await response.json()
-    data.value = result
-    // updatePageOutline
+    // 类型断言和验证
+    if (isValidHentaiAPI(result)) {
+      data.value = result as hentaiAPI
+    } else {
+      throw new Error('Invalid API response format')
+    }
 
   } catch (err) {
     error.value = err.message
@@ -69,6 +73,31 @@ const fetchData = async () => {
     loading.value = false
   }
 }
+
+// 类型验证函数
+function isValidHentaiAPI(obj: any): obj is hentaiAPI {
+  if (!obj || typeof obj !== 'object') return false
+  const requiredKeys: (keyof hentaiAPI)[] = [
+    'Resources',
+    'News',
+    'DLsite Game Ranking',
+    'DLsite Voice Ranking',
+    'DLsite Comic Ranking'
+  ]
+  return requiredKeys.every(key => {
+    const value = obj[key]
+    return Array.isArray(value) && value.every(isValidRssEntity)
+  })
+}
+function isValidRssEntity(obj: any): obj is rssEntity {
+  return obj &&
+      typeof obj === 'object' &&
+      typeof obj.title === 'string' &&
+      typeof obj.url === 'string' &&
+      typeof obj.summary === 'string' &&
+      typeof obj.timestamp === 'number'
+}
+
 
 // 方案1的状态
 const isCollapsed = ref(false)
