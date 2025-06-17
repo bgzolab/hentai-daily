@@ -193,12 +193,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="controls">
-    <button @click="fetchData" :disabled="loading">
-      {{ loading ? '加载中...' : '刷新' }}
-    </button>
-    <span class="date-info">请求日期: {{ currentDate }}</span>
-  </div>
+<!--  <div class="controls">-->
+<!--    <button @click="fetchData" :disabled="loading">-->
+<!--      {{ loading ? '加载中...' : '刷新' }}-->
+<!--    </button>-->
+<!--    <span class="date-info">请求日期: {{ currentDate }}</span>-->
+<!--  </div>-->
   <div v-if="error" class="error">
     错误: {{ error }}
   </div>
