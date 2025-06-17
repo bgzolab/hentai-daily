@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import {ref, onMounted, computed, nextTick, reactive} from 'vue'
+import {ref, onMounted, computed, nextTick, reactive, UnwrapRef} from 'vue'
 import {Content, onContentUpdated, useData} from "vitepress";
 
-// ========= Response Meta ==============
+/**
+ * Response Meta
+ */
 interface rssEntity {
   title: string,
   url: string,
@@ -18,12 +20,32 @@ interface hentaiAPI {
   'DLsite Comic Ranking': rssEntity[],
 }
 
-// =====================================
+/**
+ * Fields
+ */
 
 const data = ref<hentaiAPI>(null)
 const loading = ref(false)
 const error = ref(null)
 const currentDate = ref('')
+
+/**
+ * 获取昨日凌晨的时间戳（本地时间）
+ * 精确到秒（非毫秒）
+ */
+const getYesterdayMidnightTimestamp = (): number => {
+  const now = new Date();
+  const yesterday = new Date(now);
+  yesterday.setDate(now.getDate() - 1);
+  yesterday.setHours(0, 0, 0, 0);
+  return yesterday.getTime() / 1000;
+};
+
+// 格式化时间戳为可读字符串
+const formatTimestamp = (timestamp: number): string => {
+  const date = new Date(timestamp);
+  return date.toLocaleString(); // 或者使用更具体的格式化方法
+};
 
 // 构建 API URL - 使用相对路径，会被代理转发
 const apiUrl = computed(() => {
@@ -62,6 +84,7 @@ const fetchData = async () => {
     // 类型断言和验证
     if (isValidHentaiAPI(result)) {
       data.value = result as hentaiAPI
+      // formatResponse(data.value) TODO 过滤
     } else {
       throw new Error('Invalid API response format')
     }
@@ -73,6 +96,7 @@ const fetchData = async () => {
     loading.value = false
   }
 }
+
 
 // 类型验证函数
 function isValidHentaiAPI(obj: any): obj is hentaiAPI {
@@ -89,6 +113,7 @@ function isValidHentaiAPI(obj: any): obj is hentaiAPI {
     return Array.isArray(value) && value.every(isValidRssEntity)
   })
 }
+
 function isValidRssEntity(obj: any): obj is rssEntity {
   return obj &&
       typeof obj === 'object' &&
@@ -98,6 +123,9 @@ function isValidRssEntity(obj: any): obj is rssEntity {
       typeof obj.timestamp === 'number'
 }
 
+const filterToday = (list: rssEntity[]) => {
+  return list.filter(i => i.timestamp > getYesterdayMidnightTimestamp())
+}
 
 // 方案1的状态
 const isCollapsed = ref(false)
@@ -192,53 +220,41 @@ onMounted(() => {
   <!--  -->
 
   <div class="toc-container">
-    <div
-        class="toc-header"
-        @click="isCollapsed = !isCollapsed"
-    >
-      <h2>📖 Table of Contents</h2>
+    <div class="toc-header" @click="isCollapsed = !isCollapsed">
+      <h2>Table of Contents</h2>
       <span class="collapse-icon">
         {{ isCollapsed ? '▶' : '▼' }}
       </span>
     </div>
 
-    <div
-        class="toc-content"
-        :class="{ collapsed: isCollapsed }"
-    >
+    <div class="toc-content"
+         :class="{ collapsed: isCollapsed }">
       <ul class="toc-list">
-        <li
-            v-for="(today, index) in data"
+        <li v-for="(today, index) in data"
             :key="index"
-            class="toc-section"
-        >
-          <a
-              :href="`#section-${index}`"
-              class="section-link"
-          >
-            {{ index }} ({{ today.length }} 篇)
+            class="toc-section">
+          <a :href="`#section-${index}`"
+             v-if="filterToday(today).length !== 0"
+             class="section-link">
+            {{ index }} ({{ filterToday(today).length }})
           </a>
           <ul class="toc-items">
-            <li
-                v-for="(entity, entity_index) in today.slice(0, showAllItems[index] ? undefined : 3)"
+            <li v-for="(entity, entity_index) in today.slice(0, showAllItems[index] ? undefined : 3)"
                 :key="entity_index"
-                class="toc-item"
-            >
-              <a
-                  :href="`#item-${index}-${entity_index}`"
-                  class="item-link"
-                  :title="entity.title"
-              >
+                class="toc-item">
+              <a :href="`#item-${index}-${entity_index}`"
+                 v-if="entity.timestamp > getYesterdayMidnightTimestamp()"
+                 class="item-link"
+                 :title="entity.title">
                 {{ entity.title }}
               </a>
             </li>
             <!-- 显示更多按钮 -->
-            <li v-if="today.length > 3" class="show-more">
+            <li v-if="filterToday(today).length > 3" class="show-more">
               <button
                   @click="toggleItemsVisibility(index)"
-                  class="show-more-btn"
-              >
-                {{ showAllItems[index] ? '显示更少' : `显示更多 (${today.length - 3} 篇)` }}
+                  class="show-more-btn">
+                {{ showAllItems[index] ? 'Show less' : `Show more` }}
               </button>
             </li>
           </ul>
@@ -256,10 +272,13 @@ onMounted(() => {
     </h2>
 
     <div v-for="(entity, entity_index) in today" :key="entity_index">
-      <h3 :id="`item-${index}-${entity_index}`">
-        <a :href="`${entity['url']}`" target="_blank">{{ entity['title'] }}</a>
-      </h3>
-      <div v-html="entity['summary']"></div>
+      <div v-if="entity.timestamp > getYesterdayMidnightTimestamp()">
+        <h3 :id="`item-${index}-${entity_index}`">
+          <a :href="entity.url" target="_blank">{{ entity.title }}</a>
+        </h3>
+        <div class="datetime">{{ formatTimestamp(entity.timestamp * 1000) }}</div>
+        <div v-html="entity.summary"></div>
+      </div>
     </div>
   </div>
 
