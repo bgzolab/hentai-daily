@@ -5,18 +5,20 @@ outline: deep
 
 ## What's Next
 
-Wants more custom sources support? Welcome to create any [issue](https://github.com/bGZo/hentai/issues/new), or choose contribute it.
+Wants more custom sources support? Welcome to create any [issue](https://github.com/bGZo/hentai-daily/issues/new), or choose contribute it.
 
 - [ ] Custom functions
   - [ ] Translate 
 - [ ] n8n replace?
 
 
-##  2025.06.15 (Develop) Rewrite with [VitePress](https://github.com/vuejs/vitepress)
+##  2025.06.15 Rewrite with [VitePress](https://github.com/vuejs/vitepress) #Developing
 
 Rewrite UI/UX using vue to replace jekyll.
 
-Old site archived via: https://github.com/bGZo/hentai-daily/tree/v1.0
+Favicon & logo from meme created by [@猛禽bot](https://weibo.com/n/%E7%8C%9B%E7%A6%BDbot)
+
+Old site had archived on https://github.com/bGZo/hentai-daily/tree/v1.0
 
 ## 2024.01.21 ~ 2024.11.23 Project archived
 
@@ -71,4 +73,4 @@ Address: `https://raw.githubusercontent.com/bGZo/hentai-daily/refs/heads/vitepre
 | Feed  | `/feeds/${tag_name_with_hyphen_and_lower}` | RSS feed, return xml | `GET` | `${tag_name_with_slash_and_lower}` is the url string handle by `lower()` and hyphen(`-`). <br/>For example, we have a `DLsite Game Ranking.xml` file in server, then the correct full url address will be `http://hentai.bgzo.cc/feeds/alsite-game-ranking.xml`; |
 | Contents | `/archives/${year}/${month}/${day}.json` | Contents, return JSON response | `GET` | **NOTE**: The timezone of response is GMT, format it whatever you want |
 
-More you could discovered the folder in https://github.com/bGZo/hentai/tree/main/api/feeds to get the feed address. They should update daily.
+More you could discovered the folder in https://github.com/bGZo/hentai-daily/tree/main/api/feeds to get the feed address. They should update daily.
