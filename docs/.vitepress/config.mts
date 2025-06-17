@@ -19,6 +19,10 @@ export default defineConfig({
             {icon: 'mastodon', link: 'https://mastodon.social/@bgzo'},
             {icon: 'bluesky', link: 'https://bsky.app/profile/bgzo.bsky.social'},
         ],
+        footer: {
+            message: 'Found this useful? Give me a ⭐ on <a href="https://github.com/bGZo/hentai-daily">Github</a>.',
+            copyright: 'Copyright © 2023-present 菜就多練練',
+        },
     },
 
     head: [
@@ -62,10 +66,7 @@ export default defineConfig({
         }
     },
 
-    footer: {
-        message: 'Released under the AGPL-3.0 License.',
-        copyright: 'Copyright © 2023-present 菜就多練練'
-    },
+
 
     vite: {
         server: {
