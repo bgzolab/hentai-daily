@@ -11,7 +11,7 @@ hero:
     alt: VitePress
   actions:
     - theme: brand
-      text: Quick Start
+      text: Show me quickly
       link: /today
     - theme: alt
       text: Have questions?
