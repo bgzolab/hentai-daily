@@ -1,6 +1,7 @@
 ---
 title: Today
 outline: deep
+layout: doc
 ---
 
 <Today />
