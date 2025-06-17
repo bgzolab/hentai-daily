@@ -28,7 +28,7 @@ const data = ref<hentaiAPI>(null)
 const loading = ref(false)
 const error = ref(null)
 const currentDate = ref('')
-
+const tocCountLimit = 5
 /**
  * 获取昨日凌晨的时间戳（本地时间）
  * 精确到秒（非毫秒）
@@ -239,7 +239,7 @@ onMounted(() => {
             {{ index }} ({{ filterToday(today).length }})
           </a>
           <ul class="toc-items">
-            <li v-for="(entity, entity_index) in today.slice(0, showAllItems[index] ? undefined : 3)"
+            <li v-for="(entity, entity_index) in today.slice(0, showAllItems[index] ? undefined : tocCountLimit)"
                 :key="entity_index"
                 class="toc-item">
               <a :href="`#item-${index}-${entity_index}`"
@@ -250,11 +250,11 @@ onMounted(() => {
               </a>
             </li>
             <!-- 显示更多按钮 -->
-            <li v-if="filterToday(today).length > 3" class="show-more">
+            <li v-if="filterToday(today).length > tocCountLimit" class="show-more">
               <button
                   @click="toggleItemsVisibility(index)"
                   class="show-more-btn">
-                {{ showAllItems[index] ? 'Show less' : `Show more` }}
+                {{ showAllItems[index] ? 'Show less' : `Show more(${filterToday(today).length - tocCountLimit})` }}
               </button>
             </li>
           </ul>
@@ -294,7 +294,7 @@ onMounted(() => {
 }
 
 .controls button {
-  background: #007acc;
+  background: var(--vp-c-brand-3);
   color: white;
   border: none;
   padding: 8px 16px;
@@ -335,12 +335,13 @@ onMounted(() => {
   font-size: 12px;
 }
 
-/* 方案1样式 */
+/* 目录样式 */
 .toc-container {
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  margin: 20px 0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--vp-c-bg-soft);
+  border-radius: 12px;
+  height: 100%;
+  background-color: var(--vp-c-bg-soft);
+  transition: border-color 0.25s, background-color 0.25s;
 }
 
 .toc-header {
@@ -365,9 +366,10 @@ onMounted(() => {
 
 .toc-header h2 {
   margin: 0;
-  font-size: 1.1rem;
+  padding: 10px 0 10px 0;
+  border-top: 0;
   font-weight: 600;
-  color: #374151;
+  color: var(--vp-c-text-1);
 }
 
 .collapse-icon {
@@ -404,14 +406,14 @@ onMounted(() => {
 .section-link {
   display: block;
   font-weight: 600;
-  color: #2563eb;
+  color: var(--vp-c-brand-1);
   text-decoration: none;
   padding: 4px 0;
   transition: color 0.2s;
 }
 
 .section-link:hover {
-  color: #1d4ed8;
+  color: var(--vp-c-brand-3);
 }
 
 .toc-items {
@@ -426,7 +428,7 @@ onMounted(() => {
 
 .item-link {
   display: block;
-  color: #6b7280;
+  color: var(--vp-c-text-2);
   text-decoration: none;
   font-size: 0.9rem;
   padding: 2px 0;
@@ -450,7 +452,7 @@ onMounted(() => {
 .show-more-btn {
   background: none;
   border: none;
-  color: #2563eb;
+  color: var(--vp-c-brand-1);
   font-size: 0.8rem;
   cursor: pointer;
   padding: 4px 0;
@@ -459,7 +461,7 @@ onMounted(() => {
 }
 
 .show-more-btn:hover {
-  color: #1d4ed8;
+  color: var(--vp-c-brand-3);
 }
 
 </style>
