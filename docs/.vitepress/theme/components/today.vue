@@ -280,7 +280,7 @@ onMounted(() => {
           <div class="card-content style-common">
             <span class="card-header">
                 <h3 :id="`item-${index}-${entity_index}`" class= 'card-title'>
-                {{ entity.title }}
+                {{ entity.title === ''? 'Untitled': entity.title}}
                 </h3>
                 <span class="card-datetime">{{ formatTimestamp(entity.timestamp * 1000) }}</span>
             </span>
