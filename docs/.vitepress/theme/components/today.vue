@@ -97,6 +97,10 @@ const fetchData = async () => {
   }
 }
 
+const handleCardClick = (url: string) => {
+  // window.location.href = url
+  window.open(url, '_blank')
+}
 
 // 类型验证函数
 function isValidHentaiAPI(obj: any): obj is hentaiAPI {
@@ -128,7 +132,7 @@ const filterToday = (list: rssEntity[]) => {
 }
 
 // 方案1的状态
-const isCollapsed = ref(false)
+const isCollapsed = ref(true)
 const showAllItems = reactive<Record<string, boolean>>({})
 
 const toggleItemsVisibility = (index: string) => {
@@ -264,20 +268,25 @@ onMounted(() => {
   </div>
 
 
-  <!---------------------------------------------------------->
-
+  <!--------------------------Content-------------------------------->
   <div v-for="(today, index) in data">
-    <h2 :id="`section-${index}`">
+    <h2 v-if="filterToday(today).length > 0" :id="`section-${index}`">
       {{ index }}
     </h2>
 
     <div v-for="(entity, entity_index) in today" :key="entity_index">
       <div v-if="entity.timestamp > getYesterdayMidnightTimestamp()">
-        <h3 :id="`item-${index}-${entity_index}`">
-          <a :href="entity.url" target="_blank">{{ entity.title }}</a>
-        </h3>
-        <div class="datetime">{{ formatTimestamp(entity.timestamp * 1000) }}</div>
-        <div v-html="entity.summary"></div>
+        <div class="success-card" @click="handleCardClick(entity.url)">
+          <div class="card-content style-common">
+            <span class="card-header">
+                <h3 :id="`item-${index}-${entity_index}`" class= 'card-title'>
+                {{ entity.title }}
+                </h3>
+                <span class="card-datetime">{{ formatTimestamp(entity.timestamp * 1000) }}</span>
+            </span>
+            <div class="message" v-html="entity.summary" />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -286,12 +295,92 @@ onMounted(() => {
 
 <style scoped>
 
-.controls {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 15px;
+.success-card {
+  border-radius: 20px;
+  overflow: hidden;
+
+  margin: 30px 0 30px 0;
+  width: 100%;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
+
+.success-card:hover {
+  transform: scale(1.05) rotate(1deg);
+  box-shadow: 0 12px 24px -8px gray;
+  /**
+  var(--vp-c-brand-1)
+   */
+}
+
+.card-content {
+  padding: 2rem 1.5rem;
+  position: relative;
+  height: fit-content;
+}
+
+.card-header {
+  width: 100%;
+  display: inline-block;
+  margin-bottom: 1rem;
+  color: var(--vp-c-text-2);
+}
+
+.message {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+  color: var(--vp-c-text-2);
+}
+
+.card-title {
+  margin: 10px 0 10px 0;
+  color: var(--vp-c-text-2);
+}
+.card-datetime{
+  float: right;
+}
+
+.particle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  animation: float 4s infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  50% {
+    transform: translateY(-20px) translateX(10px);
+    opacity: 1;
+  }
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.success-card.animate {
+  animation: pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
 
 .controls button {
   background: var(--vp-c-brand-3);
@@ -302,16 +391,6 @@ onMounted(() => {
   cursor: pointer;
 }
 
-.controls button:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-}
-
-.date-info {
-  font-size: 14px;
-  color: #666;
-}
-
 .error {
   background: #ffebee;
   color: #c62828;
@@ -320,25 +399,11 @@ onMounted(() => {
   margin: 10px 0;
 }
 
-.data-display {
-  background: #f5f5f5;
-  padding: 15px;
-  border-radius: 4px;
-  margin-top: 15px;
-}
-
-.data-display pre {
-  background: white;
-  padding: 10px;
-  border-radius: 4px;
-  overflow-x: auto;
-  font-size: 12px;
-}
 
 /* 目录样式 */
 .toc-container {
   border: 1px solid var(--vp-c-bg-soft);
-  border-radius: 12px;
+  border-radius: 20px;
   height: 100%;
   background-color: var(--vp-c-bg-soft);
   transition: border-color 0.25s, background-color 0.25s;
@@ -349,10 +414,6 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   padding: 12px 16px;
-  /*
-    background: #f9fafb;
-   */
-  border-bottom: 1px solid grey;
   cursor: pointer;
   user-select: none;
   transition: background-color 0.2s;

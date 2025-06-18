@@ -4,3 +4,71 @@
 html.dark :is(img, image) {
     filter: brightness(.80) contrast(1.1);
 }
+
+/**
+ * for https://blog.reimu.net
+ */
+.more-link {
+    display: none;
+}
+
+/**
+ * for https://www.hacg.icu
+ */
+.meta-nav{
+    display: none;
+}
+
+/* Card style variations */
+.style-common {
+    background: var(--vp-c-bg-soft);
+    color: white;
+}
+
+.card-style-1 {
+    background: linear-gradient(135deg, #FF61D2, #FE9090);
+    color: white;
+    box-shadow: 0 12px 24px -8px rgba(255, 97, 210, 0.4);
+}
+
+.card-style-2 {
+    background: linear-gradient(45deg, #00F5A0, #00D9F5);
+    color: #1A1A1A;
+    box-shadow: 0 12px 24px -8px rgba(0, 245, 160, 0.4);
+}
+
+.card-style-3 {
+    background: linear-gradient(135deg, #FFD32E, #FF8B2E);
+    color: white;
+    box-shadow: 0 12px 24px -8px rgba(255, 211, 46, 0.4);
+}
+
+.card-style-4 {
+    background: linear-gradient(45deg, #845EC2, #4B4453);
+    color: white;
+    box-shadow: 0 12px 24px -8px rgba(132, 94, 194, 0.4);
+}
+
+.card-style-5 {
+    background: linear-gradient(135deg, #FF9A9E, #FAD0C4);
+    color: #1A1A1A;
+    box-shadow: 0 12px 24px -8px rgba(255, 154, 158, 0.4);
+}
+
+.card-style-6 {
+    background: linear-gradient(45deg, #2EAAFA, #4B96E5);
+    color: white;
+    box-shadow: 0 12px 24px -8px rgba(46, 170, 250, 0.4);
+}
+
+.card-style-7 {
+    background: linear-gradient(135deg, #A9F0D1, #7FD1AE);
+    color: #1A1A1A;
+    box-shadow: 0 12px 24px -8px rgba(169, 240, 209, 0.4);
+}
+
+.card-style-8 {
+    background: linear-gradient(45deg, #B721FF, #21D4FD);
+    color: white;
+    box-shadow: 0 12px 24px -8px rgba(183, 33, 255, 0.4);
+}
