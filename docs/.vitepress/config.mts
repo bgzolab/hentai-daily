@@ -23,6 +23,9 @@ export default defineConfig({
             message: 'Found this useful? Give me a ⭐ on <a href="https://github.com/bGZo/hentai-daily">Github</a>.',
             copyright: 'Copyright © 2023-present 菜就多練練',
         },
+        search: {
+            provider: 'local'
+        }
     },
 
     head: [
@@ -66,7 +69,12 @@ export default defineConfig({
         }
     },
 
+    sitemap: {
+        hostname: 'https://hentai.bgzo.cc',
+        lastmodDateOnly: false
+    },
 
+    lastUpdated: true,
 
     vite: {
         server: {
