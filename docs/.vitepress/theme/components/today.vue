@@ -20,6 +20,15 @@ interface hentaiAPI {
   'DLsite Comic Ranking': rssEntity[],
 }
 
+// 定义字段映射配置
+const FIELD_CONFIG = {
+  'Resources': {price: 'FREE', type: 'tip', ranking: false, desc: ""},
+  'News': {price: 'FREE', type: 'tip', ranking: false, desc: ""},
+  'DLsite Game Ranking': {price: 'PAID', type: 'danger', ranking: true, desc: ""},
+  'DLsite Voice Ranking': {price: 'PAID', type: 'danger', ranking: true, desc: ""},
+  'DLsite Comic Ranking': {price: 'PAID', type: 'danger', ranking: true, desc: ""},
+} as const;
+
 /**
  * Fields
  */
@@ -98,8 +107,25 @@ const fetchData = async () => {
 }
 
 const handleCardClick = (url: string) => {
+  // NOTE: open in current tab
   // window.location.href = url
   window.open(url, '_blank')
+  // NOTE: open new tab
+}
+
+const handleCardCss = (entity_index: number, index: string) => {
+  if (!FIELD_CONFIG[index].ranking) {
+    // no ranking no handle
+    return 'card-style-common'
+  }else {
+    switch (entity_index) {
+      case 0: return  'card-style-king'
+      case 1: return  'card-style-silver'
+      case 2: return  'card-style-bronze'
+      case 3: return  'card-style-common'
+      case 4: return  'card-style-common'
+    }
+  }
 }
 
 // 类型验证函数
@@ -197,12 +223,12 @@ onMounted(() => {
 </script>
 
 <template>
-<!--  <div class="controls">-->
-<!--    <button @click="fetchData" :disabled="loading">-->
-<!--      {{ loading ? '加载中...' : '刷新' }}-->
-<!--    </button>-->
-<!--    <span class="date-info">请求日期: {{ currentDate }}</span>-->
-<!--  </div>-->
+  <!--  <div class="controls">-->
+  <!--    <button @click="fetchData" :disabled="loading">-->
+  <!--      {{ loading ? '加载中...' : '刷新' }}-->
+  <!--    </button>-->
+  <!--    <span class="date-info">请求日期: {{ currentDate }}</span>-->
+  <!--  </div>-->
   <div v-if="error" class="error">
     错误: {{ error }}
   </div>
@@ -270,21 +296,22 @@ onMounted(() => {
 
   <!--------------------------Content-------------------------------->
   <div v-for="(today, index) in data">
-    <h2 v-if="filterToday(today).length > 0" :id="`section-${index}`">
+    <h2 class="today-title" v-if="filterToday(today).length > 0" :id="`section-${index}`">
       {{ index }}
     </h2>
-
+    {{ FIELD_CONFIG[index].desc }}
     <div v-for="(entity, entity_index) in today" :key="entity_index">
       <div v-if="entity.timestamp > getYesterdayMidnightTimestamp()">
         <div class="success-card" @click="handleCardClick(entity.url)">
-          <div class="card-content style-common">
+          <div :class="`card-content ${handleCardCss(entity_index, index)} card-style`">
             <span class="card-header">
-                <h3 :id="`item-${index}-${entity_index}`" class= 'card-title'>
-                {{ entity.title === ''? 'Untitled': entity.title}}
+                <h3 :id="`item-${index}-${entity_index}`" class='card-title'>
+                {{ entity.title === '' ? 'Untitled' : entity.title }}
+                  <Badge :type="FIELD_CONFIG[index].type" :text="FIELD_CONFIG[index].price"/>
                 </h3>
                 <span class="card-datetime">{{ formatTimestamp(entity.timestamp * 1000) }}</span>
             </span>
-            <div class="message" v-html="entity.summary" />
+            <div class="message" v-html="entity.summary"/>
           </div>
         </div>
       </div>
@@ -294,6 +321,10 @@ onMounted(() => {
 </template>
 
 <style scoped>
+
+.today-title {
+  text-align: center;
+}
 
 .success-card {
   border-radius: 20px;
@@ -324,7 +355,7 @@ onMounted(() => {
   width: 100%;
   display: inline-block;
   margin-bottom: 1rem;
-  color: var(--vp-c-text-2);
+  color: var(--vp-c-text-1);
 }
 
 .message {
@@ -332,14 +363,15 @@ onMounted(() => {
   font-weight: 700;
   margin-bottom: 0.5rem;
   line-height: 1.4;
-  color: var(--vp-c-text-2);
+  color: var(--vp-c-text-1);
 }
 
 .card-title {
   margin: 10px 0 10px 0;
-  color: var(--vp-c-text-2);
+  color: var(--vp-c-text-1);
 }
-.card-datetime{
+
+.card-datetime {
   float: right;
 }
 

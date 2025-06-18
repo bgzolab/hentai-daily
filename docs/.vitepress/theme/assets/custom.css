@@ -20,11 +20,29 @@ html.dark :is(img, image) {
 }
 
 /* Card style variations */
-.style-common {
+.card-style-common {
     background: var(--vp-c-bg-soft);
     color: white;
 }
 
+.card-style-king {
+    background: linear-gradient(135deg, #FFD32E, #FF8B2E);
+    color: white;
+    box-shadow: 0 12px 24px -8px rgba(255, 211, 46, 0.4);
+}
+
+.card-style-silver {
+    background: linear-gradient(135deg, #E0E0E0, #A0A0A0);
+    color: #333;
+    box-shadow: 0 10px 20px -8px rgba(160, 160, 160, 0.35);
+}
+
+.card-style-bronze {
+    background: linear-gradient(135deg, #CD7F32, #FE9090);
+    color: white;
+    box-shadow: 0 8px 16px -8px rgba(139, 69, 19, 0.3);
+}
+/** Other */
 .card-style-1 {
     background: linear-gradient(135deg, #FF61D2, #FE9090);
     color: white;
