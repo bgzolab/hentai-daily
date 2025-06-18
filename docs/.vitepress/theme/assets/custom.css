@@ -26,13 +26,13 @@ html.dark :is(img, image) {
 }
 
 .card-style-king {
-    background: linear-gradient(135deg, #FFD32E, #FF8B2E);
+    background: linear-gradient(135deg, #E6B822, #E67D22);
     color: white;
     box-shadow: 0 12px 24px -8px rgba(255, 211, 46, 0.4);
 }
 
 .card-style-silver {
-    background: linear-gradient(135deg, #E0E0E0, #A0A0A0);
+    background: linear-gradient(grey, #E0E0E0, #A0A0A0);
     color: #333;
     box-shadow: 0 10px 20px -8px rgba(160, 160, 160, 0.35);
 }
