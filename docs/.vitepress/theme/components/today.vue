@@ -359,7 +359,7 @@ onMounted(() => {
 }
 
 .message {
-  font-size: 1.2rem;
+  font-size: 1.0rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
   line-height: 1.4;
