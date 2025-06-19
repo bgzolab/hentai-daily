@@ -1,6 +1,46 @@
 <script setup lang="ts">
-import {ref, onMounted, computed, nextTick, reactive, UnwrapRef} from 'vue'
+import {ref, onMounted, computed, nextTick, reactive, UnwrapRef, getCurrentInstance} from 'vue'
 import {Content, onContentUpdated, useData} from "vitepress";
+import CalHeatmap from 'cal-heatmap';
+import 'cal-heatmap/cal-heatmap.css';
+const cal = new CalHeatmap();
+
+const instance = getCurrentInstance();
+
+function forceRerender() {
+  instance.proxy.$forceUpdate();
+}
+
+cal.paint({
+  itemSelector: '#cal-heatmap',
+  domain: {
+    type: 'month',
+  },
+  subDomain: {
+    type: 'ghDay'
+  },
+  date:{
+    start: new Date('2025-01-01'),
+  },
+  data: {
+    source: '/api/count.json',
+    x: 'date',
+    y: 'value',
+  },
+  scale: {
+    color: {
+      range: ['#9be9a8', '#40c463', '#30a14e', '#216e39'],
+      domain: [0, 30],
+    }
+  },
+});
+
+cal.on('click', (event, timestamp, value) => {
+  console.log( 'click'+ new Date(timestamp).toLocaleDateString());
+  currentDate.value = getCurrentDate(new Date(timestamp))
+  fetchData()
+      // .then(forceRerender)
+});
 
 /**
  * Response Meta
@@ -42,8 +82,7 @@ const tocCountLimit = 5
  * 获取昨日凌晨的时间戳（本地时间）
  * 精确到秒（非毫秒）
  */
-const getYesterdayMidnightTimestamp = (): number => {
-  const now = new Date();
+const getYesterdayMidnightTimestamp = (now: Date): number => {
   const yesterday = new Date(now);
   yesterday.setDate(now.getDate() - 1);
   yesterday.setHours(0, 0, 0, 0);
@@ -63,8 +102,7 @@ const apiUrl = computed(() => {
 
 // 获取当前日期并格式化为 YYYY/MM/DD
 // FIXME: 凌晨怎么办？？？
-const getCurrentDate = () => {
-  const now = new Date()
+const getCurrentDate = (now: Date) => {
   const year = now.getFullYear()
   const month = String(now.getMonth() + 1).padStart(2, '0')
   const day = String(now.getDate()).padStart(2, '0')
@@ -76,7 +114,6 @@ const fetchData = async () => {
   error.value = null
 
   try {
-    const dateStr = getCurrentDate()
     console.log('请求 URL:', apiUrl.value)
     const response = await fetch(apiUrl.value, {
       method: 'GET',
@@ -154,7 +191,7 @@ function isValidRssEntity(obj: any): obj is rssEntity {
 }
 
 const filterToday = (list: rssEntity[]) => {
-  return list.filter(i => i.timestamp > getYesterdayMidnightTimestamp())
+  return list.filter(i => i.timestamp > getYesterdayMidnightTimestamp(new Date(currentDate.value)))
 }
 
 // 方案1的状态
@@ -167,7 +204,7 @@ const toggleItemsVisibility = (index: string) => {
 
 // 组件挂载时设置当前日期
 onMounted(() => {
-  currentDate.value = getCurrentDate()
+  currentDate.value = getCurrentDate(new Date())
   fetchData()
 })
 
@@ -223,6 +260,10 @@ onMounted(() => {
 </script>
 
 <template>
+
+  <div id="cal-heatmap"></div>
+
+
   <!--  <div class="controls">-->
   <!--    <button @click="fetchData" :disabled="loading">-->
   <!--      {{ loading ? '加载中...' : '刷新' }}-->
@@ -273,7 +314,7 @@ onMounted(() => {
                 :key="entity_index"
                 class="toc-item">
               <a :href="`#item-${index}-${entity_index}`"
-                 v-if="entity.timestamp > getYesterdayMidnightTimestamp()"
+                 v-if="entity.timestamp > getYesterdayMidnightTimestamp(new Date(currentDate))"
                  class="item-link"
                  :title="entity.title">
                 {{ entity.title }}
@@ -295,13 +336,13 @@ onMounted(() => {
 
 
   <!--------------------------Content-------------------------------->
-  <div v-for="(today, index) in data">
+  <div v-for="(today, index) in data" :key="`today-${index}-${filterToday(today).length}`">
     <h2 class="today-title" v-if="filterToday(today).length > 0" :id="`section-${index}`">
       {{ index }}
     </h2>
     {{ FIELD_CONFIG[index].desc }}
     <div v-for="(entity, entity_index) in today" :key="entity_index">
-      <div v-if="entity.timestamp > getYesterdayMidnightTimestamp()">
+      <div v-if="entity.timestamp > getYesterdayMidnightTimestamp(new Date(currentDate))">
         <div class="success-card" @click="handleCardClick(entity.url)">
           <div :class="`card-content ${handleCardCss(entity_index, index)} card-style`">
             <span class="card-header">
@@ -321,6 +362,9 @@ onMounted(() => {
 </template>
 
 <style scoped>
+#cal-heatmap {
+  margin: 10px 0 20px 0;
+}
 
 .today-title {
   text-align: center;

@@ -104,7 +104,8 @@ export default defineConfig({
 
                 '/api': {
                     // target: 'http://hentai.bgzo.cc', // 500 ERROR
-                    target: 'https://raw.githubusercontent.com/bGZo/hentai-daily/refs/heads/vitepress/',
+                    // target: 'https://raw.githubusercontent.com/bGZo/hentai-daily/refs/heads/vitepress/',
+                    target: 'https://cdn.jsdelivr.net/gh/bGZo/hentai-daily@refs/heads/vitepress/',
                     changeOrigin: true,
                     secure: true, // 如果是 https,
                     // timeout: 30000, // 增加超时时间到30秒
