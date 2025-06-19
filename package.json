@@ -1,7 +1,9 @@
 {
   "devDependencies": {
     "tailwindcss": "^3.3.2",
-    "vitepress": "^1.6.3"
+    "tippy.js": "^6.3.7",
+    "vitepress": "^1.6.3",
+    "vue3-calendar-heatmap": "^2.0.5"
   },
   "scripts": {
     "docs:dev": "vitepress dev docs",
@@ -10,6 +12,7 @@
     "copy-files": "cp -r ./api ./docs/.vitepress/dist/"
   },
   "dependencies": {
+    "cal-heatmap": "^4.2.4",
     "markdown-it-footnote": "^4.0.0",
     "markdown-it-task-lists": "^2.1.1"
   }

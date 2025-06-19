@@ -37,6 +37,7 @@ jobs:
       - name: Run Script
         run: |
           python3 src/sync.py
+          python3 src/heatmap-count.py
 
       - name: Run Safe Dir
         run: |
