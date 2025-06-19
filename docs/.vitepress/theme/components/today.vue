@@ -3,44 +3,6 @@ import {ref, onMounted, computed, nextTick, reactive, UnwrapRef, getCurrentInsta
 import {Content, onContentUpdated, useData} from "vitepress";
 import CalHeatmap from 'cal-heatmap';
 import 'cal-heatmap/cal-heatmap.css';
-const cal = new CalHeatmap();
-
-const instance = getCurrentInstance();
-
-function forceRerender() {
-  instance.proxy.$forceUpdate();
-}
-
-cal.paint({
-  itemSelector: '#cal-heatmap',
-  domain: {
-    type: 'month',
-  },
-  subDomain: {
-    type: 'ghDay'
-  },
-  date:{
-    start: new Date('2025-01-01'),
-  },
-  data: {
-    source: '/api/count.json',
-    x: 'date',
-    y: 'value',
-  },
-  scale: {
-    color: {
-      range: ['#9be9a8', '#40c463', '#30a14e', '#216e39'],
-      domain: [0, 30],
-    }
-  },
-});
-
-cal.on('click', (event, timestamp, value) => {
-  console.log( 'click'+ new Date(timestamp).toLocaleDateString());
-  currentDate.value = getCurrentDate(new Date(timestamp))
-  fetchData()
-      // .then(forceRerender)
-});
 
 /**
  * Response Meta
@@ -204,6 +166,37 @@ const toggleItemsVisibility = (index: string) => {
 
 // 组件挂载时设置当前日期
 onMounted(() => {
+  const cal = new CalHeatmap();
+  cal.paint({
+    itemSelector: '#cal-heatmap',
+    domain: {
+      type: 'month',
+    },
+    subDomain: {
+      type: 'ghDay'
+    },
+    date:{
+      start: new Date('2025-01-01'),
+    },
+    data: {
+      source: '/api/count.json',
+      x: 'date',
+      y: 'value',
+    },
+    scale: {
+      color: {
+        range: ['#9be9a8', '#40c463', '#30a14e', '#216e39'],
+        domain: [0, 30],
+      }
+    },
+  });
+
+  cal.on('click', (event, timestamp, value) => {
+    console.log( 'click'+ new Date(timestamp).toLocaleDateString());
+    currentDate.value = getCurrentDate(new Date(timestamp))
+    fetchData()
+    // .then(forceRerender)
+  });
   currentDate.value = getCurrentDate(new Date())
   fetchData()
 })
