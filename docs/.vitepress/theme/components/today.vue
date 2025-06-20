@@ -208,7 +208,9 @@ onMounted(() => {
     <span class="date">{{new Date(currentDate).toLocaleDateString() }}</span>
   </div>
   <!-------------------------HeatMap--------------------------------->
-  <div id="cal-heatmap"></div>
+  <div class="heatmap-scroll">
+    <div id="cal-heatmap"></div>
+  </div>
   <div v-if="error" class="error">
     Error: {{ error }}
   </div>
@@ -281,6 +283,16 @@ onMounted(() => {
 </template>
 
 <style scoped>
+
+.heatmap-scroll {
+  overflow-x: auto;
+  padding-bottom: 20px; /* 为滚动条留出空间 */
+}
+
+#cal-heatmap {
+  min-width: 600px; /* 热力图的最小宽度 */
+}
+
 .today-title {
   width: 100%;
   margin: 10px 0 10px 0;
@@ -291,7 +303,7 @@ onMounted(() => {
   }
   .date{
     color: var(--vp-c-text-1);
-    font-size: 1.5em;
+    font-size: 1em;
     float: right;
   }
 }
