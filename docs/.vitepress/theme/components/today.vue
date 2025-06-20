@@ -39,6 +39,7 @@ const loading = ref(false)
 const error = ref(null)
 const currentDate = ref('')
 const tocCountLimit = 5
+
 /**
  * 获取昨日凌晨的时间戳（本地时间）
  * 精确到秒（非毫秒）
@@ -202,11 +203,14 @@ onMounted(() => {
 </script>
 
 <template>
+  <div class="today-title">
+    <span class="hero">Hentai Daily</span>
+    <span class="date">{{new Date(currentDate).toLocaleDateString() }}</span>
+  </div>
   <!-------------------------HeatMap--------------------------------->
   <div id="cal-heatmap"></div>
-  <!--    <span class="date-info">请求日期: {{ currentDate }}</span>-->
   <div v-if="error" class="error">
-    错误: {{ error }}
+    Error: {{ error }}
   </div>
   <!-------------------------TOC--------------------------------->
   <div class="toc-container">
@@ -253,7 +257,7 @@ onMounted(() => {
   </div>
   <!--------------------------Content-------------------------------->
   <div v-for="(today, index) in data" :key="`today-${index}-${filterToday(today).length}`">
-    <h2 class="today-title" v-if="filterToday(today).length > 0" :id="`section-${index}`">
+    <h2 class="content-title" v-if="filterToday(today).length > 0" :id="`section-${index}`">
       {{ index }}
     </h2>
     {{ FIELD_CONFIG[index].desc }}
@@ -277,11 +281,26 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.today-title {
+  width: 100%;
+  margin: 10px 0 10px 0;
+  .hero{
+    color: var(--vp-home-hero-name-color);
+    font-size: 2em;
+    font-weight: bold;
+  }
+  .date{
+    color: var(--vp-c-text-1);
+    font-size: 1.5em;
+    float: right;
+  }
+}
+
 #cal-heatmap {
   margin: 10px 0 20px 0;
 }
 
-.today-title {
+.content-title {
   text-align: center;
 }
 
