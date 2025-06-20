@@ -32,8 +32,6 @@ const fetchData = async () => {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        // 如果需要认证，可以添加 Authorization header
-        // 'Authorization': 'Bearer your-token-here'
       }
     })
 

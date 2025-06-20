@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import {ref, onMounted, computed, nextTick, reactive, UnwrapRef, getCurrentInstance} from 'vue'
-import {Content, onContentUpdated, useData} from "vitepress";
+import {ref, onMounted, computed, reactive } from 'vue'
 import CalHeatmap from 'cal-heatmap';
 import 'cal-heatmap/cal-heatmap.css';
 
@@ -195,94 +194,21 @@ onMounted(() => {
     console.log( 'click'+ new Date(timestamp).toLocaleDateString());
     currentDate.value = getCurrentDate(new Date(timestamp))
     fetchData()
-    // .then(forceRerender)
   });
   currentDate.value = getCurrentDate(new Date())
   fetchData()
 })
 
-
-// 更新目录
-// const {page} = useData()
-//
-// const updatePageOutline = async () => {
-//   await nextTick()
-//
-//   // 获取所有标题元素
-//   const headings = Array.from(document.querySelectorAll('h1, h2, h3, h4, h5, h6'))
-//       .map((el) => {
-//         const level = parseInt(el.tagName[1])
-//         const title = el.textContent || ''
-//         const anchor = el.id || title.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-')
-//
-//         // 如果元素没有 id，添加一个
-//         if (!el.id) {
-//           el.id = anchor
-//         }
-//
-//         return {
-//           level,
-//           title,
-//           anchor: `#${anchor}`
-//         }
-//       })
-//
-//   // 更新页面的标题信息
-//   if (page.value) {
-//     ;(page.value as any).headers = headings
-//   }
-// }
-// onMounted(updatePageOutline)
-// onContentUpdated(updatePageOutline)
-// onMounted(async () => {
-//   await nextTick()
-//
-//   // 手动触发 VitePress 重新扫描页面标题
-//   if (typeof window !== 'undefined') {
-//     // 获取所有标题元素
-//     const headers = document.querySelectorAll('h1, h2, h3, h4, h5, h6')
-//
-//     // 触发 VitePress 的目录更新事件
-//     const event = new CustomEvent('vitepress:updateOutline', {
-//       detail: {headers}
-//     })
-//     window.dispatchEvent(event)
-//     console.log("更新")
-//   }
-// })
 </script>
 
 <template>
-
+  <!-------------------------HeatMap--------------------------------->
   <div id="cal-heatmap"></div>
-
-
-  <!--  <div class="controls">-->
-  <!--    <button @click="fetchData" :disabled="loading">-->
-  <!--      {{ loading ? '加载中...' : '刷新' }}-->
-  <!--    </button>-->
   <!--    <span class="date-info">请求日期: {{ currentDate }}</span>-->
-  <!--  </div>-->
   <div v-if="error" class="error">
     错误: {{ error }}
   </div>
-  <!---------------------------------------------------------->
-
-  <!--  <div class="table-of-contents">-->
-  <!--    <h2>Table of contents</h2>-->
-  <!--    <ul>-->
-  <!--      <li v-for="(today, index) in data" :key="index">-->
-  <!--        <a :href="`#section-${index}`">{{ index }}</a>-->
-  <!--        <ul>-->
-  <!--          <li v-for="(entity, entity_index) in today" :key="entity_index">-->
-  <!--            <a :href="`#item-${index}-${entity_index}`">{{ entity['title'] }}</a>-->
-  <!--          </li>-->
-  <!--        </ul>-->
-  <!--      </li>-->
-  <!--    </ul>-->
-  <!--  </div>-->
-  <!--  -->
-
+  <!-------------------------TOC--------------------------------->
   <div class="toc-container">
     <div class="toc-header" @click="isCollapsed = !isCollapsed">
       <h2>Table of Contents</h2>
@@ -290,7 +216,6 @@ onMounted(() => {
         {{ isCollapsed ? '▶' : '▼' }}
       </span>
     </div>
-
     <div class="toc-content"
          :class="{ collapsed: isCollapsed }">
       <ul class="toc-list">
@@ -326,8 +251,6 @@ onMounted(() => {
       </ul>
     </div>
   </div>
-
-
   <!--------------------------Content-------------------------------->
   <div v-for="(today, index) in data" :key="`today-${index}-${filterToday(today).length}`">
     <h2 class="today-title" v-if="filterToday(today).length > 0" :id="`section-${index}`">
@@ -351,7 +274,6 @@ onMounted(() => {
       </div>
     </div>
   </div>
-
 </template>
 
 <style scoped>
