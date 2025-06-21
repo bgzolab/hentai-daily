@@ -12,6 +12,7 @@ export default defineConfig({
         nav: [
             {text: 'Home', link: '/'},
             {text: 'Today', link: '/today'},
+            {text: 'API', link: '/rss'},
             {
                 text: 'About',
                 items: [
