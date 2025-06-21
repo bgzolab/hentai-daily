@@ -12,7 +12,13 @@ export default defineConfig({
         nav: [
             {text: 'Home', link: '/'},
             {text: 'Today', link: '/today'},
-            {text: 'Changelog', link: '/changelog'},
+            {
+                text: 'About',
+                items: [
+                    {text: 'Changelog', link: '/changelog'},
+                    {text: 'Q&A', link: '/faq'},
+                ]
+            }
         ],
         socialLinks: [
             {icon: 'github', link: 'https://github.com/bGZo/hentai-daily'},
@@ -24,7 +30,7 @@ export default defineConfig({
             copyright: 'Copyright © 2023-present 菜就多練練',
         },
         search: {
-            provider: 'local'
+            // provider: 'local'
         }
     },
 

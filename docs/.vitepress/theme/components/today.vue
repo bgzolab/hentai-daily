@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, onMounted, computed, reactive } from 'vue'
+import {ref, onMounted, computed, reactive} from 'vue'
 import CalHeatmap from 'cal-heatmap';
 import 'cal-heatmap/cal-heatmap.css';
 
@@ -39,14 +39,18 @@ const loading = ref(false)
 const error = ref(null)
 const currentDate = ref('')
 const tocCountLimit = 5
+// 目录配置
+const isCollapsed = ref(true)
+const showAllItems = reactive<Record<string, boolean>>({})
+
 
 /**
  * 获取昨日凌晨的时间戳（本地时间）
  * 精确到秒（非毫秒）
  */
-const getYesterdayMidnightTimestamp = (now: Date): number => {
-  const yesterday = new Date(now);
-  yesterday.setDate(now.getDate() - 1);
+const getYesterdayMidnightTimestamp = (): number => {
+  const yesterday = new Date(currentDate.value);
+  yesterday.setDate(yesterday.getDate() - 1);
   yesterday.setHours(0, 0, 0, 0);
   return yesterday.getTime() / 1000;
 };
@@ -116,13 +120,18 @@ const handleCardCss = (entity_index: number, index: string) => {
   if (!FIELD_CONFIG[index].ranking) {
     // no ranking no handle
     return 'card-style-common'
-  }else {
+  } else {
     switch (entity_index) {
-      case 0: return  'card-style-king'
-      case 1: return  'card-style-silver'
-      case 2: return  'card-style-bronze'
-      case 3: return  'card-style-common'
-      case 4: return  'card-style-common'
+      case 0:
+        return 'card-style-king'
+      case 1:
+        return 'card-style-silver'
+      case 2:
+        return 'card-style-bronze'
+      case 3:
+        return 'card-style-common'
+      case 4:
+        return 'card-style-common'
     }
   }
 }
@@ -152,13 +161,13 @@ function isValidRssEntity(obj: any): obj is rssEntity {
       typeof obj.timestamp === 'number'
 }
 
+/**
+ * 过滤出戒指昨天的内容
+ * @param list
+ */
 const filterToday = (list: rssEntity[]) => {
-  return list.filter(i => i.timestamp > getYesterdayMidnightTimestamp(new Date(currentDate.value)))
+  return list.filter(i => i.timestamp > getYesterdayMidnightTimestamp())
 }
-
-// 方案1的状态
-const isCollapsed = ref(true)
-const showAllItems = reactive<Record<string, boolean>>({})
 
 const toggleItemsVisibility = (index: string) => {
   showAllItems[index] = !showAllItems[index]
@@ -175,7 +184,7 @@ onMounted(() => {
     subDomain: {
       type: 'ghDay'
     },
-    date:{
+    date: {
       start: new Date('2025-01-01'),
     },
     data: {
@@ -192,7 +201,7 @@ onMounted(() => {
   });
 
   cal.on('click', (event, timestamp, value) => {
-    console.log( 'click'+ new Date(timestamp).toLocaleDateString());
+    console.log('click' + new Date(timestamp).toLocaleDateString());
     currentDate.value = getCurrentDate(new Date(timestamp))
     fetchData()
   });
@@ -205,7 +214,7 @@ onMounted(() => {
 <template>
   <div class="today-title">
     <span class="hero">Hentai Daily</span>
-    <span class="date">{{new Date(currentDate).toLocaleDateString() }}</span>
+    <span class="date">{{ new Date(currentDate).toLocaleDateString() }}</span>
   </div>
   <!-------------------------HeatMap--------------------------------->
   <div class="heatmap-scroll">
@@ -238,7 +247,7 @@ onMounted(() => {
                 :key="entity_index"
                 class="toc-item">
               <a :href="`#item-${index}-${entity_index}`"
-                 v-if="entity.timestamp > getYesterdayMidnightTimestamp(new Date(currentDate))"
+                 v-if="entity.timestamp > getYesterdayMidnightTimestamp()"
                  class="item-link"
                  :title="entity.title">
                 {{ entity.title }}
@@ -264,7 +273,7 @@ onMounted(() => {
     </h2>
     {{ FIELD_CONFIG[index].desc }}
     <div v-for="(entity, entity_index) in today" :key="entity_index">
-      <div v-if="entity.timestamp > getYesterdayMidnightTimestamp(new Date(currentDate))">
+      <div v-if="entity.timestamp > getYesterdayMidnightTimestamp()">
         <div class="success-card" @click="handleCardClick(entity.url)">
           <div :class="`card-content ${handleCardCss(entity_index, index)} card-style`">
             <span class="card-header">
@@ -296,12 +305,14 @@ onMounted(() => {
 .today-title {
   width: 100%;
   margin: 10px 0 10px 0;
-  .hero{
+
+  .hero {
     color: var(--vp-home-hero-name-color);
     font-size: 2em;
     font-weight: bold;
   }
-  .date{
+
+  .date {
     color: var(--vp-c-text-1);
     font-size: 1em;
     float: right;
