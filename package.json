@@ -1,12 +1,14 @@
 {
   "devDependencies": {
+    "concurrently": "^9.1.2",
+    "live-server": "^1.2.2",
     "tailwindcss": "^3.3.2",
     "tippy.js": "^6.3.7",
     "vitepress": "^1.6.3",
     "vue3-calendar-heatmap": "^2.0.5"
   },
   "scripts": {
-    "docs:dev": "vitepress dev docs",
+    "docs:dev": " concurrently \"vitepress dev docs\" \"live-server --port=8080\"",
     "docs:build": "vitepress build docs && npm run copy-files",
     "docs:preview": "vitepress preview docs",
     "copy-files": "cp -r ./api ./docs/.vitepress/dist/"
