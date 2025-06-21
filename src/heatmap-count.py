@@ -8,8 +8,31 @@
 import os
 import json
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timedelta
 
+def count_json_value(yestoday_str, day_file):
+    f = open (day_file, 'r')
+    data = json.load(f)
+
+    resList = data.get('Resources', [])  # 不存在时返回空列表
+    newsList = data.get('News', [])      # 不存在时返回空列表
+
+    yestoday_dt = datetime.strptime(yestoday_str, "%Y-%m-%d")
+    yestoday_timestamp = int(yestoday_dt.timestamp())
+
+    count = 0
+    # if yestoday_str == '2025-06-20':
+    if resList != []:
+        for res in resList:
+            if res['timestamp'] > yestoday_timestamp:
+                count += 1
+
+    if newsList != []:
+        for res in newsList:
+            if res['timestamp'] > yestoday_timestamp:
+                count += 1
+
+    return count
 
 def scan_directories(root_path="api/archives/", output_file="api/count.json"):
     """
@@ -64,7 +87,8 @@ def scan_directories(root_path="api/archives/", output_file="api/count.json"):
                 if not day.isdigit():
                     continue
 
-                day = day.zfill(2)  # 补零确保两位数
+                # 补零确保两位数
+                day = day.zfill(2)
 
                 # 构造日期字符串
                 date_str = f"{year}-{month}-{day}"
@@ -78,13 +102,17 @@ def scan_directories(root_path="api/archives/", output_file="api/count.json"):
 
                 print(f"    找到文件: {date_str}")
 
+                current_date = datetime.strptime(f"{year}-{month}-{day}", "%Y-%m-%d")
+                yesterday = current_date - timedelta(days=1)
+                yestoday_str = yesterday.strftime("%Y-%m-%d")  # 获取前一天的字符串
+
                 # 添加到统计数据中
-                # 这里假设每个文件代表1个单位，你可以根据需要修改这个逻辑
                 # 比如读取JSON文件内容来统计具体数量
                 statistics.append({
                     "date": date_str,
-                    "value": 1  # 可以根据实际需求修改这个值
+                    "value": count_json_value(yestoday_str, day_file)
                 })
+
 
     # 按日期排序
     statistics.sort(key=lambda x: x["date"])
@@ -138,8 +166,4 @@ def count_json_content(file_path):
 
 
 if __name__ == "__main__":
-    # 你可以修改这些参数
-    # ROOT_PATH = "."  # 根目录路径
-    # OUTPUT_FILE = "statistics.json"  # 输出文件名
-
     scan_directories()
