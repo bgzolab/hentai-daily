@@ -2,7 +2,10 @@
 import {ref, onMounted, computed, reactive} from 'vue'
 import CalHeatmap from 'cal-heatmap';
 import 'cal-heatmap/cal-heatmap.css';
-import { useToast } from 'vue-toastification'
+import {useToast} from 'vue-toastification'
+import Tooltip from 'cal-heatmap/plugins/Tooltip';
+import {useData} from "vitepress";
+import type {OptionsType} from "cal-heatmap/src/options/Options";
 
 /**
  * Response Meta
@@ -48,7 +51,8 @@ const isCollapsed = ref(true)
 const showAllItems = reactive<Record<string, boolean>>({})
 // 消息通知
 const toast = useToast()
-
+// 是否是黑暗模式
+const { isDark } = useData()
 
 /**
  * 获取昨日凌晨的时间戳（本地时间）
@@ -98,13 +102,13 @@ const fetchData = async () => {
       showContent.value = false
       data.value = {} as hentaiAPI
       // error route
-      if (404 == response.status){
+      if (404 == response.status) {
         toast.info("It seems not exist for today. Please check other days")
       } else {
         toast.error(`Except resonse with: ${response.status}, please contact with admin`)
       }
       throw new Error(`HTTP error! status: ${response.status}`)
-    }else{
+    } else {
       showContent.value = true
     }
 
@@ -190,7 +194,7 @@ const toggleItemsVisibility = (index: string) => {
 }
 
 const refreshToday = (timestamp?: number) => {
-  if (timestamp){
+  if (timestamp) {
     currentDate.value = getCurrentDate(new Date(timestamp))
   } else {
     currentDate.value = getCurrentDate(new Date())
@@ -198,8 +202,21 @@ const refreshToday = (timestamp?: number) => {
   fetchData()
 }
 
-// 组件挂载时设置当前日期
-onMounted(() => {
+function watchDarkMode(callback) {
+  if (typeof window === 'undefined') return
+  const observer = new MutationObserver(() => {
+    const isDark = document.documentElement.classList.contains('dark')
+    callback(isDark)
+  })
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['class']
+  })
+  // 初始触发一次
+  // callback(document.documentElement.classList.contains('dark'))
+}
+
+function createCalHeatmap(){
   const cal = new CalHeatmap();
   cal.paint({
     itemSelector: '#cal-heatmap',
@@ -223,18 +240,36 @@ onMounted(() => {
         domain: [0, 30],
       }
     },
-  });
+    theme: isDark.value ? 'dark': 'light',
+  }, [[Tooltip, {
+    text: t => `${new Date(t).toLocaleDateString()}`,
+  }]]);
 
-  cal.on('click', (event, timestamp, value) => {
+  cal.on('click', ((event: any, timestamp: number, value: any) => {
     console.log('click' + new Date(timestamp).toLocaleDateString());
-    if (timestamp > new Date().getTime()){
-      toast.info("The future is yours. Check it in few days latter.")
-    }else{
+    if (timestamp > new Date().getTime()) {
+      toast.info("The future is yours. Check it in few days later.")
+    } else {
       refreshToday(timestamp)
     }
-  });
+  }) as any); // 关键：使用 as any 绕过类型检查
+  return cal;
+}
 
+// 组件挂载时设置当前日期
+onMounted(() => {
+  console.log('1绘制为 ', isDark)
   refreshToday()
+
+  var cal = createCalHeatmap()
+  // 监听黑暗模式变化，重新渲染图表
+  watchDarkMode((isDark) => {
+    if (cal) {
+      cal.destroy()
+    }
+    cal = createCalHeatmap()
+    console.log('绘制为 ', isDark)
+  })
 })
 
 </script>
@@ -248,9 +283,9 @@ onMounted(() => {
   <div class="heatmap-scroll">
     <div id="cal-heatmap"></div>
   </div>
-<!--  <div v-if="error" class="error">-->
-<!--    Error: {{ error }}-->
-<!--  </div>-->
+  <!--  <div v-if="error" class="error">-->
+  <!--    Error: {{ error }}-->
+  <!--  </div>-->
   <!-------------------------TOC--------------------------------->
   <div v-show="showContent" class="toc-container">
     <div class="toc-header" @click="isCollapsed = !isCollapsed">
