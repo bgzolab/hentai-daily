@@ -1,4 +1,6 @@
-The website was originally created for this purpose. Except content on Today, now we provided following RSS address without full-text: 
+Except contents on [today](today.md), now we provided following RSS address without full-text: 
+
+More feed could be discovered on: https://github.com/bGZo/hentai-daily/tree/vitepress/api/feeds
 
 ## 名器之家 [^why_mingqizhijia]
 
@@ -22,8 +24,6 @@ https://raw.githubusercontent.com/bGZo/hentai-daily/refs/heads/vitepress/api/fee
 ```
 
 [^why_4gamers]: RSSHUB 429 no response.
-
-More feed could be discovered on: https://github.com/bGZo/hentai-daily/tree/vitepress/api/feeds
 
 ## API using on today
 
