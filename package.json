@@ -1,20 +1,21 @@
 {
   "devDependencies": {
     "concurrently": "^9.1.2",
-    "live-server": "^1.2.2",
     "tailwindcss": "^3.3.2",
     "tippy.js": "^6.3.7",
     "vitepress": "^1.6.3",
     "vue3-calendar-heatmap": "^2.0.5"
   },
   "scripts": {
-    "docs:dev": "concurrently 'vitepress dev docs' 'live-server --port=8080'",
+    "docs:dev": "concurrently 'vitepress dev docs' 'http-server -p 8080'",
     "docs:build": "vitepress build docs && npm run copy-files",
     "docs:preview": "vitepress preview docs",
     "copy-files": "cp -r ./api ./docs/.vitepress/dist/"
   },
   "dependencies": {
+    "@vitalets/google-translate-api": "^9.2.1",
     "cal-heatmap": "^4.2.4",
+    "http-server": "^14.1.1",
     "markdown-it-footnote": "^4.0.0",
     "markdown-it-task-lists": "^2.1.1",
     "vue-toastification": "^2.0.0-rc.5"

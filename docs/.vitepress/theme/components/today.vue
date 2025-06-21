@@ -5,7 +5,6 @@ import 'cal-heatmap/cal-heatmap.css';
 import {useToast} from 'vue-toastification'
 import Tooltip from 'cal-heatmap/plugins/Tooltip';
 import {useData} from "vitepress";
-import {handleInput} from "concurrently/dist/src/defaults";
 
 /**
  * Response Meta
@@ -14,7 +13,7 @@ interface rssEntity {
   title: string,
   url: string,
   summary: string,
-  timestamp: number
+  timestamp: number,
 }
 
 interface hentaiAPI {
@@ -46,7 +45,7 @@ const FIELD_CONFIG = {
     type: 'danger',
     ranking: true,
     desc: "",
-    rss: 'https://raw.githubusercontent.com/bGZo/hentai-daily/refs/heads/vitepress/api/feeds/dlsite-game-ranking'
+    rss: 'https://raw.githubusercontent.com/bGZo/hentai-daily/refs/heads/vitepress/api/feeds/dlsite-game-ranking.xml'
   },
   'DLsite Voice Ranking': {
     price: 'PAID',
@@ -156,6 +155,12 @@ const fetchData = async () => {
   } finally {
     loading.value = false
   }
+}
+
+const clickCopyLink = (url:string) => {
+  navigator.clipboard.writeText(url).then(i => {
+        toast.info('Copy link successful.')
+  }).catch(e=>console.error(e));
 }
 
 const handleSubscribeClick = (index: string) => {
@@ -316,9 +321,6 @@ onMounted(() => {
   <div class="heatmap-scroll">
     <div id="cal-heatmap"></div>
   </div>
-  <!--  <div v-if="error" class="error">-->
-  <!--    Error: {{ error }}-->
-  <!--  </div>-->
   <!-------------------------TOC--------------------------------->
   <div v-show="showContent" class="toc-container">
     <div class="toc-header" @click="isCollapsed = !isCollapsed">
@@ -368,18 +370,20 @@ onMounted(() => {
       {{ index }}  <Badge type="warning" text="subscribe" @click="handleSubscribeClick(index)"/>
     </h2>
     {{ FIELD_CONFIG[index].desc }}
+    
     <div v-for="(entity, entity_index) in today" :key="entity_index">
       <div v-if="entity.timestamp > getYesterdayMidnightTimestamp()">
-        <div class="success-card" @click="handleCardClick(entity.url)">
+        <div class="card">
           <div :class="`card-content ${handleCardCss(entity_index, index)} card-style`">
             <span class="card-header">
-                <h3 :id="`item-${index}-${entity_index}`" class='card-title'>
+                <h3 :id="`item-${index}-${entity_index}`" class='card-title' @click="clickCopyLink(entity.url)">
                 {{ entity.title === '' ? 'Untitled' : entity.title }}
                   <Badge :type="FIELD_CONFIG[index].type" :text="FIELD_CONFIG[index].price"/>
                 </h3>
                 <span class="card-datetime">{{ formatTimestamp(entity.timestamp * 1000) }}</span>
             </span>
-            <div class="message" v-html="entity.summary"/>
+            <div class="message" v-html="entity.summary" @click="handleCardClick(entity.url)"/>
+            <div class="message" v-html="entity.translate" @click="handleCardClick(entity.url)"/>
           </div>
         </div>
       </div>
@@ -423,18 +427,18 @@ onMounted(() => {
   text-align: center;
 }
 
-.success-card {
+.card {
   border-radius: 20px;
   overflow: hidden;
 
-  margin: 30px 0 30px 0;
+  margin: 40px 0 40px 0;
   width: 100%;
   position: relative;
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.success-card:hover {
+.card:hover {
   transform: scale(1.05) rotate(1deg);
   box-shadow: 0 12px 24px -8px gray;
   /**
@@ -506,7 +510,7 @@ onMounted(() => {
   }
 }
 
-.success-card.animate {
+.card.animate {
   animation: pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
