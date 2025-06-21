@@ -1,10 +1,18 @@
-// docs/.vitepress/theme/index.js
 import DefaultTheme from 'vitepress/theme'
-import './assets/custom.css'  // 可选：自定义样式
+import './assets/custom.css'
+import toastification from './toastification'
 
 export default {
     extends: DefaultTheme,
     enhanceApp({app, router, siteData}) {
-        // 在这里可以注册全局组件或添加其他配置
+        // 注册 toastification 插件
+        app.use(toastification)
+        // 可选：添加全局方法
+        app.config.globalProperties.$toast = app.config.globalProperties.$toast || {
+            success: (msg) => app.config.globalProperties.$toast.success(msg),
+            error: (msg) => app.config.globalProperties.$toast.error(msg),
+            info: (msg) => app.config.globalProperties.$toast.info(msg),
+            warning: (msg) => app.config.globalProperties.$toast.warning(msg)
+        }
     }
 }

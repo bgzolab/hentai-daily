@@ -90,3 +90,13 @@ html.dark :is(img, image) {
     color: white;
     box-shadow: 0 12px 24px -8px rgba(183, 33, 255, 0.4);
 }
+
+/**
+ * global message
+ */
+/* .vitepress/theme/styles/toast.css */
+.global-message.Vue-Toastification__toast--info {
+    background-color: white !important;
+    color: #333 !important;
+    border: 1px solid #e0e0e0;
+}

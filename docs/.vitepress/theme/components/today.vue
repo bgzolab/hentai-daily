@@ -2,6 +2,7 @@
 import {ref, onMounted, computed, reactive} from 'vue'
 import CalHeatmap from 'cal-heatmap';
 import 'cal-heatmap/cal-heatmap.css';
+import { useToast } from 'vue-toastification'
 
 /**
  * Response Meta
@@ -37,11 +38,16 @@ const FIELD_CONFIG = {
 const data = ref<hentaiAPI>(null)
 const loading = ref(false)
 const error = ref(null)
+// 日期
 const currentDate = ref('')
+// 目录限制
 const tocCountLimit = 5
+const showContent = ref(true)
 // 目录配置
 const isCollapsed = ref(true)
 const showAllItems = reactive<Record<string, boolean>>({})
+// 消息通知
+const toast = useToast()
 
 
 /**
@@ -89,7 +95,17 @@ const fetchData = async () => {
     })
 
     if (!response.ok) {
+      showContent.value = false
+      data.value = {} as hentaiAPI
+      // error route
+      if (404 == response.status){
+        toast.info("It seems not exist for today. Please check other days")
+      } else {
+        toast.error(`Except resonse with: ${response.status}, please contact with admin`)
+      }
       throw new Error(`HTTP error! status: ${response.status}`)
+    }else{
+      showContent.value = true
     }
 
     const result = await response.json()
@@ -173,6 +189,15 @@ const toggleItemsVisibility = (index: string) => {
   showAllItems[index] = !showAllItems[index]
 }
 
+const refreshToday = (timestamp?: number) => {
+  if (timestamp){
+    currentDate.value = getCurrentDate(new Date(timestamp))
+  } else {
+    currentDate.value = getCurrentDate(new Date())
+  }
+  fetchData()
+}
+
 // 组件挂载时设置当前日期
 onMounted(() => {
   const cal = new CalHeatmap();
@@ -202,11 +227,14 @@ onMounted(() => {
 
   cal.on('click', (event, timestamp, value) => {
     console.log('click' + new Date(timestamp).toLocaleDateString());
-    currentDate.value = getCurrentDate(new Date(timestamp))
-    fetchData()
+    if (timestamp > new Date().getTime()){
+      toast.info("The future is yours. Check it in few days latter.")
+    }else{
+      refreshToday(timestamp)
+    }
   });
-  currentDate.value = getCurrentDate(new Date())
-  fetchData()
+
+  refreshToday()
 })
 
 </script>
@@ -220,11 +248,11 @@ onMounted(() => {
   <div class="heatmap-scroll">
     <div id="cal-heatmap"></div>
   </div>
-  <div v-if="error" class="error">
-    Error: {{ error }}
-  </div>
+<!--  <div v-if="error" class="error">-->
+<!--    Error: {{ error }}-->
+<!--  </div>-->
   <!-------------------------TOC--------------------------------->
-  <div class="toc-container">
+  <div v-show="showContent" class="toc-container">
     <div class="toc-header" @click="isCollapsed = !isCollapsed">
       <h2>Table of Contents</h2>
       <span class="collapse-icon">

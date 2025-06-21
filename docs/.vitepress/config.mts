@@ -84,6 +84,9 @@ export default defineConfig({
     lastUpdated: true,
 
     vite: {
+        ssr: {
+            noExternal: ['vue-toastification']
+        },
         server: {
             proxy: {
                 // 测试
