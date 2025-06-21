@@ -2,9 +2,9 @@
 [//]: # ()
 [//]: # (The GitHub Action was set on 5:00am UTC+8:00. So if you reach website on)
 
-## Q: Which source this site reach?
+## Q: Which sources this site reached?
 
-As [changelog](changelog.md#20230613-release-prototype-with-jekyll-) saied, basically included:
+As [changelog](changelog.md#_2023-06-13-release-prototype-with-jekyll) saied, basically included:
 
 1. https://www.dlsite.com
 2. https://www.4gamers.com.tw
@@ -14,7 +14,7 @@ As [changelog](changelog.md#20230613-release-prototype-with-jekyll-) saied, basi
 6. https://www.tiangal.com
 7. https://www.south-plus.net
 
-But something happened(admin was arrested), so some website like https://www.south-plus.net was no longer providered the Chinese version for galgame.
+But something happened(such as admin was arrested), so some website like https://www.south-plus.net was no longer providered the Chinese version for galgame.
 
 ## Q: Why the resources card get 404 or error page?
 

@@ -1,15 +1,4 @@
-The website was originally created for this purpose.
-
-You could discover on: https://github.com/bGZo/hentai-daily/tree/vitepress/api/feeds
-
-Expect content on Today, now we provided following RSS address without full-text: 
-
-## API using on today
-
-- Address: `https://raw.githubusercontent.com/bGZo/hentai-daily/refs/heads/vitepress/api/`
-- Route: `/archives/${year}/${month}/${day}.json`
-- Method: `GET`
-- **NOTE**: The timezone of response is GMT, format it whatever you want
+The website was originally created for this purpose. Except content on Today, now we provided following RSS address without full-text: 
 
 ## 名器之家 [^why_mingqizhijia]
 
@@ -33,3 +22,12 @@ https://raw.githubusercontent.com/bGZo/hentai-daily/refs/heads/vitepress/api/fee
 ```
 
 [^why_4gamers]: RSSHUB 429 no response.
+
+More feed could be discovered on: https://github.com/bGZo/hentai-daily/tree/vitepress/api/feeds
+
+## API using on today
+
+- Address: `https://raw.githubusercontent.com/bGZo/hentai-daily/refs/heads/vitepress/api/`
+- Route: `/archives/${year}/${month}/${day}.json`
+- Method: `GET`
+- **NOTE**: The timezone of response is GMT, format it whatever you want
