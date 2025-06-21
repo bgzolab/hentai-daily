@@ -8,7 +8,7 @@
     "vue3-calendar-heatmap": "^2.0.5"
   },
   "scripts": {
-    "docs:dev": " concurrently \"vitepress dev docs\" \"live-server --port=8080\"",
+    "docs:dev": "concurrently 'vitepress dev docs' 'live-server --port=8080'",
     "docs:build": "vitepress build docs && npm run copy-files",
     "docs:preview": "vitepress preview docs",
     "copy-files": "cp -r ./api ./docs/.vitepress/dist/"
