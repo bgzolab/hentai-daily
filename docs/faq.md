@@ -1,20 +1,30 @@
-[//]: # (## Q: Why get 404?)
-[//]: # ()
-[//]: # (The GitHub Action was set on 5:00am UTC+8:00. So if you reach website on)
+## Q: When daily paper refreshed?
+
+The GitHub Action was set at 5:00 a.m. UTC+8:00. [^github-action]
+
+[^github-action]: https://github.com/bGZo/hentai-daily/blob/f6b12f8517c4b96a5c2aff772e8f2cc88fc36dc7/.github/workflows/sync.yml#L8
+
+So if you reached website before the job running, you only could browse the yestoday info.
 
 ## Q: Which sources this site reached?
 
 As [changelog](changelog.md#_2023-06-13-release-prototype-with-jekyll) saied, basically included:
 
-1. https://www.dlsite.com
-2. https://www.4gamers.com.tw
-3. https://mingqiceping.com
-4. https://blog.reimu.net
-5. https://gmgard.com
-6. https://www.tiangal.com
-7. https://www.south-plus.net
+1. https://www.4gamers.com.tw
+2. https://mingqiceping.com
+3. https://blog.reimu.net
+4. https://gmgard.com
+5. https://www.acg.gy
+5. https://www.tiangal.com
+6. https://www.south-plus.net
 
-But something happened(such as admin was arrested), so some website like https://www.south-plus.net was no longer providered the Chinese version for galgame.
+And fetch sale ranking on https://www.dlsite.com.
+
+::: tip
+A more and more sad thing is, the website above isn't always accessible, because something could be happened(like admin was arrested). Especially like https://www.south-plus.net / https://bbs.drdian.net, which was no longer provided the Chinese version for galgame. I miss them very much.
+
+So be kindful as soon as possible. Wish you could have fun here. That's my pleasure.
+:::
 
 ## Q: Why the resources card get 404 or error page?
 
