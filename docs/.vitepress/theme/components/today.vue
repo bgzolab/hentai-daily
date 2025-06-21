@@ -5,7 +5,7 @@ import 'cal-heatmap/cal-heatmap.css';
 import {useToast} from 'vue-toastification'
 import Tooltip from 'cal-heatmap/plugins/Tooltip';
 import {useData} from "vitepress";
-import type {OptionsType} from "cal-heatmap/src/options/Options";
+import {handleInput} from "concurrently/dist/src/defaults";
 
 /**
  * Response Meta
@@ -27,11 +27,41 @@ interface hentaiAPI {
 
 // 定义字段映射配置
 const FIELD_CONFIG = {
-  'Resources': {price: 'FREE', type: 'tip', ranking: false, desc: ""},
-  'News': {price: 'FREE', type: 'tip', ranking: false, desc: ""},
-  'DLsite Game Ranking': {price: 'PAID', type: 'danger', ranking: true, desc: ""},
-  'DLsite Voice Ranking': {price: 'PAID', type: 'danger', ranking: true, desc: ""},
-  'DLsite Comic Ranking': {price: 'PAID', type: 'danger', ranking: true, desc: ""},
+  'Resources': {
+    price: 'FREE',
+    type: 'tip',
+    ranking: false,
+    desc: "",
+    rss: 'https://raw.githubusercontent.com/bGZo/hentai-daily/refs/heads/vitepress/api/feeds/resources.xml'
+  },
+  'News': {
+    price: 'FREE',
+    type: 'tip',
+    ranking: false,
+    desc: "",
+    rss: 'https://raw.githubusercontent.com/bGZo/hentai-daily/refs/heads/vitepress/api/feeds/news.xml'
+  },
+  'DLsite Game Ranking': {
+    price: 'PAID',
+    type: 'danger',
+    ranking: true,
+    desc: "",
+    rss: 'https://raw.githubusercontent.com/bGZo/hentai-daily/refs/heads/vitepress/api/feeds/dlsite-game-ranking'
+  },
+  'DLsite Voice Ranking': {
+    price: 'PAID',
+    type: 'danger',
+    ranking: true,
+    desc: "",
+    rss: 'https://raw.githubusercontent.com/bGZo/hentai-daily/refs/heads/vitepress/api/feeds/dlsite-voice-ranking.xml'
+  },
+  'DLsite Comic Ranking': {
+    price: 'PAID',
+    type: 'danger',
+    ranking: true,
+    desc: "",
+    rss: 'https://raw.githubusercontent.com/bGZo/hentai-daily/refs/heads/vitepress/api/feeds/dlsite-comic-ranking.xml'
+  },
 } as const;
 
 /**
@@ -53,6 +83,10 @@ const showAllItems = reactive<Record<string, boolean>>({})
 const toast = useToast()
 // 是否是黑暗模式
 const { isDark } = useData()
+// 构建 API URL - 使用相对路径，会被代理转发
+const apiUrl = computed(() => {
+  return `/api/archives/${currentDate.value}.json`
+})
 
 /**
  * 获取昨日凌晨的时间戳（本地时间）
@@ -70,11 +104,6 @@ const formatTimestamp = (timestamp: number): string => {
   const date = new Date(timestamp);
   return date.toLocaleString(); // 或者使用更具体的格式化方法
 };
-
-// 构建 API URL - 使用相对路径，会被代理转发
-const apiUrl = computed(() => {
-  return `/api/archives/${currentDate.value}.json`
-})
 
 // 获取当前日期并格式化为 YYYY/MM/DD
 // FIXME: 凌晨怎么办？？？
@@ -129,11 +158,15 @@ const fetchData = async () => {
   }
 }
 
+const handleSubscribeClick = (index: string) => {
+  window.open(FIELD_CONFIG[index].rss, '_blank')
+}
+
 const handleCardClick = (url: string) => {
   // NOTE: open in current tab
   // window.location.href = url
-  window.open(url, '_blank')
   // NOTE: open new tab
+  window.open(url, '_blank')
 }
 
 const handleCardCss = (entity_index: number, index: string) => {
@@ -332,7 +365,7 @@ onMounted(() => {
   <!--------------------------Content-------------------------------->
   <div v-for="(today, index) in data" :key="`today-${index}-${filterToday(today).length}`">
     <h2 class="content-title" v-if="filterToday(today).length > 0" :id="`section-${index}`">
-      {{ index }}
+      {{ index }}  <Badge type="warning" text="subscribe" @click="handleSubscribeClick(index)"/>
     </h2>
     {{ FIELD_CONFIG[index].desc }}
     <div v-for="(entity, entity_index) in today" :key="entity_index">
