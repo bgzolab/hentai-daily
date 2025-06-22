@@ -15,6 +15,7 @@ from feedgen.feed import FeedGenerator
 
 from common.strUtils import *
 from output import output_rss_feed, get_time_from_timestamp_offset_gmt
+from sources.bahamut import get_bahamut_article_from_author
 from sources.dlsite import get_dlsite_news
 from template import TEMPLATE_CONTENT_PARENT, TEMPLATE_CONTENT_CHILD, TEMPLATE_POST
 from sources.mingqiceping import get_mingqiceping_post
@@ -255,6 +256,14 @@ if __name__ == '__main__':
         'DLsite Comic Ranking',
         get_dlsite_comic_ranking_with_limit(DLSITE_LIMIT),
         None)
+
+    bahamut_author_list = ['a1102kevin']
+    for author in bahamut_author_list:
+        rss_content_dict = add_sources(
+            rss_content_dict,
+            'News',
+            get_bahamut_article_from_author(author),
+            "bahamut-{}".format(author))
 
     rss_content_dict = sort_content_dict(rss_content_dict)
 
