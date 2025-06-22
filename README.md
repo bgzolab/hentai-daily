@@ -12,9 +12,7 @@ Hentai news all in one. Support RSS subscribe.
 
 ## Contribute
 
-
 ```shell
 npm install
 npm run docs:dev 
-npx tailwindcss -i ./assets/css/custom.css -o ./assets/css/output.css --watch
 ```
