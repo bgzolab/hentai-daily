@@ -7,6 +7,10 @@ on:
   schedule:
     - cron:  '0 21 * * *'
     # 东八区每天凌晨5点
+  push:
+    branches:
+      # 开发分支验证路由
+      - 'vitepress-dev'
 
 jobs:
   sync:
