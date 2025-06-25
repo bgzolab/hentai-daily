@@ -1,6 +1,7 @@
 import DefaultTheme from 'vitepress/theme'
 import './assets/custom.css'
 import toastification from './toastification'
+import googleAnalytics from 'vitepress-plugin-google-analytics'
 
 export default {
     extends: DefaultTheme,
@@ -13,6 +14,11 @@ export default {
             error: (msg) => app.config.globalProperties.$toast.error(msg),
             info: (msg) => app.config.globalProperties.$toast.info(msg),
             warning: (msg) => app.config.globalProperties.$toast.warning(msg)
-        }
+        },
+        // google analyse
+        googleAnalytics({
+            id: 'G-E5GDS1JNWM',
+        })
+
     }
 }

@@ -18,6 +18,7 @@
     "http-server": "^14.1.1",
     "markdown-it-footnote": "^4.0.0",
     "markdown-it-task-lists": "^2.1.1",
+    "vitepress-plugin-google-analytics": "^1.0.2",
     "vue-toastification": "^2.0.0-rc.5"
   }
 }
