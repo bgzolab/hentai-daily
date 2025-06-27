@@ -257,15 +257,7 @@ if __name__ == '__main__':
         get_dlsite_comic_ranking_with_limit(DLSITE_LIMIT),
         None)
 
-    bahamut_author_list = ['a1102kevin']
-    for author in bahamut_author_list:
-        rss_content_dict = add_sources(
-            rss_content_dict,
-            'News',
-            get_bahamut_article_from_author(author),
-            "bahamut-{}".format(author))
-
-    rss_content_dict = sort_content_dict(rss_content_dict)
+        rss_content_dict = sort_content_dict(rss_content_dict)
 
     output_archive(rss_content_dict, archive_filename)
     # output_content_within_day(rss_content_dict, start, interval_days, target_filename)
