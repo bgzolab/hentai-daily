@@ -257,7 +257,7 @@ if __name__ == '__main__':
         get_dlsite_comic_ranking_with_limit(DLSITE_LIMIT),
         None)
 
-        rss_content_dict = sort_content_dict(rss_content_dict)
+    rss_content_dict = sort_content_dict(rss_content_dict)
 
     output_archive(rss_content_dict, archive_filename)
     # output_content_within_day(rss_content_dict, start, interval_days, target_filename)
