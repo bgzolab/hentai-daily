@@ -54,13 +54,13 @@ export default defineConfig({
                     {
                         text: '关于',
                         items: [
-                            {text: '日志', link: '/zh-cn/changelog'},
+                            {text: '更新日志', link: '/zh-cn/changelog'},
                             {text: '问答', link: '/zh-cn/faq'},
                         ]
                     }
                 ],
                 footer: {
-                    message: '项目有用吗? 给我个 <a href="https://github.com/bGZo/hentai-daily">Github</a> 的 ⭐ 鼓励一下我吧～',
+                    message: '项目有用吗? 有用的话请考虑给我个 <a href="https://github.com/bGZo/hentai-daily">Github</a> 的 ⭐ 鼓励一下我吧～',
                     copyright: 'Copyright © 2023-present 菜就多練練',
                 },
             },
