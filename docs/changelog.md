@@ -11,6 +11,15 @@ Wants more custom sources support? Welcome to create any [issue](https://github.
   - [ ] Translate 
 - [ ] n8n replace?
 
+## 2025.08.09 `i8n` for Chinese
+
+Translate the main documents to Chinese, except the today component.
+
+## 2025.06.20 Publish to commun
+
+1. https://bgm.tv/group/topic/427051
+2. https://www.v2ex.com/t/1140027
+
 
 ##  2025.06.15 Rewrite with [VitePress](https://github.com/vuejs/vitepress) #Developing
 
@@ -20,7 +29,7 @@ Favicon & logo from meme created by [@猛禽bot](https://weibo.com/n/%E7%8C%9B%E
 
 Old site had archived on https://github.com/bGZo/hentai-daily/tree/v1.0
 
-## 2024.01.21 ~ 2024.11.23 Project archived
+## 2024.01.21 ~ 2024.11.23 Project archivedc
 
 Archived due to using [telegram RSS bot](https://github.com/Rongronggg9/RSS-to-Telegram-Bot). But I realised this is a black hell when all messages messed up. I have no time to read anyone.
 

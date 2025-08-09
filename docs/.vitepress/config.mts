@@ -5,26 +5,11 @@ import footnote from 'markdown-it-footnote'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-    title: "Hentai Daily",
+
     description: "Hentai contents combined with multi sources",
     themeConfig: {
-        // https://vitepress.dev/reference/default-theme-config
-        nav: [
-            {text: 'Home', link: '/'},
-            {text: 'Today', link: '/today'},
-            {text: 'API', link: '/rss'},
-            {
-                text: 'About',
-                items: [
-                    {text: 'Changelog', link: '/changelog'},
-                    {text: 'Q&A', link: '/faq'},
-                ]
-            }
-        ],
         socialLinks: [
             {icon: 'github', link: 'https://github.com/bGZo/hentai-daily'},
-            {icon: 'mastodon', link: 'https://mastodon.social/@bgzo'},
-            {icon: 'bluesky', link: 'https://bsky.app/profile/bgzo.bsky.social'},
         ],
         footer: {
             message: 'Found this useful? Give me a ⭐ on <a href="https://github.com/bGZo/hentai-daily">Github</a>.',
@@ -32,6 +17,53 @@ export default defineConfig({
         },
         search: {
             // provider: 'local'
+        }
+    },
+    locales: {
+        root: {
+            title: "Hentai Daily",
+            label: 'English',
+            lang: 'en',
+            link: '/',
+            themeConfig: {
+                // https://vitepress.dev/reference/default-theme-config
+                nav: [
+                    {text: 'Home', link: '/'},
+                    {text: 'Today', link: '/today'},
+                    {text: 'API', link: '/rss'},
+                    {
+                        text: 'About',
+                        items: [
+                            {text: 'Changelog', link: '/changelog'},
+                            {text: 'Q&A', link: '/faq'},
+                        ]
+                    }
+                ]
+            },
+        },
+        'zh-cn': {
+            title: "绅士日报",
+            label: '简体中文',
+            lang: 'zh-CN',
+            link: '/zh-cn/',
+            themeConfig: {
+                nav: [
+                    {text: '首页', link: '/zh-cn/'},
+                    {text: '日报', link: '/zh-cn/today'},
+                    {text: 'API', link: '/zh-cn/rss'},
+                    {
+                        text: '关于',
+                        items: [
+                            {text: '日志', link: '/zh-cn/changelog'},
+                            {text: '问答', link: '/zh-cn/faq'},
+                        ]
+                    }
+                ],
+                footer: {
+                    message: '项目有用吗? 给我个 <a href="https://github.com/bGZo/hentai-daily">Github</a> 的 ⭐ 鼓励一下我吧～',
+                    copyright: 'Copyright © 2023-present 菜就多練練',
+                },
+            },
         }
     },
 

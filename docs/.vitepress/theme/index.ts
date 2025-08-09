@@ -2,9 +2,11 @@ import DefaultTheme from 'vitepress/theme'
 import './assets/custom.css'
 import toastification from './toastification'
 import googleAnalytics from 'vitepress-plugin-google-analytics'
+import layout from './layout.vue'
 
 export default {
     extends: DefaultTheme,
+    layout,
     enhanceApp({app, router, siteData}) {
         // 注册 toastification 插件
         app.use(toastification)
