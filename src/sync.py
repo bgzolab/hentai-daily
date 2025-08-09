@@ -219,43 +219,72 @@ if __name__ == '__main__':
     init_rss_feed_dict(config_rss_opml)
     rss_content_dict = get_rss_content_dict()
 
-    rss_content_dict = add_sources(
-        rss_content_dict,
-        'News',
-        get_4gamers_info_by_number(9),
-        "4gamers"
-    )
+    try:
+        rss_content_dict = add_sources(
+            rss_content_dict,
+            'News',
+            get_4gamers_info_by_number(9),
+            "4gamers"
+        )
+    except Exception as e:
+        logging.warning(f"跳过4gamers: {e}")
 
-    rss_content_dict = add_sources(
-        rss_content_dict,
-        'News',
-        get_mingqiceping_post(),
-        "mingqiceping"
-    )
+    try:
+        rss_content_dict = add_sources(
+            rss_content_dict,
+            'News',
+            get_mingqiceping_post(),
+            "mingqiceping"
+        )
+    except Exception as e:
+        logging.warning(f"跳过mingqiceping: {e}")
 
-    rss_content_dict = add_sources(
-        rss_content_dict,
-        'News',
-        get_dlsite_news(DLSITE_LIMIT),
-        "dlsite-news")
+    try:
+        rss_content_dict = add_sources(
+            rss_content_dict,
+            'News',
+            get_dlsite_news(DLSITE_LIMIT),
+            "dlsite-news")
+    except Exception as e:
+        logging.warning(f"跳过dlsite-news: {e}")
 
-    rss_content_dict = add_sources(
-        rss_content_dict,
-        'DLsite Game Ranking',
-        get_dlsite_game_ranking_with_limit(DLSITE_LIMIT),
-        None)
+    try:
+        rss_content_dict = add_sources(
+            rss_content_dict,
+            'DLsite Game Ranking',
+            get_dlsite_game_ranking_with_limit(DLSITE_LIMIT),
+            None)
+    except Exception as e:
+        logging.warning(f"跳过DLsite Game Ranking: {e}")
 
-    rss_content_dict = add_sources(
-        rss_content_dict,
-        'DLsite Voice Ranking',
-        get_dlsite_voice_ranking_with_limit(DLSITE_LIMIT),
-        None)
+    try:
+        rss_content_dict = add_sources(
+            rss_content_dict,
+            'DLsite Voice Ranking',
+            get_dlsite_voice_ranking_with_limit(DLSITE_LIMIT),
+            None)
+    except Exception as e:
+        logging.warning(f"跳过DLsite Voice Ranking: {e}")
 
-    rss_content_dict = add_sources(
-        rss_content_dict,
-        'DLsite Comic Ranking',
-        get_dlsite_comic_ranking_with_limit(DLSITE_LIMIT),
-        None)
+    try:
+        rss_content_dict = add_sources(
+            rss_content_dict,
+            'DLsite Comic Ranking',
+            get_dlsite_comic_ranking_with_limit(DLSITE_LIMIT),
+            None)
+    except Exception as e:
+        logging.warning(f"跳过DLsite Comic Ranking: {e}")
+
+    bahamut_author_list = ['a1102kevin']
+    for author in bahamut_author_list:
+        try:
+            rss_content_dict = add_sources(
+                rss_content_dict,
+                'News',
+                get_bahamut_article_from_author(author),
+                "bahamut-{}".format(author))
+        except Exception as e:
+            logging.warning(f"跳过bahamut-{author}: {e}")
 
     rss_content_dict = sort_content_dict(rss_content_dict)
 
