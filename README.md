@@ -36,7 +36,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/bGZo/playground">
-    <img src="https://raw.githack.com/bGZo/assets/dev/2026/20260214095756842.webp" alt="Logo">
+    <img src="https://raw.githack.com/bGZo/assets/dev/2026/20260214095756842.webp" alt="Logo is from: https://siddhantkhare.com/writing/ai-fatigue-is-real">
   </a>
 <h3 align="center">Playground</h3>
   <p align="center">
