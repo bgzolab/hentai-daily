@@ -44,6 +44,8 @@ venv/
 .env.development
 .env.test
 .env.production
+.pytest_cache/
+.ruff_cache/
 
 
 # Logs
