@@ -1,0 +1,15 @@
+{
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug your file",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/{your-file}",
+      "envFile": "${workspaceFolder}/.env",
+      "console": "integratedTerminal",
+      "args": "{your-args}"
+    }
+  ]
+}
