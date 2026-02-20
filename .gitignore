@@ -2,8 +2,14 @@
 # Visual Studio Code
 # .vscode/
 .history/
+# debug
+__debug_bin*
 
 
+# OS generated files
+# Windows
+ehthumbs.db
+Desktop.ini
 # MacOS
 .DS_Store
 
