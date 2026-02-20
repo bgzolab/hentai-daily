@@ -10,6 +10,14 @@
 ## 项目结构
 
 ```shell
+.
+├── .github
+│   ├── agents # 智能体，copilot 左下角可选择
+│   ├── copilot-instructions.md # 项目全局生效
+│   ├── instructions # 项目默认加载指令
+│   ├── ISSUE_TEMPLATE # 项目 issue 模板
+│   ├── prompts # 使用slash 调用的预制提示词
+│   └── workflows # GitHub CI/CD
 ├── docs # 项目文档，包含项目的设计文档、架构文档、技术栈规范、实施计划等
 │   ├── implementation-plans # 项目的实施计划，每次修BUG、新增改能全部记录在这里，包含每个功能的分步指令和验证正确性的测试
 │   │   ├── feature-a.md # feature-a 的实施计划，包含分步指令和验证正确性的测试
