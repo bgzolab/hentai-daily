@@ -69,29 +69,29 @@ When the task is to generate any report, implementation plan, architecture descr
 - **Output path**:
   - If the user explicitly specifies a target path or folder, use that path exactly.
   - Otherwise, default to `/docs/{category}/` (create the folder automatically if it does not exist).
-- **Main categories** (lowercase kebab-case):
-  | Category | Purpose | Mode |
-  | ---------------------- | -------------------------------------------------------------------------------------------------------------------------- | ------------------------- |
-  | `implementation-plans` | Implementation plans, technical execution plans | Always new file |
-  | `research` | Technical research, competitor analysis, POC results | Mostly new files |
-  | `reviews` | Code reviews, retrospective notes, post-mortems | Always new file |
-  | `memories` | Persistent project memory: architecture evolution, roadmap, key decisions, lessons learned, tech selection, knowledge base | Living Document + history |
+
+- **Main categories**:
+  - `implementation-plans`: Implementation plans, technical execution plans → Always new dated file
+  - `research`: Technical research, competitor analysis, POC results → Mostly new dated files
+  - `reviews`: Code reviews, retrospective notes, post-mortems → Always new dated file
+  - `memories`: Persistent project memory (Evergreen / Living Documents only): architecture evolution, roadmap, key decisions, lessons learned, tech selection, knowledge base → Single source of truth (suitable for full LLM ingestion)
 
 - **File naming & organization rules**:
-  **1. implementation-plans / research / reviews** (new content，specific events or history):
-  - Use naming convention: `[YYYYMMDD]-[purpose]-[component].md`
-  - Purpose prefixes: `upgrade|refactor|feature|data|infrastructure|process|architecture|design`
-  - Example: `20260221-upgrade-system-command.md`, `20260221-feature-auth-module.md`
-  - Adjust according to actual needs while keeping readability and time traceability.
-  - File must be valid Markdown with proper front matter structure
-
-  **2. memories** (evolution & living documents):
-  - **Long live / Greenever Document** (recommended for architecture, roadmap, etc. — single source of truth):
-    - `architecture.md`
-    - `roadmap.md`
-    - `key-decisions.md`
-    - `tech-stack.md`
-    - ...
+  - **implementation-plans / research / reviews** (specific events or history):
+    - Format: `YYYYMMDD-[purpose]-[component].md`
+    - Purpose prefixes (optional but recommended): `upgrade|refactor|feature|data|infrastructure|process|architecture|design|research|review`
+    - Example: `20260221-feature-auth-module.md`, `20260221-upgrade-system-command.md`
+    - Adjust according to actual needs while keeping readability and time traceability.
+    - File must be valid Markdown with proper YAML front-matter.
+  - **memories** (Evergreen / Living Documents only):
+    - Use fixed, clean filenames (single source of truth):
+      - `architecture.md`
+      - `roadmap.md`
+      - `key-decisions.md`
+      - `tech-stack.md`
+      - `lessons-learned.md`
+      - ...
+    - These files are designed to be fully loaded into LLM context at any time. When updating, always use surgical minimal edits.
 
 - **Additional requirements**:
   - Always include proper YAML front-matter (follows `markdown.instructions.md` rules).
