@@ -84,3 +84,8 @@ Gopkg.lock
 *.rvmrc
 *.ruby-version
 *.ruby-gemset
+
+
+# Copilot
+.github/.bak/*
+!.github/.bak/.keep

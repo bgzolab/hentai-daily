@@ -88,6 +88,17 @@ Merge the `template` branch into your local repository to get started:
 git merge origin/template --allow-unrelated-histories
 ```
 
+> [!NOTE]
+> If you'll use GitHub copilot, make sure to keep `.github/instructions` folder clean and simplest, or it may make context understanding and code generation worse, such as:
+> 
+> `agent`, `instructions` and `prompts` should not conflict each other.
+>  
+> The **priority** of them is:
+> 
+> Personal Instructions > Repository Instructions > Agent > Prompts > Your messages.
+
+
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
