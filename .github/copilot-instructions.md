@@ -64,40 +64,39 @@ In every first response, start with:
 
 When the task is to generate any report, implementation plan, architecture description, roadmap, decision record, research summary, lessons learned, key decision, or other persistent documentation:
 
+- **Strict transparency rule (No black-box operations)**: All actions must be fully transparent and traceable inside the project repository. Absolutely no hidden scripts, silent executions, temporary files in /tmp or any external directories, or automatic deletions after use. Every step (scripts, tool calls, executions) must be created, committed, and documented within the repository so it is permanently auditable.
 - **Must save directly to the local filesystem using tools** — never output only as a code block for manual copy-paste.
-- **Base folder**: `/docs/{category}/` (create the folder automatically if it does not exist)
-
+- **Output path**:
+  - If the user explicitly specifies a target path or folder, use that path exactly.
+  - Otherwise, default to `/docs/{category}/` (create the folder automatically if it does not exist).
 - **Main categories** (lowercase kebab-case):
-
-  | Category              | Purpose                                              | Mode                     |
-  |-----------------------|------------------------------------------------------|--------------------------|
-  | `implementation-plans`| Implementation plans, technical execution plans      | Always new file          |
-  | `memories`            | Persistent project memory: architecture evolution, roadmap, key decisions, lessons learned, tech selection, knowledge base | Living Document + history |
-  | `research`            | Technical research, competitor analysis, POC results | Mostly new files         |
-  | `reviews`             | Code reviews, retrospective notes, post-mortems      | Always new file          |
+  | Category | Purpose | Mode |
+  | ---------------------- | -------------------------------------------------------------------------------------------------------------------------- | ------------------------- |
+  | `implementation-plans` | Implementation plans, technical execution plans | Always new file |
+  | `research` | Technical research, competitor analysis, POC results | Mostly new files |
+  | `reviews` | Code reviews, retrospective notes, post-mortems | Always new file |
+  | `memories` | Persistent project memory: architecture evolution, roadmap, key decisions, lessons learned, tech selection, knowledge base | Living Document + history |
 
 - **File naming & organization rules**:
-
-  **1. implementation-plans / research / reviews** (new content only):
-  - Format: `{category}-YYYYMMDD-kebab-case-short-title.md`
-  - Example: `implementation-plans-20260221-user-login-system.md`
+  **1. implementation-plans / research / reviews** (new content，specific events or history):
+  - Use naming convention: `[YYYYMMDD]-[purpose]-[component].md`
+  - Purpose prefixes: `upgrade|refactor|feature|data|infrastructure|process|architecture|design`
+  - Example: `20260221-upgrade-system-command.md`, `20260221-feature-auth-module.md`
+  - Adjust according to actual needs while keeping readability and time traceability.
+  - File must be valid Markdown with proper front matter structure
 
   **2. memories** (evolution & living documents):
-  - **Living Document mode** (recommended for architecture, roadmap, etc. — single source of truth):
+  - **Long live / Greenever Document** (recommended for architecture, roadmap, etc. — single source of truth):
     - `architecture.md`
     - `roadmap.md`
     - `key-decisions.md`
     - `tech-stack.md`
-  - **Time-series mode** (for specific events or history):
-    - `YYYYMMDD-topic-short-title.md` or `memories-YYYYMMDD-topic.md`
-    - Example: `20260221-choose-rust-over-go.md` or `architecture-20260221-v2.md`
-  - Naming is flexible — adjust according to actual needs while keeping readability and time traceability.
+    - ...
 
 - **Additional requirements**:
   - Always include proper YAML front-matter (follows `markdown.instructions.md` rules).
   - When updating a Living Document, use surgical minimal edits.
   - This rule has the same priority as other Core Directives.
-
 
 ## Build & Test Commands
 
