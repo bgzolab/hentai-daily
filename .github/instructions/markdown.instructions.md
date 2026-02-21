@@ -35,7 +35,7 @@ Follow these guidelines for formatting and structuring your markdown content:
 Ensure compliance with the following validation requirements:
 
 - **Front Matter**: Include the following fields in the YAML front matter:
-  - `ai_note`: Indicate if AI was used in the creation of the post.
+  - `ai`: Indicate if AI was used in the creation of the post.
   - `title`: The title of the post.
   - `aliases`: Alternative titles or keywords for the post.
   - `created`: The creation date of the post in YYYY-MM-DDTHH:MM:SS format (e.g., 2026-02-10T06:45:53).
