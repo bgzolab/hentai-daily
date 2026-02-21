@@ -87,5 +87,7 @@ Gopkg.lock
 
 
 # Copilot
-.github/.bak/*
 !.github/.bak/.keep
+!.github/.bak/instructions-lang-default-disable/*
+.github/.bak/*.md
+
