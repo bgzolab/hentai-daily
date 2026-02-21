@@ -90,4 +90,4 @@ Gopkg.lock
 !.github/.bak/.keep
 !.github/.bak/instructions-lang-default-disable/*
 .github/.bak/*.md
-
+.github/.bak/deprecated
