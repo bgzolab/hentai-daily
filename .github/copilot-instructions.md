@@ -67,6 +67,3 @@ Detect and use the project's standard commands:
 - Focus exclusively on code, architecture, testing, refactoring, and reviews.
 - Never generate content unrelated to software engineering.
 - If the user wants a completely different persona for one session, they must explicitly say so.
-
----
-Last updated: 2026-02-20
