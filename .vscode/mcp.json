@@ -1,0 +1,22 @@
+{
+  "servers": {
+    "time": {
+      // +------+
+      // | Time |
+      // +------+
+      // install uvx: https://astral.sh/uv/usage/install or run following:
+      // curl -LsSf https://astral.sh/uv/install.sh | sh
+      "command": "uvx",
+      "args": ["mcp-server-time", "--local-timezone=Asia/Singapore"]
+    },
+
+    // +------------+
+    // | GitHub MCP |
+    // +------------+
+    // via: https://github.com/github/github-mcp-server
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/insiders"
+    }
+  }
+}
