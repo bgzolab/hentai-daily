@@ -3,13 +3,17 @@ title: Changelog
 outline: deep
 ---
 
-## What's Next
+## 2026.03.04
 
-Wants more custom sources support? Welcome to create any [issue](https://github.com/bGZo/hentai-daily/issues/new), or choose contribute it.
+Actually, there's nothing new this time, just wanted to vent.
 
-- [ ] Custom functions
-  - [ ] Translate 
-- [ ] n8n replace?
+Last week, I was checking my bookmarks on TG and found that LMYS's Telegram channel @lmys8 was gone. I panicked, thinking it had become private. Then I found its new channel @lmys88, and realized that hundreds of thousands of channels were simply inaccessible.
+
+What can I say? This is probably the norm for Web2. One of the biggest problems with centralization is legality and compliance. Because I haven't had much free time lately month, I haven't been looking at much content, including this project. I miss my school holidays, when I could freely immerse myself in these communities for a whole month, lost in my own world, and always have home-cooked meals whenever I was hungry, day after day.
+
+That's getting off-topic. Actually, I think if I had extracted the links last year, I might have been able to avoid this situation to some extent. But I didn't want to do that because it would reduce traffic to the origin server, which is almost the most fatal problem for an independent website. Then there's the issue of link explosions. If I extracted the links and put them on GitHub, wouldn't that make the link explosions even more likely?
+
+I don't know if writing this down counts as an answer?
 
 ## 2025.08.09 `i8n` for Chinese
 
