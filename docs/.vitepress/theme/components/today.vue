@@ -77,8 +77,6 @@ const tocCountLimit = 5
 const showContent = ref(true)
 // 目录配置
 const showAllItems = reactive<Record<string, boolean>>({})
-// 悬停的卡片标识
-const hoveredCardId = ref<string | null>(null)
 // 消息通知
 const toast = useToast()
 // 是否是黑暗模式
@@ -232,18 +230,6 @@ const toggleItemsVisibility = (index: string) => {
   showAllItems[index] = !showAllItems[index]
 }
 
-const getCardId = (index: string, entity_index: number): string => {
-  return `card-${index}-${entity_index}`
-}
-
-const onCardHover = (cardId: string) => {
-  hoveredCardId.value = cardId
-}
-
-const onCardLeave = () => {
-  hoveredCardId.value = null
-}
-
 const refreshToday = (timestamp?: number) => {
   if (timestamp) {
     currentDate.value = getCurrentDate(new Date(timestamp))
@@ -350,31 +336,8 @@ onMounted(() => {
         <div v-for="(entity, entity_index) in today" :key="entity_index">
           <div v-if="entity.timestamp > getYesterdayMidnightTimestamp()">
             <div 
-              class="card" 
-              @mouseenter="onCardHover(getCardId(index, entity_index))"
-              @mouseleave="onCardLeave()"
+              class="card"
             >
-              <!-- 左侧操作按钮面板 -->
-              <div 
-                class="card-actions" 
-                :class="{ 'show': hoveredCardId === getCardId(index, entity_index) }"
-              >
-                <button 
-                  class="action-btn action-open"
-                  :title="'Open Link'"
-                  @click.stop="handleCardClick(entity.url)"
-                >
-                  <span class="icon">↗</span>
-                </button>
-                <button 
-                  class="action-btn action-copy"
-                  :title="'Copy URL'"
-                  @click.stop="clickCopyLink(entity.url)"
-                >
-                  <span class="icon">📋</span>
-                </button>
-              </div>
-
               <div :class="`card-content ${handleCardCss(entity_index, index)} card-style`">
                 <span class="card-header">
                     <h3 :id="`item-${index}-${entity_index}`" class='card-title'>
@@ -383,8 +346,29 @@ onMounted(() => {
                     </h3>
                     <span class="card-datetime">{{ formatTimestamp(entity.timestamp * 1000) }}</span>
                 </span>
-                <div class="message" v-html="entity.summary" @click="handleCardClick(entity.url)"/>
-                <div class="message" v-html="entity.translate" @click="handleCardClick(entity.url)"/>
+                <div class="message" v-html="entity.summary"/>
+                <div class="message" v-html="entity.translate"/>
+                
+                <!-- 卡片底部按钮 -->
+                <div class="card-actions">
+                  <button 
+                    class="action-btn action-copy"
+                    title="Copy Link"
+                    @click.stop="clickCopyLink(entity.url)"
+                  >
+                  <svg t="1772717415932" class="icon icon-svg" 
+                  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1622" width="200" height="200"><path d="M931.882 131.882l-103.764-103.764A96 96 0 0 0 760.236 0H416c-53.02 0-96 42.98-96 96v96H160c-53.02 0-96 42.98-96 96v640c0 53.02 42.98 96 96 96h448c53.02 0 96-42.98 96-96v-96h160c53.02 0 96-42.98 96-96V199.764a96 96 0 0 0-28.118-67.882zM596 928H172a12 12 0 0 1-12-12V300a12 12 0 0 1 12-12h148v448c0 53.02 42.98 96 96 96h192v84a12 12 0 0 1-12 12z m256-192H428a12 12 0 0 1-12-12V108a12 12 0 0 1 12-12h212v176c0 26.51 21.49 48 48 48h176v404a12 12 0 0 1-12 12z m12-512h-128V96h19.264c3.182 0 6.234 1.264 8.486 3.514l96.736 96.736a12 12 0 0 1 3.514 8.486V224z" p-id="1623" fill="#8a8a8a"></path></svg>
+
+                  </button>
+                  <button 
+                    class="action-btn action-open"
+                    title="Open Link"
+                    @click.stop="handleCardClick(entity.url)"
+                  >
+                    <svg t="1772716796795" class="icon icon-svg" 
+                    viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6502" width="200" height="200"><path d="M819.2 887.466667H136.533333V204.8h341.333334V68.266667H136.533333a136.533333 136.533333 0 0 0-136.533333 136.533333v682.666667a136.533333 136.533333 0 0 0 136.533333 136.533333h682.666667a136.533333 136.533333 0 0 0 136.533333-136.533333V546.133333h-136.533333v341.333334z" fill="#8a8a8a" p-id="6503"></path><path d="M955.733333 0h-273.066666a68.266667 68.266667 0 0 0 0 136.533333h108.202666L421.2736 506.129067a68.266667 68.266667 0 1 0 96.597333 96.597333L887.466667 233.130667V341.333333a68.266667 68.266667 0 0 0 136.533333 0V68.266667a68.266667 68.266667 0 0 0-68.266667-68.266667z" fill="#8a8a8a" p-id="6504"></path></svg>  
+                </button>
+                </div>
               </div>
             </div>
           </div>
@@ -498,7 +482,7 @@ onMounted(() => {
 
 .card {
   border-radius: 20px;
-  overflow: visible;
+  overflow: hidden;
 
   margin: 40px 0 40px 0;
   width: 100%;
@@ -510,64 +494,61 @@ onMounted(() => {
 .card:hover {
   transform: scale(1.05) rotate(1deg);
   box-shadow: 0 12px 24px -8px gray;
-  /**
-  var(--vp-c-brand-1)
-   */
 }
 
-/* 卡片左侧操作按钮面板 */
+/* 卡片底部操作按钮面板 */
 .card-actions {
-  position: absolute;
-  left: -80px;
-  top: 50%;
-  transform: translateY(-50%) translateX(-10px);
+  position: relative;
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-  opacity: 0;
-  pointer-events: none;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  z-index: 20;
-}
-
-.card-actions.show {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateY(-50%) translateX(0);
+  margin-top: 1.5rem;
 }
 
 .action-btn {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
+  flex: 1;
+  padding: 0.625rem;
   border: none;
+  background: transparent;
+  color: var(--vp-c-text-1);
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  font-size: 20px;
-  background: var(--vp-c-brand-1);
-  color: white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
 }
 
 .action-btn:hover {
-  transform: scale(1.1) rotate(-5deg);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  color: var(--vp-c-brand-1);
 }
 
-.action-btn .icon {
+/* 按钮之间的竖线分隔符 */
+.action-btn:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  width: 1px;
+  height: 20px;
+  background: var(--vp-c-divider);
+}
+
+.icon-svg {
+  width: 20px;
+  height: 20px;
   display: block;
-  line-height: 1;
+}
+
+.icon-svg path {
+  fill: var(--vp-c-text-1);
+  transition: fill 0.2s ease;
+}
+
+.action-btn:hover .icon-svg path {
+  fill: var(--vp-c-brand-1);
 }
 
 .card-content {
   padding: 2rem 1.5rem;
   position: relative;
   height: fit-content;
-  overflow: hidden;
-  border-radius: 20px;
 }
 
 .card-header {
