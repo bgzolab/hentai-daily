@@ -76,7 +76,7 @@ const currentDate = ref('')
 const tocCountLimit = 5
 const showContent = ref(true)
 // 目录配置
-const isCollapsed = ref(true)
+const isCollapsed = ref(false)
 const showAllItems = reactive<Record<string, boolean>>({})
 // 消息通知
 const toast = useToast()
@@ -359,9 +359,6 @@ onMounted(() => {
       <div class="toc-container">
         <div class="toc-header" @click="isCollapsed = !isCollapsed">
           <h2>Table of Contents</h2>
-          <span class="collapse-icon">
-            {{ isCollapsed ? '▶' : '▼' }}
-          </span>
         </div>
         <div class="toc-content"
              :class="{ collapsed: isCollapsed }">
@@ -404,16 +401,7 @@ onMounted(() => {
 <style scoped>
 
 .today-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 32px;
-}
-
-@media (min-width: 1200px) {
-  .today-layout {
-    grid-template-columns: minmax(0, 1fr) 260px;
-    align-items: start;
-  }
+  display: block;
 }
 
 .today-main {
@@ -421,8 +409,19 @@ onMounted(() => {
 }
 
 .toc-aside {
-  display: block;
-  position: relative;
+  display: none;
+}
+
+@media (min-width: 1280px) {
+  .toc-aside {
+    display: block;
+    position: fixed;
+    top: calc(var(--vp-nav-height) + 24px);
+    right: max(150px, calc((100vw - var(--vp-layout-max-width)) / 2 + 200px));
+    width: 256px;
+    max-height: calc(100vh - var(--vp-nav-height) - 120px);
+    z-index: 10;
+  }
 }
 
 .heatmap-scroll {
@@ -567,17 +566,12 @@ onMounted(() => {
 
 /* 目录样式 */
 .toc-container {
+  display: flex;
+  flex-direction: column;
   position: static;
   border-left: 1px solid var(--vp-c-divider);
   padding-left: 16px;
   height: 100%;
-}
-
-@media (min-width: 1200px) {
-  .toc-container {
-    position: sticky;
-    top: calc(var(--vp-nav-height) + 24px);
-  }
 }
 
 .toc-header {
@@ -607,7 +601,7 @@ onMounted(() => {
 }
 
 .toc-content {
-  max-height: calc(100vh - var(--vp-nav-height) - 80px);
+  flex: 1;
   overflow-y: auto;
   transition: all 0.3s ease;
   padding: 0 0 8px 0;
