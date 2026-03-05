@@ -256,6 +256,10 @@ function watchDarkMode(callback) {
 
 function createCalHeatmap(){
   const cal = new CalHeatmap();
+  const startDate = new Date();
+  startDate.setFullYear(startDate.getFullYear() - 1);
+  startDate.setDate(startDate.getDate() + 30);
+  
   cal.paint({
     itemSelector: '#cal-heatmap',
     domain: {
@@ -265,7 +269,7 @@ function createCalHeatmap(){
       type: 'ghDay'
     },
     date: {
-      start: new Date('2025-01-01'),
+      start: startDate,
     },
     data: {
       source: '/api/count.json',
