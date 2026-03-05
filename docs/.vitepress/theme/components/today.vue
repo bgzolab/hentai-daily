@@ -1,65 +1,65 @@
 <script setup lang="ts">
-import {ref, onMounted, computed, reactive} from 'vue'
-import CalHeatmap from 'cal-heatmap';
-import 'cal-heatmap/cal-heatmap.css';
-import {useToast} from 'vue-toastification'
-import Tooltip from 'cal-heatmap/plugins/Tooltip';
-import {useData} from "vitepress";
+import { ref, onMounted, computed, reactive } from "vue";
+import CalHeatmap from "cal-heatmap";
+import "cal-heatmap/cal-heatmap.css";
+import { useToast } from "vue-toastification";
+import Tooltip from "cal-heatmap/plugins/Tooltip";
+import { useData } from "vitepress";
 
 /**
  * Response Meta
  */
 interface rssEntity {
-  title: string,
-  url: string,
-  summary: string,
-  timestamp: number,
+  title: string;
+  url: string;
+  summary: string;
+  timestamp: number;
 }
 
 interface hentaiAPI {
-  'Resources': rssEntity[],
-  'News': rssEntity[],
-  'DLsite Game Ranking': rssEntity[],
-  'DLsite Voice Ranking': rssEntity[],
-  'DLsite Comic Ranking': rssEntity[],
+  Resources: rssEntity[];
+  News: rssEntity[];
+  "DLsite Game Ranking": rssEntity[];
+  "DLsite Voice Ranking": rssEntity[];
+  "DLsite Comic Ranking": rssEntity[];
 }
 
 // 定义字段映射配置
 const FIELD_CONFIG = {
-  'Resources': {
-    price: 'FREE',
-    type: 'tip',
+  Resources: {
+    price: "FREE",
+    type: "tip",
     ranking: false,
     desc: "",
-    rss: 'https://raw.githubusercontent.com/bGZo/hentai-daily/refs/heads/vitepress/api/feeds/resources.xml'
+    rss: "https://raw.githubusercontent.com/bGZo/hentai-daily/refs/heads/vitepress/api/feeds/resources.xml",
   },
-  'News': {
-    price: 'FREE',
-    type: 'tip',
+  News: {
+    price: "FREE",
+    type: "tip",
     ranking: false,
     desc: "",
-    rss: 'https://raw.githubusercontent.com/bGZo/hentai-daily/refs/heads/vitepress/api/feeds/news.xml'
+    rss: "https://raw.githubusercontent.com/bGZo/hentai-daily/refs/heads/vitepress/api/feeds/news.xml",
   },
-  'DLsite Game Ranking': {
-    price: 'PAID',
-    type: 'danger',
+  "DLsite Game Ranking": {
+    price: "PAID",
+    type: "danger",
     ranking: true,
     desc: "",
-    rss: 'https://raw.githubusercontent.com/bGZo/hentai-daily/refs/heads/vitepress/api/feeds/dlsite-game-ranking.xml'
+    rss: "https://raw.githubusercontent.com/bGZo/hentai-daily/refs/heads/vitepress/api/feeds/dlsite-game-ranking.xml",
   },
-  'DLsite Voice Ranking': {
-    price: 'PAID',
-    type: 'danger',
+  "DLsite Voice Ranking": {
+    price: "PAID",
+    type: "danger",
     ranking: true,
     desc: "",
-    rss: 'https://raw.githubusercontent.com/bGZo/hentai-daily/refs/heads/vitepress/api/feeds/dlsite-voice-ranking.xml'
+    rss: "https://raw.githubusercontent.com/bGZo/hentai-daily/refs/heads/vitepress/api/feeds/dlsite-voice-ranking.xml",
   },
-  'DLsite Comic Ranking': {
-    price: 'PAID',
-    type: 'danger',
+  "DLsite Comic Ranking": {
+    price: "PAID",
+    type: "danger",
     ranking: true,
     desc: "",
-    rss: 'https://raw.githubusercontent.com/bGZo/hentai-daily/refs/heads/vitepress/api/feeds/dlsite-comic-ranking.xml'
+    rss: "https://raw.githubusercontent.com/bGZo/hentai-daily/refs/heads/vitepress/api/feeds/dlsite-comic-ranking.xml",
   },
 } as const;
 
@@ -67,24 +67,24 @@ const FIELD_CONFIG = {
  * Fields
  */
 
-const data = ref<hentaiAPI>(null)
-const loading = ref(false)
-const error = ref(null)
+const data = ref<hentaiAPI>(null);
+const loading = ref(false);
+const error = ref(null);
 // 日期
-const currentDate = ref('')
+const currentDate = ref("");
 // 目录限制
-const tocCountLimit = 5
-const showContent = ref(true)
+const tocCountLimit = 5;
+const showContent = ref(true);
 // 目录配置
-const showAllItems = reactive<Record<string, boolean>>({})
+const showAllItems = reactive<Record<string, boolean>>({});
 // 消息通知
-const toast = useToast()
+const toast = useToast();
 // 是否是黑暗模式
-const { isDark } = useData()
+const { isDark } = useData();
 // 构建 API URL - 使用相对路径，会被代理转发
 const apiUrl = computed(() => {
-  return `/api/archives/${currentDate.value}.json`
-})
+  return `/api/archives/${currentDate.value}.json`;
+});
 
 /**
  * 获取昨日凌晨的时间戳（本地时间）
@@ -106,116 +106,122 @@ const formatTimestamp = (timestamp: number): string => {
 // 获取当前日期并格式化为 YYYY/MM/DD
 // FIXME: 凌晨怎么办？？？
 const getCurrentDate = (now: Date) => {
-  const year = now.getFullYear()
-  const month = String(now.getMonth() + 1).padStart(2, '0')
-  const day = String(now.getDate()).padStart(2, '0')
-  return `${year}/${month}/${day}`
-}
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${year}/${month}/${day}`;
+};
 
 const fetchData = async () => {
-  loading.value = true
-  error.value = null
+  loading.value = true;
+  error.value = null;
 
   try {
-    console.log('请求 URL:', apiUrl.value)
+    console.log("请求 URL:", apiUrl.value);
     const response = await fetch(apiUrl.value, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
-      }
-    })
+        "Content-Type": "application/json",
+      },
+    });
 
     if (!response.ok) {
-      showContent.value = false
-      data.value = {} as hentaiAPI
+      showContent.value = false;
+      data.value = {} as hentaiAPI;
       // error route
       if (404 == response.status) {
-        toast.info("It seems not exist for today. Please check other days")
+        toast.info("It seems not exist for today. Please check other days");
       } else {
-        toast.error(`Except resonse with: ${response.status}, please contact with admin`)
+        toast.error(
+          `Except resonse with: ${response.status}, please contact with admin`,
+        );
       }
-      throw new Error(`HTTP error! status: ${response.status}`)
+      throw new Error(`HTTP error! status: ${response.status}`);
     } else {
-      showContent.value = true
+      showContent.value = true;
     }
 
-    const result = await response.json()
+    const result = await response.json();
     // 类型断言和验证
     if (isValidHentaiAPI(result)) {
-      data.value = result as hentaiAPI
+      data.value = result as hentaiAPI;
       // formatResponse(data.value) TODO 过滤
     } else {
-      throw new Error('Invalid API response format')
+      throw new Error("Invalid API response format");
     }
-
   } catch (err) {
-    error.value = err.message
-    console.error('API 请求失败:', err)
+    error.value = err.message;
+    console.error("API 请求失败:", err);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
-const clickCopyLink = (url:string) => {
-  navigator.clipboard.writeText(url).then(i => {
-        toast.info('Copy link successful.')
-  }).catch(e=>console.error(e));
-}
+const clickCopyLink = (url: string) => {
+  navigator.clipboard
+    .writeText(url)
+    .then((i) => {
+      toast.info("Copy link successful.");
+    })
+    .catch((e) => console.error(e));
+};
 
 const handleSubscribeClick = (index: string) => {
-  window.open(FIELD_CONFIG[index].rss, '_blank')
-}
+  window.open(FIELD_CONFIG[index].rss, "_blank");
+};
 
 const handleCardClick = (url: string) => {
   // NOTE: open in current tab
   // window.location.href = url
   // NOTE: open new tab
-  window.open(url, '_blank')
-}
+  window.open(url, "_blank");
+};
 
 const handleCardCss = (entity_index: number, index: string) => {
   if (!FIELD_CONFIG[index].ranking) {
     // no ranking no handle
-    return 'card-style-common'
+    return "card-style-common";
   } else {
     switch (entity_index) {
       case 0:
-        return 'card-style-king'
+        return "card-style-king";
       case 1:
-        return 'card-style-silver'
+        return "card-style-silver";
       case 2:
-        return 'card-style-bronze'
+        return "card-style-bronze";
       case 3:
-        return 'card-style-common'
+        return "card-style-common";
       case 4:
-        return 'card-style-common'
+        return "card-style-common";
     }
   }
-}
+};
 
 // 类型验证函数
 function isValidHentaiAPI(obj: any): obj is hentaiAPI {
-  if (!obj || typeof obj !== 'object') return false
+  if (!obj || typeof obj !== "object") return false;
   const requiredKeys: (keyof hentaiAPI)[] = [
-    'Resources',
-    'News',
-    'DLsite Game Ranking',
-    'DLsite Voice Ranking',
-    'DLsite Comic Ranking'
-  ]
-  return requiredKeys.every(key => {
-    const value = obj[key]
-    return Array.isArray(value) && value.every(isValidRssEntity)
-  })
+    "Resources",
+    "News",
+    "DLsite Game Ranking",
+    "DLsite Voice Ranking",
+    "DLsite Comic Ranking",
+  ];
+  return requiredKeys.every((key) => {
+    const value = obj[key];
+    return Array.isArray(value) && value.every(isValidRssEntity);
+  });
 }
 
 function isValidRssEntity(obj: any): obj is rssEntity {
-  return obj &&
-      typeof obj === 'object' &&
-      typeof obj.title === 'string' &&
-      typeof obj.url === 'string' &&
-      typeof obj.summary === 'string' &&
-      typeof obj.timestamp === 'number'
+  return (
+    obj &&
+    typeof obj === "object" &&
+    typeof obj.title === "string" &&
+    typeof obj.url === "string" &&
+    typeof obj.summary === "string" &&
+    typeof obj.timestamp === "number"
+  );
 }
 
 /**
@@ -223,71 +229,79 @@ function isValidRssEntity(obj: any): obj is rssEntity {
  * @param list
  */
 const filterToday = (list: rssEntity[]) => {
-  return list.filter(i => i.timestamp > getYesterdayMidnightTimestamp())
-}
+  return list.filter((i) => i.timestamp > getYesterdayMidnightTimestamp());
+};
 
 const refreshToday = (timestamp?: number) => {
   if (timestamp) {
-    currentDate.value = getCurrentDate(new Date(timestamp))
+    currentDate.value = getCurrentDate(new Date(timestamp));
   } else {
-    currentDate.value = getCurrentDate(new Date())
+    currentDate.value = getCurrentDate(new Date());
   }
-  fetchData()
-}
+  fetchData();
+};
 
 function watchDarkMode(callback) {
-  if (typeof window === 'undefined') return
+  if (typeof window === "undefined") return;
   const observer = new MutationObserver(() => {
-    const isDark = document.documentElement.classList.contains('dark')
-    callback(isDark)
-  })
+    const isDark = document.documentElement.classList.contains("dark");
+    callback(isDark);
+  });
   observer.observe(document.documentElement, {
     attributes: true,
-    attributeFilter: ['class']
-  })
+    attributeFilter: ["class"],
+  });
   // 初始触发一次
   // callback(document.documentElement.classList.contains('dark'))
 }
 
-function createCalHeatmap(){
+function createCalHeatmap() {
   const cal = new CalHeatmap();
   const startDate = new Date();
   startDate.setFullYear(startDate.getFullYear() - 1);
   startDate.setDate(startDate.getDate() + 30);
-  
-  cal.paint({
-    itemSelector: '#cal-heatmap',
-    domain: {
-      type: 'month',
-    },
-    subDomain: {
-      type: 'ghDay'
-    },
-    date: {
-      start: startDate,
-    },
-    data: {
-      source: '/api/count.json',
-      x: 'date',
-      y: 'value',
-    },
-    scale: {
-      color: {
-        range: ['#9be9a8', '#40c463', '#30a14e', '#216e39'],
-        domain: [0, 30],
-      }
-    },
-    theme: isDark.value ? 'dark': 'light',
-  }, [[Tooltip, {
-    text: t => `${new Date(t).toLocaleDateString()}`,
-  }]]);
 
-  cal.on('click', ((event: any, timestamp: number, value: any) => {
-    console.log('click' + new Date(timestamp).toLocaleDateString());
+  cal.paint(
+    {
+      itemSelector: "#cal-heatmap",
+      domain: {
+        type: "month",
+      },
+      subDomain: {
+        type: "ghDay",
+      },
+      date: {
+        start: startDate,
+      },
+      data: {
+        source: "/api/count.json",
+        x: "date",
+        y: "value",
+      },
+      scale: {
+        color: {
+          range: ["#9be9a8", "#40c463", "#30a14e", "#216e39"],
+          domain: [0, 30],
+        },
+      },
+      theme: isDark.value ? "dark" : "light",
+    },
+    [
+      [
+        Tooltip,
+        {
+          text: (t) => `${new Date(t).toLocaleDateString()}`,
+        },
+      ],
+    ],
+  );
+
+  cal.on("click", ((event: any, timestamp: number, value: any) => {
+    console.log("click" + new Date(timestamp).toLocaleDateString());
     if (timestamp > new Date().getTime()) {
-      toast.info("The future is yours. Check it in few days later.")
+      toast.info("The future is yours. Check it in few days later.");
     } else {
-      refreshToday(timestamp)
+      refreshToday(timestamp);
     }
   }) as any); // 关键：使用 as any 绕过类型检查
   return cal;
@@ -295,20 +309,19 @@ function createCalHeatmap(){
 
 // 组件挂载时设置当前日期
 onMounted(() => {
-  console.log('1绘制为 ', isDark)
-  refreshToday()
+  console.log("1绘制为 ", isDark);
+  refreshToday();
 
-  var cal = createCalHeatmap()
+  var cal = createCalHeatmap();
   // 监听黑暗模式变化，重新渲染图表
   watchDarkMode((isDark) => {
     if (cal) {
-      cal.destroy()
+      cal.destroy();
     }
-    cal = createCalHeatmap()
-    console.log('绘制为 ', isDark)
-  })
-})
-
+    cal = createCalHeatmap();
+    console.log("绘制为 ", isDark);
+  });
+});
 </script>
 
 <template>
@@ -323,47 +336,97 @@ onMounted(() => {
   <div class="today-layout">
     <main class="today-main">
       <!--------------------------Content-------------------------------->
-      <div v-for="(today, index) in data" :key="`today-${index}-${filterToday(today).length}`">
-        <h2 class="content-title" v-if="filterToday(today).length > 0" :id="`section-${index}`">
-          {{ index }}  <Badge type="warning" text="subscribe" @click="handleSubscribeClick(index)"/>
+      <div
+        v-for="(today, index) in data"
+        :key="`today-${index}-${filterToday(today).length}`"
+      >
+        <h2
+          class="content-title"
+          v-if="filterToday(today).length > 0"
+          :id="`section-${index}`"
+        >
+          {{ index }}
+          <Badge
+            type="warning"
+            text="subscribe"
+            @click="handleSubscribeClick(index)"
+          />
         </h2>
         {{ FIELD_CONFIG[index].desc }}
 
         <div v-for="(entity, entity_index) in today" :key="entity_index">
           <div v-if="entity.timestamp > getYesterdayMidnightTimestamp()">
-            <div 
-              class="card"
-            >
-              <div :class="`card-content ${handleCardCss(entity_index, index)} card-style`" @click="handleCardClick(entity.url)">
+            <div class="card">
+              <div
+                :class="`card-content ${handleCardCss(entity_index, index)} card-style`"
+                @click="handleCardClick(entity.url)"
+              >
                 <span class="card-header">
-                    <h3 :id="`item-${index}-${entity_index}`" class='card-title'>
-                    {{ entity.title === '' ? 'Untitled' : entity.title }}
-                      <Badge :type="FIELD_CONFIG[index].type" :text="FIELD_CONFIG[index].price"/>
-                    </h3>
-                    <span class="card-datetime">{{ formatTimestamp(entity.timestamp * 1000) }}</span>
+                  <h3 :id="`item-${index}-${entity_index}`" class="card-title">
+                    {{ entity.title === "" ? "Untitled" : entity.title }}
+                    <Badge
+                      :type="FIELD_CONFIG[index].type"
+                      :text="FIELD_CONFIG[index].price"
+                    />
+                  </h3>
+                  <span class="card-datetime">{{
+                    formatTimestamp(entity.timestamp * 1000)
+                  }}</span>
                 </span>
-                <div class="message" v-html="entity.summary"/>
-                <div class="message" v-html="entity.translate"/>
-                
+                <div class="message" v-html="entity.summary" />
+                <div class="message" v-html="entity.translate" />
+
                 <!-- 卡片底部按钮 -->
                 <div class="card-actions">
-                  <button 
+                  <button
                     class="action-btn action-copy"
                     title="Copy Link"
                     @click.stop="clickCopyLink(entity.url)"
                   >
-                  <svg t="1772717415932" class="icon icon-svg" 
-                  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1622" width="200" height="200"><path d="M931.882 131.882l-103.764-103.764A96 96 0 0 0 760.236 0H416c-53.02 0-96 42.98-96 96v96H160c-53.02 0-96 42.98-96 96v640c0 53.02 42.98 96 96 96h448c53.02 0 96-42.98 96-96v-96h160c53.02 0 96-42.98 96-96V199.764a96 96 0 0 0-28.118-67.882zM596 928H172a12 12 0 0 1-12-12V300a12 12 0 0 1 12-12h148v448c0 53.02 42.98 96 96 96h192v84a12 12 0 0 1-12 12z m256-192H428a12 12 0 0 1-12-12V108a12 12 0 0 1 12-12h212v176c0 26.51 21.49 48 48 48h176v404a12 12 0 0 1-12 12z m12-512h-128V96h19.264c3.182 0 6.234 1.264 8.486 3.514l96.736 96.736a12 12 0 0 1 3.514 8.486V224z" p-id="1623" fill="#8a8a8a"></path></svg>
-
+                    <svg
+                      t="1772717415932"
+                      class="icon icon-svg"
+                      viewBox="0 0 1024 1024"
+                      version="1.1"
+                      xmlns="http://www.w3.org/2000/svg"
+                      p-id="1622"
+                      width="200"
+                      height="200"
+                    >
+                      <path
+                        d="M931.882 131.882l-103.764-103.764A96 96 0 0 0 760.236 0H416c-53.02 0-96 42.98-96 96v96H160c-53.02 0-96 42.98-96 96v640c0 53.02 42.98 96 96 96h448c53.02 0 96-42.98 96-96v-96h160c53.02 0 96-42.98 96-96V199.764a96 96 0 0 0-28.118-67.882zM596 928H172a12 12 0 0 1-12-12V300a12 12 0 0 1 12-12h148v448c0 53.02 42.98 96 96 96h192v84a12 12 0 0 1-12 12z m256-192H428a12 12 0 0 1-12-12V108a12 12 0 0 1 12-12h212v176c0 26.51 21.49 48 48 48h176v404a12 12 0 0 1-12 12z m12-512h-128V96h19.264c3.182 0 6.234 1.264 8.486 3.514l96.736 96.736a12 12 0 0 1 3.514 8.486V224z"
+                        p-id="1623"
+                        fill="#8a8a8a"
+                      ></path>
+                    </svg>
                   </button>
-                  <button 
+                  <button
                     class="action-btn action-open"
                     title="Open Link"
                     @click.stop="handleCardClick(entity.url)"
                   >
-                    <svg t="1772716796795" class="icon icon-svg" 
-                    viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6502" width="200" height="200"><path d="M819.2 887.466667H136.533333V204.8h341.333334V68.266667H136.533333a136.533333 136.533333 0 0 0-136.533333 136.533333v682.666667a136.533333 136.533333 0 0 0 136.533333 136.533333h682.666667a136.533333 136.533333 0 0 0 136.533333-136.533333V546.133333h-136.533333v341.333334z" fill="#8a8a8a" p-id="6503"></path><path d="M955.733333 0h-273.066666a68.266667 68.266667 0 0 0 0 136.533333h108.202666L421.2736 506.129067a68.266667 68.266667 0 1 0 96.597333 96.597333L887.466667 233.130667V341.333333a68.266667 68.266667 0 0 0 136.533333 0V68.266667a68.266667 68.266667 0 0 0-68.266667-68.266667z" fill="#8a8a8a" p-id="6504"></path></svg>  
-                </button>
+                    <svg
+                      t="1772716796795"
+                      class="icon icon-svg"
+                      viewBox="0 0 1024 1024"
+                      version="1.1"
+                      xmlns="http://www.w3.org/2000/svg"
+                      p-id="6502"
+                      width="200"
+                      height="200"
+                    >
+                      <path
+                        d="M819.2 887.466667H136.533333V204.8h341.333334V68.266667H136.533333a136.533333 136.533333 0 0 0-136.533333 136.533333v682.666667a136.533333 136.533333 0 0 0 136.533333 136.533333h682.666667a136.533333 136.533333 0 0 0 136.533333-136.533333V546.133333h-136.533333v341.333334z"
+                        fill="#8a8a8a"
+                        p-id="6503"
+                      ></path>
+                      <path
+                        d="M955.733333 0h-273.066666a68.266667 68.266667 0 0 0 0 136.533333h108.202666L421.2736 506.129067a68.266667 68.266667 0 1 0 96.597333 96.597333L887.466667 233.130667V341.333333a68.266667 68.266667 0 0 0 136.533333 0V68.266667a68.266667 68.266667 0 0 0-68.266667-68.266667z"
+                        fill="#8a8a8a"
+                        p-id="6504"
+                      ></path>
+                    </svg>
+                  </button>
                 </div>
               </div>
             </div>
@@ -380,22 +443,26 @@ onMounted(() => {
         </div>
         <div class="toc-content">
           <ul class="toc-list">
-            <li v-for="(today, index) in data"
-                :key="index"
-                class="toc-section">
-              <a :href="`#section-${index}`"
-                 v-if="filterToday(today).length !== 0"
-                 class="section-link">
+            <li v-for="(today, index) in data" :key="index" class="toc-section">
+              <a
+                :href="`#section-${index}`"
+                v-if="filterToday(today).length !== 0"
+                class="section-link"
+              >
                 {{ index }} ({{ filterToday(today).length }})
               </a>
               <ul class="toc-items">
-                <li v-for="(entity, entity_index) in today"
-                    :key="entity_index"
-                    class="toc-item">
-                  <a :href="`#item-${index}-${entity_index}`"
-                     v-if="entity.timestamp > getYesterdayMidnightTimestamp()"
-                     class="item-link"
-                     :title="entity.title">
+                <li
+                  v-for="(entity, entity_index) in today"
+                  :key="entity_index"
+                  class="toc-item"
+                >
+                  <a
+                    :href="`#item-${index}-${entity_index}`"
+                    v-if="entity.timestamp > getYesterdayMidnightTimestamp()"
+                    class="item-link"
+                    :title="entity.title"
+                  >
                     {{ entity.title }}
                   </a>
                 </li>
@@ -409,7 +476,6 @@ onMounted(() => {
 </template>
 
 <style scoped>
-
 .today-layout {
   display: block;
 }
@@ -495,7 +561,11 @@ onMounted(() => {
   overflow: hidden;
   transform: translateY(8px);
   pointer-events: none;
-  transition: max-height 0.28s ease, opacity 0.22s ease, transform 0.28s ease, margin-top 0.28s ease;
+  transition:
+    max-height 0.28s ease,
+    opacity 0.22s ease,
+    transform 0.28s ease,
+    margin-top 0.28s ease;
 }
 
 .card:hover .card-actions {
@@ -526,7 +596,7 @@ onMounted(() => {
 
 /* 按钮之间的竖线分隔符（放在右侧按钮的左边） */
 .action-btn + .action-btn::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   width: 1px;
@@ -563,7 +633,7 @@ onMounted(() => {
 }
 
 .message {
-  font-size: 1.0rem;
+  font-size: 1rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
   line-height: 1.4;
@@ -589,7 +659,8 @@ onMounted(() => {
 }
 
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0) translateX(0);
     opacity: 0;
   }
@@ -617,7 +688,6 @@ onMounted(() => {
   animation: pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-
 .controls button {
   background: var(--vp-c-brand-3);
   color: white;
@@ -634,7 +704,6 @@ onMounted(() => {
   border-radius: 4px;
   margin: 10px 0;
 }
-
 
 /* 目录样式 */
 .toc-container {
@@ -678,7 +747,6 @@ onMounted(() => {
   transition: all 0.3s ease;
   padding: 0 0 8px 0;
 }
-
 
 .toc-list {
   list-style: none;
@@ -738,5 +806,4 @@ onMounted(() => {
 .show-more {
   margin-top: 8px;
 }
-
 </style>
