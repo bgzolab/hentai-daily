@@ -77,6 +77,8 @@ const tocCountLimit = 5
 const showContent = ref(true)
 // 目录配置
 const showAllItems = reactive<Record<string, boolean>>({})
+// 悬停的卡片标识
+const hoveredCardId = ref<string | null>(null)
 // 消息通知
 const toast = useToast()
 // 是否是黑暗模式
@@ -230,6 +232,18 @@ const toggleItemsVisibility = (index: string) => {
   showAllItems[index] = !showAllItems[index]
 }
 
+const getCardId = (index: string, entity_index: number): string => {
+  return `card-${index}-${entity_index}`
+}
+
+const onCardHover = (cardId: string) => {
+  hoveredCardId.value = cardId
+}
+
+const onCardLeave = () => {
+  hoveredCardId.value = null
+}
+
 const refreshToday = (timestamp?: number) => {
   if (timestamp) {
     currentDate.value = getCurrentDate(new Date(timestamp))
@@ -335,10 +349,35 @@ onMounted(() => {
 
         <div v-for="(entity, entity_index) in today" :key="entity_index">
           <div v-if="entity.timestamp > getYesterdayMidnightTimestamp()">
-            <div class="card">
+            <div 
+              class="card" 
+              @mouseenter="onCardHover(getCardId(index, entity_index))"
+              @mouseleave="onCardLeave()"
+            >
+              <!-- 左侧操作按钮面板 -->
+              <div 
+                class="card-actions" 
+                :class="{ 'show': hoveredCardId === getCardId(index, entity_index) }"
+              >
+                <button 
+                  class="action-btn action-open"
+                  :title="'Open Link'"
+                  @click.stop="handleCardClick(entity.url)"
+                >
+                  <span class="icon">↗</span>
+                </button>
+                <button 
+                  class="action-btn action-copy"
+                  :title="'Copy URL'"
+                  @click.stop="clickCopyLink(entity.url)"
+                >
+                  <span class="icon">📋</span>
+                </button>
+              </div>
+
               <div :class="`card-content ${handleCardCss(entity_index, index)} card-style`">
                 <span class="card-header">
-                    <h3 :id="`item-${index}-${entity_index}`" class='card-title' @click="clickCopyLink(entity.url)">
+                    <h3 :id="`item-${index}-${entity_index}`" class='card-title'>
                     {{ entity.title === '' ? 'Untitled' : entity.title }}
                       <Badge :type="FIELD_CONFIG[index].type" :text="FIELD_CONFIG[index].price"/>
                     </h3>
@@ -459,7 +498,7 @@ onMounted(() => {
 
 .card {
   border-radius: 20px;
-  overflow: hidden;
+  overflow: visible;
 
   margin: 40px 0 40px 0;
   width: 100%;
@@ -476,10 +515,59 @@ onMounted(() => {
    */
 }
 
+/* 卡片左侧操作按钮面板 */
+.card-actions {
+  position: absolute;
+  left: -80px;
+  top: 50%;
+  transform: translateY(-50%) translateX(-10px);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 20;
+}
+
+.card-actions.show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(-50%) translateX(0);
+}
+
+.action-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  font-size: 20px;
+  background: var(--vp-c-brand-1);
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.action-btn:hover {
+  transform: scale(1.1) rotate(-5deg);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+.action-btn .icon {
+  display: block;
+  line-height: 1;
+}
+
 .card-content {
   padding: 2rem 1.5rem;
   position: relative;
   height: fit-content;
+  overflow: hidden;
+  border-radius: 20px;
 }
 
 .card-header {
