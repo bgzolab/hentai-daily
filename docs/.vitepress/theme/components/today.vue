@@ -338,7 +338,7 @@ onMounted(() => {
             <div 
               class="card"
             >
-              <div :class="`card-content ${handleCardCss(entity_index, index)} card-style`">
+              <div :class="`card-content ${handleCardCss(entity_index, index)} card-style`" @click="handleCardClick(entity.url)">
                 <span class="card-header">
                     <h3 :id="`item-${index}-${entity_index}`" class='card-title'>
                     {{ entity.title === '' ? 'Untitled' : entity.title }}
@@ -492,7 +492,7 @@ onMounted(() => {
 }
 
 .card:hover {
-  transform: scale(1.05) rotate(1deg);
+  transform: scale(1.04, 1.02) rotate(0.6deg);
   box-shadow: 0 12px 24px -8px gray;
 }
 
@@ -500,7 +500,21 @@ onMounted(() => {
 .card-actions {
   position: relative;
   display: flex;
-  margin-top: 1.5rem;
+  margin-top: 0;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transform: translateY(8px);
+  pointer-events: none;
+  transition: max-height 0.28s ease, opacity 0.22s ease, transform 0.28s ease, margin-top 0.28s ease;
+}
+
+.card:hover .card-actions {
+  max-height: 44px;
+  margin-top: 1rem;
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
 }
 
 .action-btn {
