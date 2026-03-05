@@ -414,12 +414,13 @@ onMounted(() => {
 
 @media (min-width: 1280px) {
   .toc-aside {
-    display: block;
+    display: flex;
     position: fixed;
     top: calc(var(--vp-nav-height) + 24px);
     right: max(150px, calc((100vw - var(--vp-layout-max-width)) / 2 + 200px));
     width: 256px;
-    max-height: calc(100vh - var(--vp-nav-height) - 120px);
+    height: calc(100vh - var(--vp-nav-height) - 48px);
+    overflow: hidden;
     z-index: 10;
   }
 }
