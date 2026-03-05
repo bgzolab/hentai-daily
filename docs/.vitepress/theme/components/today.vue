@@ -527,6 +527,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
   transition: all 0.2s ease;
 }
 
@@ -534,11 +535,11 @@ onMounted(() => {
   color: var(--vp-c-brand-1);
 }
 
-/* 按钮之间的竖线分隔符 */
-.action-btn:not(:last-child)::after {
+/* 按钮之间的竖线分隔符（放在右侧按钮的左边） */
+.action-btn + .action-btn::before {
   content: '';
   position: absolute;
-  right: 0;
+  left: 0;
   width: 1px;
   height: 20px;
   background: var(--vp-c-divider);
