@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed, reactive } from "vue";
+import { ref, onMounted, computed, reactive, watch } from "vue";
 import CalHeatmap from "cal-heatmap";
 import "cal-heatmap/cal-heatmap.css";
 import { useToast } from "vue-toastification";
@@ -72,6 +72,17 @@ const loading = ref(false);
 const error = ref(null);
 // 日期
 const currentDate = ref("");
+// 当前选中的年份
+const selectedYear = ref<number>(new Date().getFullYear());
+// 可用的年份列表（从2023到当前年份）
+const availableYears = computed(() => {
+  const currentYear = new Date().getFullYear();
+  const years: number[] = [];
+  for (let year = 2023; year <= currentYear; year++) {
+    years.push(year);
+  }
+  return years.reverse(); // 降序排列，最新年份在前
+});
 // 目录限制
 const tocCountLimit = 5;
 const showContent = ref(true);
@@ -103,13 +114,19 @@ const formatTimestamp = (timestamp: number): string => {
   return date.toLocaleString(); // 或者使用更具体的格式化方法
 };
 
-// 获取当前日期并格式化为 YYYY/MM/DD
-// FIXME: 凌晨怎么办？？？
+// 获取当前日期并格式化为 YYYY/MM/DD（用于 API 调用）
 const getCurrentDate = (now: Date) => {
   const year = now.getFullYear();
   const month = String(now.getMonth() + 1).padStart(2, "0");
   const day = String(now.getDate()).padStart(2, "0");
   return `${year}/${month}/${day}`;
+};
+
+// 格式化日期为 MM/DD/YYYY 格式（用于显示）
+const formatDisplayDate = (dateStr: string): string => {
+  // dateStr 格式为 YYYY/MM/DD
+  const [year, month, day] = dateStr.split("/");
+  return `${month}/${day}/${year}`;
 };
 
 const fetchData = async () => {
@@ -257,9 +274,9 @@ function watchDarkMode(callback) {
 
 function createCalHeatmap() {
   const cal = new CalHeatmap();
-  const startDate = new Date();
-  startDate.setFullYear(startDate.getFullYear() - 1);
-  startDate.setDate(startDate.getDate() + 30);
+  // 根据选中的年份计算起始和结束日期，显示整个年份的12个月
+  const startDate = new Date(selectedYear.value, 0, 1); // 该年的1月1日
+  const endDate = new Date(selectedYear.value, 11, 31); // 该年的12月31日
 
   cal.paint(
     {
@@ -272,6 +289,7 @@ function createCalHeatmap() {
       },
       date: {
         start: startDate,
+        end: endDate,
       },
       data: {
         source: "/api/count.json",
@@ -301,6 +319,11 @@ function createCalHeatmap() {
     if (timestamp > new Date().getTime()) {
       toast.info("The future is yours. Check it in few days later.");
     } else {
+      const clickedDate = new Date(timestamp);
+      // 如果点击的日期年份与当前选中年份不同，更新年份
+      if (clickedDate.getFullYear() !== selectedYear.value) {
+        selectedYear.value = clickedDate.getFullYear();
+      }
       refreshToday(timestamp);
     }
   }) as any); // 关键：使用 as any 绕过类型检查
@@ -312,14 +335,34 @@ onMounted(() => {
   console.log("1绘制为 ", isDark);
   refreshToday();
 
-  var cal = createCalHeatmap();
-  // 监听黑暗模式变化，重新渲染图表
-  watchDarkMode((isDark) => {
+  let cal: any = null;
+
+  const initCalHeatmap = () => {
+    // 销毁旧的热力图
     if (cal) {
       cal.destroy();
     }
+    // 清空容器
+    const container = document.querySelector("#cal-heatmap");
+    if (container) {
+      container.innerHTML = "";
+    }
+    // 创建新热力图
     cal = createCalHeatmap();
+  };
+
+  initCalHeatmap();
+  
+  // 监听年份变化，重新绘制图表
+  watch(selectedYear, () => {
+    console.log("年份已更新为 ", selectedYear.value);
+    initCalHeatmap();
+  });
+
+  // 监听黑暗模式变化，重新渲染图表
+  watchDarkMode((isDark) => {
     console.log("绘制为 ", isDark);
+    initCalHeatmap();
   });
 });
 </script>
@@ -327,7 +370,14 @@ onMounted(() => {
 <template>
   <div class="today-title">
     <span class="hero">Hentai Daily</span>
-    <span class="date">{{ new Date(currentDate).toLocaleDateString() }}</span>
+    <div class="date-selector">
+      <span class="date">{{ formatDisplayDate(currentDate) }}</span>
+      <select v-model.number="selectedYear" class="year-select">
+        <option v-for="year in availableYears" :key="year" :value="year">
+          {{ year }}
+        </option>
+      </select>
+    </div>
   </div>
   <!-------------------------HeatMap--------------------------------->
   <div class="heatmap-scroll">
@@ -513,6 +563,9 @@ onMounted(() => {
 .today-title {
   width: 100%;
   margin: 10px 0 10px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
   .hero {
     color: var(--vp-home-hero-name-color);
@@ -520,10 +573,38 @@ onMounted(() => {
     font-weight: bold;
   }
 
+  .date-selector {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
   .date {
     color: var(--vp-c-text-1);
     font-size: 1em;
-    float: right;
+    min-width: 100px;
+    text-align: right;
+  }
+
+  .year-select {
+    padding: 6px 12px;
+    border: 1px solid var(--vp-c-divider);
+    border-radius: 4px;
+    background-color: var(--vp-c-bg);
+    color: var(--vp-c-text-1);
+    font-size: 0.95em;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .year-select:hover {
+    border-color: var(--vp-c-brand-1);
+  }
+
+  .year-select:focus {
+    outline: none;
+    border-color: var(--vp-c-brand-1);
+    box-shadow: 0 0 0 2px var(--vp-c-brand-1-dimm);
   }
 }
 
