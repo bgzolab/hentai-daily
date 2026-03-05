@@ -39,27 +39,46 @@ def get_dlsite_ranking_with_limit_from(html_doc, limit):
     content_list = []
     soup = BeautifulSoup(html_doc, 'html.parser')
 
-    works = soup.find_all("a", "work_thumb_box")
-    descriptions = soup.find_all("dd", "work_text")
+    # 查找缩略图与描述：不要绑定到特定标签，只按 class 查找以提高鲁棒性
+    works = soup.find_all(class_="work_thumb_box")
+    descriptions = soup.find_all(class_="work_text")
 
     safe_limit = min(len(works), len(descriptions), limit)
 
     for i in range(safe_limit):
         work = works[i]
         description = descriptions[i]
-        work_url = work['href']
-        work_name = work.img['alt']
+
+        # 尽量兼容 <a> 或 <div> 等不同标签结构
+        work_url = work.get('href') or work.find('a', href=True)['href'] if work.find('a', href=True) else None
+        work_name = None
+        if work.find('img') is not None:
+            work_name = work.find('img').get('alt')
+        else:
+            # 退回到查找 title 文本
+            work_name = work.get_text(strip=True)
+
         work_timestamp = datetime.datetime.today().timestamp()
 
         try:
-            work_img = work.img['src']
-        except KeyError as e:
-            work_img = work.img['data-src']
+            img_tag = work.find('img')
+            work_img = img_tag.get('src') or img_tag.get('data-src')
         except Exception as e:
-            print("Unknown: Cannot find the image of " + work_name)
+            work_img = None
+            print("Unknown: Cannot find the image of " + (work_name or "<unknown>"))
 
-        work_summary = '<img src ="' + format_resize_img(work_img) + '"/><br/>' \
-                       + str(description.string)
+        work_summary = ''
+        if work_img:
+            work_summary = '<img src ="' + format_resize_img(work_img) + '"/><br/>'
+
+        # 如果 description 有更丰富的 HTML，提取其文本/HTML
+        desc_text = ''
+        try:
+            desc_text = description.get_text(separator=' ', strip=True)
+        except Exception:
+            desc_text = ''
+
+        work_summary += desc_text
 
         content_list.append(package_content(
             work_name,
