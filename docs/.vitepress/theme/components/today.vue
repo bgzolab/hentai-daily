@@ -76,7 +76,6 @@ const currentDate = ref('')
 const tocCountLimit = 5
 const showContent = ref(true)
 // 目录配置
-const isCollapsed = ref(false)
 const showAllItems = reactive<Record<string, boolean>>({})
 // 消息通知
 const toast = useToast()
@@ -357,11 +356,10 @@ onMounted(() => {
     <!-------------------------TOC--------------------------------->
     <aside v-show="showContent" class="toc-aside">
       <div class="toc-container">
-        <div class="toc-header" @click="isCollapsed = !isCollapsed">
+        <div class="toc-header">
           <h2>Table of Contents</h2>
         </div>
-        <div class="toc-content"
-             :class="{ collapsed: isCollapsed }">
+        <div class="toc-content">
           <ul class="toc-list">
             <li v-for="(today, index) in data"
                 :key="index"
@@ -591,7 +589,7 @@ onMounted(() => {
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.08em;
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
   color: var(--vp-c-text-2);
 }
 
@@ -608,11 +606,6 @@ onMounted(() => {
   padding: 0 0 8px 0;
 }
 
-.toc-content.collapsed {
-  max-height: 0;
-  padding: 0;
-  overflow: hidden;
-}
 
 .toc-list {
   list-style: none;
