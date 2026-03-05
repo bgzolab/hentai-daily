@@ -3,7 +3,18 @@ title: 更新日志
 outline: deep
 ---
 
-## 2026.03.04
+## 20260305 目录与热力图改善
+
+1. 目录格式大改善，基本做到了Vitepress原生的效果；
+2. HeatMap 组件的起始时间写死导致今年基本不可用；
+
+最难过的是，竟然没有人给我提Issue，这个项目真的没人看了么？
+
+好难过
+
+![](https://syimg.3dmgame.com/uploadimg/xiaz/2022/1011/1665477061696.jpg)
+
+## 20260304 脆弱的互联网
 
 其实这次没有什么更新的内容，纯粹想发发牢骚。
 
@@ -15,17 +26,17 @@ outline: deep
 
 我不知道，写下来算不算是一种答案？
 
-## 2025.08.09 中文国际化
+## 20250809 中文国际化
 
 翻译了主要文档，翻译比较随性，大家看个乐呵。
 
-## 2025.06.20 项目面向社区发布
+## 20250620 项目面向社区发布
 
 1. https://bgm.tv/group/topic/427051
 2. https://www.v2ex.com/t/1140027
 
 
-##  2025.06.15 用 [VitePress](https://github.com/vuejs/vitepress) 重写前端 #Developing
+##  20250615 用 [VitePress](https://github.com/vuejs/vitepress) 重写前端 #Developing
 
 不再用 Jekyll 自动构建的静态站点，采用更加现代化的 Vue 框架 VitePress 来重写前端。
 
@@ -33,7 +44,7 @@ Favicon 和 logo 来自于 [@猛禽bot](https://weibo.com/n/%E7%8C%9B%E7%A6%BDbo
 
 如果你对旧站点感兴趣，可以访问 https://github.com/bGZo/hentai-daily/tree/v1.0
 
-## 2024.01.21 ~ 2024.11.23 项目存档
+## 20240121 ~ 20241123 项目存档
 
 由于没有什么人看，加上使用了 [telegram RSS bot](https://github.com/Rongronggg9/RSS-to-Telegram-Bot) 来替代我的 RSS 阅读器，所以项目没有什么存在的必要了，就存档了。 但我慢慢意识到一个问题，时间线的信息流会打乱你输入信息的节奏，消息是碎片且不连续的，这对你的注意力是个黑洞。
 
@@ -41,24 +52,24 @@ Favicon 和 logo 来自于 [@猛禽bot](https://weibo.com/n/%E7%8C%9B%E7%A6%BDbo
 
 我还是重启这个项目吧。
 
-### 2024.05.21 名器之家
+### 20240521 名器之家
 
 https://mingqiceping.com 关闭了 RSS 输出
 
-### 2024.03.07 灵梦御所
+### 20240307 灵梦御所
 
 https://blog.reimu.net 全站数据丢失。
 
 内容分发策略转移，全部面向 Telegram 频道。
 
 
-### 2024.03.01 RSShub 重构
+### 20240301 RSShub 重构
 
 RSSHub 的路由重构导致了部分 RSS 源失效（http://home.gamer.com.tw）。[^rsshub-pr]
 
 [^rsshub-pr]: via: https://github.com/DIYgod/RSSHub/commit/6f57c02538bd2faefbe77566465c2c2c3f3caf3b
 
-## 2023.12.01 终点论坛被封禁
+## 20231201 终点论坛被封禁
 
 https://bbs.drdian.net 的作者被中国警方逮捕，最终被判保释候审。[^end-of-drdian]
 
@@ -67,7 +78,7 @@ https://bbs.drdian.net 的作者被中国警方逮捕，最终被判保释候审
 随后没几天，https://www.south-plus.net/rss.php?fid=135 的中文汉化区也被站长隐藏了，至今未恢复。RSS源也自然倒闭了。
 
 
-## 2023.06.13 项目原型诞生
+## 20230613 项目原型诞生
 
 ### 来源列表
 
