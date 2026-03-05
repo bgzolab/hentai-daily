@@ -226,10 +226,6 @@ const filterToday = (list: rssEntity[]) => {
   return list.filter(i => i.timestamp > getYesterdayMidnightTimestamp())
 }
 
-const toggleItemsVisibility = (index: string) => {
-  showAllItems[index] = !showAllItems[index]
-}
-
 const refreshToday = (timestamp?: number) => {
   if (timestamp) {
     currentDate.value = getCurrentDate(new Date(timestamp))
@@ -393,7 +389,7 @@ onMounted(() => {
                 {{ index }} ({{ filterToday(today).length }})
               </a>
               <ul class="toc-items">
-                <li v-for="(entity, entity_index) in today.slice(0, showAllItems[index] ? undefined : tocCountLimit)"
+                <li v-for="(entity, entity_index) in today"
                     :key="entity_index"
                     class="toc-item">
                   <a :href="`#item-${index}-${entity_index}`"
@@ -402,13 +398,6 @@ onMounted(() => {
                      :title="entity.title">
                     {{ entity.title }}
                   </a>
-                </li>
-                <li v-if="filterToday(today).length > tocCountLimit" class="show-more">
-                  <button
-                      @click="toggleItemsVisibility(index)"
-                      class="show-more-btn">
-                    {{ showAllItems[index] ? 'Show less' : `Show more(${filterToday(today).length - tocCountLimit})` }}
-                  </button>
                 </li>
               </ul>
             </li>
@@ -477,7 +466,7 @@ onMounted(() => {
 }
 
 .content-title {
-  text-align: center;
+  text-align: left;
 }
 
 .card {
@@ -748,21 +737,6 @@ onMounted(() => {
 
 .show-more {
   margin-top: 8px;
-}
-
-.show-more-btn {
-  background: none;
-  border: none;
-  color: var(--vp-c-brand-1);
-  font-size: 12px;
-  cursor: pointer;
-  padding: 4px 0;
-  text-decoration: underline;
-  transition: color 0.2s;
-}
-
-.show-more-btn:hover {
-  color: var(--vp-c-brand-3);
 }
 
 </style>
