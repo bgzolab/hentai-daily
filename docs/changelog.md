@@ -7,6 +7,7 @@ outline: deep
 
 1. The directory style has been greatly improved, basically achieving the feeling of native Vitepress;
 2. The hard-coded start time of the HeatMap component has rendered it essentially unusable this year;
+3. Card button improvements for better accessibility and minimalist design
 
 The most disheartening thing is that no one has raised any issues with me. Is this project really no longer being looked at?
 
