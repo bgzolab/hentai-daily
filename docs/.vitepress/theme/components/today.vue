@@ -325,77 +325,105 @@ onMounted(() => {
   <div class="heatmap-scroll">
     <div id="cal-heatmap"></div>
   </div>
-  <!-------------------------TOC--------------------------------->
-  <div v-show="showContent" class="toc-container">
-    <div class="toc-header" @click="isCollapsed = !isCollapsed">
-      <h2>Table of Contents</h2>
-      <span class="collapse-icon">
-        {{ isCollapsed ? '▶' : '▼' }}
-      </span>
-    </div>
-    <div class="toc-content"
-         :class="{ collapsed: isCollapsed }">
-      <ul class="toc-list">
-        <li v-for="(today, index) in data"
-            :key="index"
-            class="toc-section">
-          <a :href="`#section-${index}`"
-             v-if="filterToday(today).length !== 0"
-             class="section-link">
-            {{ index }} ({{ filterToday(today).length }})
-          </a>
-          <ul class="toc-items">
-            <li v-for="(entity, entity_index) in today.slice(0, showAllItems[index] ? undefined : tocCountLimit)"
-                :key="entity_index"
-                class="toc-item">
-              <a :href="`#item-${index}-${entity_index}`"
-                 v-if="entity.timestamp > getYesterdayMidnightTimestamp()"
-                 class="item-link"
-                 :title="entity.title">
-                {{ entity.title }}
-              </a>
-            </li>
-            <!-- 显示更多按钮 -->
-            <li v-if="filterToday(today).length > tocCountLimit" class="show-more">
-              <button
-                  @click="toggleItemsVisibility(index)"
-                  class="show-more-btn">
-                {{ showAllItems[index] ? 'Show less' : `Show more(${filterToday(today).length - tocCountLimit})` }}
-              </button>
-            </li>
-          </ul>
-        </li>
-      </ul>
-    </div>
-  </div>
-  <!--------------------------Content-------------------------------->
-  <div v-for="(today, index) in data" :key="`today-${index}-${filterToday(today).length}`">
-    <h2 class="content-title" v-if="filterToday(today).length > 0" :id="`section-${index}`">
-      {{ index }}  <Badge type="warning" text="subscribe" @click="handleSubscribeClick(index)"/>
-    </h2>
-    {{ FIELD_CONFIG[index].desc }}
-    
-    <div v-for="(entity, entity_index) in today" :key="entity_index">
-      <div v-if="entity.timestamp > getYesterdayMidnightTimestamp()">
-        <div class="card">
-          <div :class="`card-content ${handleCardCss(entity_index, index)} card-style`">
-            <span class="card-header">
-                <h3 :id="`item-${index}-${entity_index}`" class='card-title' @click="clickCopyLink(entity.url)">
-                {{ entity.title === '' ? 'Untitled' : entity.title }}
-                  <Badge :type="FIELD_CONFIG[index].type" :text="FIELD_CONFIG[index].price"/>
-                </h3>
-                <span class="card-datetime">{{ formatTimestamp(entity.timestamp * 1000) }}</span>
-            </span>
-            <div class="message" v-html="entity.summary" @click="handleCardClick(entity.url)"/>
-            <div class="message" v-html="entity.translate" @click="handleCardClick(entity.url)"/>
+  <div class="today-layout">
+    <main class="today-main">
+      <!--------------------------Content-------------------------------->
+      <div v-for="(today, index) in data" :key="`today-${index}-${filterToday(today).length}`">
+        <h2 class="content-title" v-if="filterToday(today).length > 0" :id="`section-${index}`">
+          {{ index }}  <Badge type="warning" text="subscribe" @click="handleSubscribeClick(index)"/>
+        </h2>
+        {{ FIELD_CONFIG[index].desc }}
+
+        <div v-for="(entity, entity_index) in today" :key="entity_index">
+          <div v-if="entity.timestamp > getYesterdayMidnightTimestamp()">
+            <div class="card">
+              <div :class="`card-content ${handleCardCss(entity_index, index)} card-style`">
+                <span class="card-header">
+                    <h3 :id="`item-${index}-${entity_index}`" class='card-title' @click="clickCopyLink(entity.url)">
+                    {{ entity.title === '' ? 'Untitled' : entity.title }}
+                      <Badge :type="FIELD_CONFIG[index].type" :text="FIELD_CONFIG[index].price"/>
+                    </h3>
+                    <span class="card-datetime">{{ formatTimestamp(entity.timestamp * 1000) }}</span>
+                </span>
+                <div class="message" v-html="entity.summary" @click="handleCardClick(entity.url)"/>
+                <div class="message" v-html="entity.translate" @click="handleCardClick(entity.url)"/>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </main>
+
+    <!-------------------------TOC--------------------------------->
+    <aside v-show="showContent" class="toc-aside">
+      <div class="toc-container">
+        <div class="toc-header" @click="isCollapsed = !isCollapsed">
+          <h2>Table of Contents</h2>
+          <span class="collapse-icon">
+            {{ isCollapsed ? '▶' : '▼' }}
+          </span>
+        </div>
+        <div class="toc-content"
+             :class="{ collapsed: isCollapsed }">
+          <ul class="toc-list">
+            <li v-for="(today, index) in data"
+                :key="index"
+                class="toc-section">
+              <a :href="`#section-${index}`"
+                 v-if="filterToday(today).length !== 0"
+                 class="section-link">
+                {{ index }} ({{ filterToday(today).length }})
+              </a>
+              <ul class="toc-items">
+                <li v-for="(entity, entity_index) in today.slice(0, showAllItems[index] ? undefined : tocCountLimit)"
+                    :key="entity_index"
+                    class="toc-item">
+                  <a :href="`#item-${index}-${entity_index}`"
+                     v-if="entity.timestamp > getYesterdayMidnightTimestamp()"
+                     class="item-link"
+                     :title="entity.title">
+                    {{ entity.title }}
+                  </a>
+                </li>
+                <li v-if="filterToday(today).length > tocCountLimit" class="show-more">
+                  <button
+                      @click="toggleItemsVisibility(index)"
+                      class="show-more-btn">
+                    {{ showAllItems[index] ? 'Show less' : `Show more(${filterToday(today).length - tocCountLimit})` }}
+                  </button>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </aside>
   </div>
 </template>
 
 <style scoped>
+
+.today-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 32px;
+}
+
+@media (min-width: 1200px) {
+  .today-layout {
+    grid-template-columns: minmax(0, 1fr) 260px;
+    align-items: start;
+  }
+}
+
+.today-main {
+  min-width: 0;
+}
+
+.toc-aside {
+  display: block;
+  position: relative;
+}
 
 .heatmap-scroll {
   overflow-x: auto;
@@ -539,53 +567,55 @@ onMounted(() => {
 
 /* 目录样式 */
 .toc-container {
-  border: 1px solid var(--vp-c-bg-soft);
-  border-radius: 20px;
+  position: static;
+  border-left: 1px solid var(--vp-c-divider);
+  padding-left: 16px;
   height: 100%;
-  background-color: var(--vp-c-bg-soft);
-  transition: border-color 0.25s, background-color 0.25s;
+}
+
+@media (min-width: 1200px) {
+  .toc-container {
+    position: sticky;
+    top: calc(var(--vp-nav-height) + 24px);
+  }
 }
 
 .toc-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 16px;
+  padding: 0 0 12px 0;
   cursor: pointer;
   user-select: none;
-  transition: background-color 0.2s;
-}
-
-.toc-header:hover {
-  /**
-  background: #f3f4f6;
-   */
 }
 
 .toc-header h2 {
   margin: 0;
-  padding: 10px 0 10px 0;
+  padding: 0;
   border-top: 0;
+  font-size: 13px;
   font-weight: 600;
-  color: var(--vp-c-text-1);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--vp-c-text-2);
 }
 
 .collapse-icon {
-  font-size: 14px;
-  color: #6b7280;
+  font-size: 12px;
+  color: var(--vp-c-text-3);
   transition: transform 0.2s;
 }
 
 .toc-content {
-  max-height: 400px;
+  max-height: calc(100vh - var(--vp-nav-height) - 80px);
   overflow-y: auto;
   transition: all 0.3s ease;
-  padding: 16px;
+  padding: 0 0 8px 0;
 }
 
 .toc-content.collapsed {
   max-height: 0;
-  padding: 0 16px;
+  padding: 0;
   overflow: hidden;
 }
 
@@ -596,39 +626,40 @@ onMounted(() => {
 }
 
 .toc-section {
-  margin-bottom: 16px;
-  padding-left: 8px;
-  border-left: 3px solid #e5e7eb;
+  margin-bottom: 12px;
+  padding-left: 0;
+  border-left: 0;
 }
 
 .section-link {
   display: block;
   font-weight: 600;
+  font-size: 13px;
   color: var(--vp-c-brand-1);
   text-decoration: none;
-  padding: 4px 0;
+  padding: 2px 0;
   transition: color 0.2s;
 }
 
 .section-link:hover {
-  color: var(--vp-c-brand-3);
+  color: var(--vp-c-brand-2);
 }
 
 .toc-items {
   list-style: none;
-  padding: 0;
+  padding: 0 0 0 12px;
   margin: 8px 0 0 0;
 }
 
 .toc-item {
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
 .item-link {
   display: block;
-  color: var(--vp-c-text-2);
+  color: var(--vp-c-text-3);
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 12px;
   padding: 2px 0;
   line-height: 1.4;
   transition: color 0.2s;
@@ -640,7 +671,7 @@ onMounted(() => {
 }
 
 .item-link:hover {
-  color: #374151;
+  color: var(--vp-c-text-1);
 }
 
 .show-more {
@@ -651,7 +682,7 @@ onMounted(() => {
   background: none;
   border: none;
   color: var(--vp-c-brand-1);
-  font-size: 0.8rem;
+  font-size: 12px;
   cursor: pointer;
   padding: 4px 0;
   text-decoration: underline;
