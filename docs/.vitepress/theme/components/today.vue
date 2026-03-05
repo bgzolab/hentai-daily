@@ -122,11 +122,11 @@ const getCurrentDate = (now: Date) => {
   return `${year}/${month}/${day}`;
 };
 
-// 格式化日期为 MM/DD/YYYY 格式（用于显示）
+// 格式化日期为 MM/DD 格式（用于显示）
 const formatDisplayDate = (dateStr: string): string => {
   // dateStr 格式为 YYYY/MM/DD
   const [year, month, day] = dateStr.split("/");
-  return `${month}/${day}/${year}`;
+  return `${month}/${day}/`;
 };
 
 const fetchData = async () => {
@@ -258,6 +258,19 @@ const refreshToday = (timestamp?: number) => {
   fetchData();
 };
 
+// 检查指定日期是否存在日志
+const checkDateExists = async (dateStr: string): Promise<boolean> => {
+  // try {
+  //   const response = await fetch(`/api/archives/${dateStr}.json`, {
+  //     method: "GET",
+  //   });
+  //   return response.ok;
+  // } catch {
+  //   return false;
+  // }
+  return true; // 先假设所有日期都存在，后续可以根据实际情况调整
+};
+
 function watchDarkMode(callback) {
   if (typeof window === "undefined") return;
   const observer = new MutationObserver(() => {
@@ -352,11 +365,28 @@ onMounted(() => {
   };
 
   initCalHeatmap();
-  
-  // 监听年份变化，重新绘制图表
-  watch(selectedYear, () => {
-    console.log("年份已更新为 ", selectedYear.value);
+
+  // 监听年份变化，重新绘制图表并加载该年的数据
+  watch(selectedYear, async (newYear, oldYear) => {
+    console.log("年份已更新为 ", newYear);
+
+    // 构造该年同月同日的日期
+    const today = new Date();
+    const newDate = new Date(newYear, today.getMonth(), today.getDate());
+    const newDateStr = getCurrentDate(newDate);
+
+    // 检查新日期是否存在日志
+    const exists = await checkDateExists(newDateStr);
+    if (!exists) {
+      // 数据不存在，恢复到旧年份
+      selectedYear.value = oldYear;
+      toast.warning(`No logs found for ${newDateStr}. Year reverted.`);
+      return;
+    }
+
+    // 数据存在，重新绘制图表并加载数据
     initCalHeatmap();
+    refreshToday(newDate.getTime());
   });
 
   // 监听黑暗模式变化，重新渲染图表
@@ -576,7 +606,6 @@ onMounted(() => {
   .date-selector {
     display: flex;
     align-items: center;
-    gap: 12px;
   }
 
   .date {
@@ -587,24 +616,22 @@ onMounted(() => {
   }
 
   .year-select {
-    padding: 6px 12px;
-    border: 1px solid var(--vp-c-divider);
-    border-radius: 4px;
-    background-color: var(--vp-c-bg);
+    padding: 6px 28px 6px 0;
+    border: none;
+    background-color: transparent;
     color: var(--vp-c-text-1);
-    font-size: 0.95em;
+    font-size: 1em;
     cursor: pointer;
     transition: all 0.2s ease;
   }
 
   .year-select:hover {
-    border-color: var(--vp-c-brand-1);
+    border-bottom-color: var(--vp-c-divider);
   }
 
   .year-select:focus {
     outline: none;
-    border-color: var(--vp-c-brand-1);
-    box-shadow: 0 0 0 2px var(--vp-c-brand-1-dimm);
+    border-bottom-color: var(--vp-c-brand-1);
   }
 }
 
