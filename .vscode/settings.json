@@ -136,5 +136,8 @@
 
   // Live Preview
   "livePreview.autoRefreshPreview": "On Changes to Saved Files",
-  "chat.mcp.access": "all"
+  "chat.mcp.access": "all",
+  "python.testing.pytestArgs": ["tests"],
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestEnabled": true
 }

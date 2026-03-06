@@ -8,7 +8,7 @@
 import logging
 import sys
 
-import brotli
+# import brotli
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
