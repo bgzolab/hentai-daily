@@ -2,15 +2,15 @@ name: sync
 
 on:
   workflow_dispatch:
-#  push:
-#    branches: [ main ]
+  #  push:
+  #    branches: [ main ]
   schedule:
-    - cron:  '0 21 * * *'
+    - cron: "0 21 * * *"
     # 东八区每天凌晨5点
   push:
     branches:
       # 开发分支验证路由
-      - 'vitepress-dev'
+      - "vitepress-dev"
 
 jobs:
   sync:
@@ -38,10 +38,34 @@ jobs:
           pip install -r src/requirements.txt
         if: steps.pip-cache.outputs.cache-hit != 'true'
 
+      - name: Ensure jq is available
+        run: |
+          if ! command -v jq &> /dev/null; then
+            echo "jq not found, installing..."
+            sudo apt-get update && sudo apt-get install -y jq
+          else
+            echo "jq is available: $(jq --version)"
+          fi
+
       - name: Run Script
         run: |
           python3 src/sync.py
           python3 src/heatmap-count.py
+
+      - name: Format JSON with jq
+        run: |
+          # 遍历所有 JSON 文件并用 jq 格式化（2 个空格缩进）
+          # 使用 -print0 和 read -d '' 安全处理文件名
+          find api/archives -maxdepth 4 -name "*.json" -type f -print0 | \
+            while IFS= read -r -d '' file; do
+              if jq --indent 2 '.' "$file" > /tmp/jq-tmp 2>/dev/null; then
+                mv -f /tmp/jq-tmp "$file"
+                echo "✓ Formatted: $file"
+              else
+                echo "✗ Skipped (invalid JSON): $file"
+                rm -f /tmp/jq-tmp
+              fi
+            done
 
       - name: Run Safe Dir
         run: |
