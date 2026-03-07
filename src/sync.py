@@ -12,6 +12,7 @@ import logging
 
 import requests
 from feedgen.feed import FeedGenerator
+from sources.llss import get_llss_post
 
 try:
     import brotli
@@ -475,6 +476,17 @@ if __name__ == '__main__':
                 "bahamut-{}".format(author))
         except Exception as e:
             logging.warning(f"跳过bahamut-{author}: {e}")
+
+    try:
+        rss_content_dict = add_sources(
+            rss_content_dict,
+            'Resources',
+            get_llss_post(),
+            "llss"
+        )
+    except Exception as e:
+        logging.warning(f"跳过llss: {e}")
+
 
     rss_content_dict = sort_content_dict(rss_content_dict)
 

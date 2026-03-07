@@ -6,7 +6,8 @@
 <body>
     <outline title="Resources" text="Resources">
         <outline title='gmgard' xmlUrl="https://feeds.feedburner.com/gmgard/bgzo"/>
-        <outline title='hacgicu' xmlUrl="https://feeds.feedburner.com/hacgicu/bgzo" />
+        <!-- no image -->
+        <!-- <outline title='hacgicu' xmlUrl="https://feeds.feedburner.com/hacgicu/bgzo" /> -->
         <outline title='reimu' xmlUrl="http://reimu.bgzo.cc"/>
         <outline title='tiangal' xmlUrl="http://tiangal.bgzo.cc"/>
         <outline title='south-plus-221' xmlUrl="http://south-plus-221.bgzo.cc"/>
