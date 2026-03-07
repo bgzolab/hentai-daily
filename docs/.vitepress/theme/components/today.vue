@@ -24,6 +24,16 @@ interface hentaiAPI {
   "DLsite Comic Ranking": rssEntity[];
 }
 
+interface countEntity {
+  date: string;
+  value: number;
+}
+
+const COUNT_JSON_URL = "/api/count.json";
+const COUNT_JSON_CACHE_KEY = "today:count-json:v1";
+let countDataCache: countEntity[] | null = null;
+let countDataPromise: Promise<countEntity[]> | null = null;
+
 type CategoryKey = keyof hentaiAPI;
 
 const createEmptyApiData = (): hentaiAPI => ({
@@ -94,6 +104,10 @@ const availableYears = computed(() => {
 const showContent = ref(true);
 // 卡片布局：false 为单栏，true 为双栏
 const isTwoColumn = ref(false);
+// 热力图 count.json 原始数据缓存
+const heatmapCountData = ref<countEntity[]>([]);
+// 热力图可用日期集合（来自 /api/count.json）
+const availableHeatmapDates = ref<Set<string>>(new Set());
 // 消息通知
 const toast = useToast();
 // 是否是黑暗模式
@@ -147,6 +161,85 @@ const formatDisplayDate = (dateStr: string): string => {
   // dateStr 格式为 YYYY/MM/DD
   const [, month, day] = dateStr.split("/");
   return `${month}/${day}/`;
+};
+
+const formatDateKey = (date: Date): string => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
+const loadAvailableHeatmapDates = async () => {
+  try {
+    if (countDataCache) {
+      heatmapCountData.value = countDataCache;
+      availableHeatmapDates.value = new Set(
+        countDataCache
+          .filter((item) => typeof item?.date === "string")
+          .map((item) => item.date),
+      );
+      return;
+    }
+
+    if (!countDataPromise) {
+      countDataPromise = (async () => {
+        if (typeof window !== "undefined") {
+          const cachedRaw = window.sessionStorage.getItem(COUNT_JSON_CACHE_KEY);
+          if (cachedRaw) {
+            const parsed = JSON.parse(cachedRaw) as countEntity[];
+            return parsed;
+          }
+        }
+
+        const response = await fetch(COUNT_JSON_URL, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch count.json: ${response.status}`);
+        }
+
+        const result = (await response.json()) as countEntity[];
+        if (typeof window !== "undefined") {
+          window.sessionStorage.setItem(
+            COUNT_JSON_CACHE_KEY,
+            JSON.stringify(result),
+          );
+        }
+        return result;
+      })();
+    }
+
+    const result = await countDataPromise;
+    countDataCache = result;
+    heatmapCountData.value = result;
+    availableHeatmapDates.value = new Set(
+      result
+        .filter((item) => typeof item?.date === "string")
+        .map((item) => item.date),
+    );
+  } catch (err) {
+    console.error("加载 count.json 失败:", err);
+    heatmapCountData.value = [];
+    availableHeatmapDates.value = new Set();
+  } finally {
+    countDataPromise = null;
+  }
+};
+
+const isDateInCountData = (timestamp: number): boolean => {
+  const dateKey = formatDateKey(new Date(timestamp));
+  return availableHeatmapDates.value.has(dateKey);
+};
+
+const hasArchiveData = (archiveDate: string): boolean => {
+  // archiveDate: YYYY/MM/DD -> count.json key: YYYY-MM-DD
+  const dateKey = archiveDate.replace(/\//g, "-");
+  return availableHeatmapDates.value.has(dateKey);
 };
 
 const fetchData = async () => {
@@ -290,30 +383,23 @@ const visibleData = computed(() => {
   const result = createEmptyApiData();
   for (const category of CATEGORY_KEYS) {
     result[category] = getVisibleEntries(category, data.value[category]);
-      }
+  }
   return result;
 });
 
 const refreshToday = (timestamp?: number) => {
-  if (timestamp) {
-    currentDate.value = getCurrentDate(new Date(timestamp));
-  } else {
-    currentDate.value = getCurrentDate(new Date());
+  const targetDate = timestamp
+    ? getCurrentDate(new Date(timestamp))
+    : getCurrentDate(new Date());
+
+  currentDate.value = targetDate;
+
+  if (!hasArchiveData(targetDate)) {
+    showContent.value = false;
+    data.value = createEmptyApiData();
+    return;
   }
   fetchData();
-};
-
-// 检查指定日期是否存在日志
-const checkDateExists = async (dateStr: string): Promise<boolean> => {
-  // try {
-  //   const response = await fetch(`/api/archives/${dateStr}.json`, {
-  //     method: "GET",
-  //   });
-  //   return response.ok;
-  // } catch {
-  //   return false;
-  // }
-  return true; // 先假设所有日期都存在，后续可以根据实际情况调整
 };
 
 function createCalHeatmap() {
@@ -336,7 +422,7 @@ function createCalHeatmap() {
         end: endDate,
       },
       data: {
-        source: "/api/count.json",
+        source: heatmapCountData.value,
         x: "date",
         y: "value",
       },
@@ -358,25 +444,28 @@ function createCalHeatmap() {
     ],
   );
 
-  cal.on("click", ((event: any, timestamp: number, value: any) => {
+  cal.on("click", ((_event: any, timestamp: number, _value: any) => {
     console.log("click" + new Date(timestamp).toLocaleDateString());
-    if (timestamp > new Date().getTime()) {
-      toast.info("The future is yours. Check it in few days later.");
-    } else {
-      const clickedDate = new Date(timestamp);
-      // 如果点击的日期年份与当前选中年份不同，更新年份
-      if (clickedDate.getFullYear() !== selectedYear.value) {
-        selectedYear.value = clickedDate.getFullYear();
-      }
-      refreshToday(timestamp);
+    // 以 count.json 为准：只有存在于统计数据中的日期才允许跳转
+    if (!isDateInCountData(timestamp)) {
+      toast.info("No archived data for this day yet. Please try another date.");
+      return;
     }
+
+    const clickedDate = new Date(timestamp);
+    // 如果点击的日期年份与当前选中年份不同，更新年份
+    if (clickedDate.getFullYear() !== selectedYear.value) {
+      selectedYear.value = clickedDate.getFullYear();
+    }
+    refreshToday(timestamp);
   }) as any); // 关键：使用 as any 绕过类型检查
   return cal;
 }
 
 // 组件挂载时设置当前日期
-onMounted(() => {
-  console.log("1绘制为 ", isDark);
+onMounted(async () => {
+  console.log("绘制为 ", isDark);
+  await loadAvailableHeatmapDates();
   refreshToday();
 
   let cal: any = null;
@@ -407,7 +496,7 @@ onMounted(() => {
     const newDateStr = getCurrentDate(newDate);
 
     // 检查新日期是否存在日志
-    const exists = await checkDateExists(newDateStr);
+    const exists = await hasArchiveData(newDateStr);
     if (!exists) {
       // 数据不存在，恢复到旧年份
       selectedYear.value = oldYear;
@@ -417,6 +506,8 @@ onMounted(() => {
 
     // 数据存在，重新绘制图表并加载数据
     initCalHeatmap();
+
+    // 缓存是否存在这天的结果，存在就请求，不存在不请求，避免404请求
     refreshToday(newDate.getTime());
   });
 
