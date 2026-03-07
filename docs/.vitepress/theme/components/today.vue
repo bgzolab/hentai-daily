@@ -30,7 +30,6 @@ interface countEntity {
 }
 
 const COUNT_JSON_URL = "/api/count.json";
-const COUNT_JSON_CACHE_KEY = "today:count-json:v1";
 let countDataCache: countEntity[] | null = null;
 let countDataPromise: Promise<countEntity[]> | null = null;
 
@@ -184,14 +183,6 @@ const loadAvailableHeatmapDates = async () => {
 
     if (!countDataPromise) {
       countDataPromise = (async () => {
-        if (typeof window !== "undefined") {
-          const cachedRaw = window.sessionStorage.getItem(COUNT_JSON_CACHE_KEY);
-          if (cachedRaw) {
-            const parsed = JSON.parse(cachedRaw) as countEntity[];
-            return parsed;
-          }
-        }
-
         const response = await fetch(COUNT_JSON_URL, {
           method: "GET",
           headers: {
@@ -204,12 +195,6 @@ const loadAvailableHeatmapDates = async () => {
         }
 
         const result = (await response.json()) as countEntity[];
-        if (typeof window !== "undefined") {
-          window.sessionStorage.setItem(
-            COUNT_JSON_CACHE_KEY,
-            JSON.stringify(result),
-          );
-        }
         return result;
       })();
     }
@@ -495,17 +480,16 @@ onMounted(async () => {
     const newDate = new Date(newYear, today.getMonth(), today.getDate());
     const newDateStr = getCurrentDate(newDate);
 
+    // 数据存在，重新绘制图表并加载数据
+    initCalHeatmap();
+
     // 检查新日期是否存在日志
     const exists = await hasArchiveData(newDateStr);
     if (!exists) {
       // 数据不存在，恢复到旧年份
-      selectedYear.value = oldYear;
-      toast.warning(`No logs found for ${newDateStr}. Year reverted.`);
+      toast.info(`No logs found for ${newDateStr}.`);
       return;
     }
-
-    // 数据存在，重新绘制图表并加载数据
-    initCalHeatmap();
 
     // 缓存是否存在这天的结果，存在就请求，不存在不请求，避免404请求
     refreshToday(newDate.getTime());
