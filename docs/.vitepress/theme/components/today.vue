@@ -97,6 +97,8 @@ const apiUrl = computed(() => {
   return `/api/archives/${currentDate.value}.json`;
 });
 
+const YESTERDAY_ONLY_KEYS = new Set(["Resources", "News"]);
+
 /**
  * 获取昨日凌晨的时间戳（本地时间）
  * 精确到秒（非毫秒）
@@ -106,6 +108,16 @@ const getYesterdayMidnightTimestamp = (): number => {
   yesterday.setDate(yesterday.getDate() - 1);
   yesterday.setHours(0, 0, 0, 0);
   return yesterday.getTime() / 1000;
+};
+
+/**
+ * 获取当前日期凌晨的时间戳（本地时间）
+ * 精确到秒（非毫秒）
+ */
+const getCurrentDayMidnightTimestamp = (): number => {
+  const current = new Date(currentDate.value);
+  current.setHours(0, 0, 0, 0);
+  return current.getTime() / 1000;
 };
 
 // 格式化时间戳为可读字符串
@@ -251,6 +263,24 @@ function isValidRssEntity(obj: any): obj is rssEntity {
  */
 const filterToday = (list: rssEntity[]) => {
   return list.filter((i) => i.timestamp > getYesterdayMidnightTimestamp());
+};
+
+const shouldDisplayEntity = (category: string, timestamp: number): boolean => {
+  if (YESTERDAY_ONLY_KEYS.has(category)) {
+    const start = getYesterdayMidnightTimestamp();
+    const end = getCurrentDayMidnightTimestamp();
+    return timestamp >= start && timestamp < end;
+  }
+
+  // Ranking 分类保持原逻辑
+  return timestamp > getYesterdayMidnightTimestamp();
+};
+
+const getVisibleEntries = (
+  category: string,
+  list: rssEntity[],
+): rssEntity[] => {
+  return list.filter((i) => shouldDisplayEntity(category, i.timestamp));
 };
 
 const refreshToday = (timestamp?: number) => {
@@ -422,11 +452,11 @@ onMounted(() => {
       <!--------------------------Content-------------------------------->
       <div
         v-for="(today, index) in data"
-        :key="`today-${index}-${filterToday(today).length}`"
+        :key="`today-${index}-${getVisibleEntries(index, today).length}`"
       >
         <h2
           class="content-title"
-          v-if="filterToday(today).length > 0"
+          v-if="getVisibleEntries(index, today).length > 0"
           :id="`section-${index}`"
         >
           {{ index }}
@@ -439,7 +469,7 @@ onMounted(() => {
         {{ FIELD_CONFIG[index].desc }}
 
         <div v-for="(entity, entity_index) in today" :key="entity_index">
-          <div v-if="entity.timestamp > getYesterdayMidnightTimestamp()">
+          <div v-if="shouldDisplayEntity(index, entity.timestamp)">
             <div class="card">
               <div
                 :class="`card-content ${handleCardCss(entity_index, index)} card-style`"
@@ -530,10 +560,10 @@ onMounted(() => {
             <li v-for="(today, index) in data" :key="index" class="toc-section">
               <a
                 :href="`#section-${index}`"
-                v-if="filterToday(today).length !== 0"
+                v-if="getVisibleEntries(index, today).length !== 0"
                 class="section-link"
               >
-                {{ index }} ({{ filterToday(today).length }})
+                {{ index }} ({{ getVisibleEntries(index, today).length }})
               </a>
               <ul class="toc-items">
                 <li
@@ -543,7 +573,7 @@ onMounted(() => {
                 >
                   <a
                     :href="`#item-${index}-${entity_index}`"
-                    v-if="entity.timestamp > getYesterdayMidnightTimestamp()"
+                    v-if="shouldDisplayEntity(index, entity.timestamp)"
                     class="item-link"
                     :title="entity.title"
                   >
