@@ -451,7 +451,7 @@ onMounted(() => {
   </div>
   <!-------------------------Actions Bar---------------------------->
   <div class="actions-bar">
-    <span class="label"> Column Switch</span>
+    <span class="label">Double Column</span>
     <button
       class="VPSwitch layout-switch"
       type="button"
@@ -496,76 +496,81 @@ onMounted(() => {
             class="card-item"
           >
             <div class="card">
-              <div
-                :class="`card-content ${handleCardCss(entity_index, index)} card-style`"
-                @click="handleCardClick(entity.url)"
-              >
-                <span class="card-header">
-                  <h3 :id="`item-${index}-${entity_index}`" class="card-title">
-                    {{ entity.title === "" ? "Untitled" : entity.title }}
-                    <Badge
-                      :type="FIELD_CONFIG[index].type"
-                      :text="FIELD_CONFIG[index].price"
-                    />
-                  </h3>
-                  <span class="card-datetime">{{
-                    formatTimestamp(entity.timestamp * 1000)
-                  }}</span>
-                </span>
-                <div class="message" v-html="entity.summary" />
-                <div class="message" v-html="entity.translate" />
+              <div class="card-wrapper">
+                <div
+                  :class="`card-content ${handleCardCss(entity_index, index)} card-style`"
+                  @click="handleCardClick(entity.url)"
+                >
+                  <span class="card-header">
+                    <h3
+                      :id="`item-${index}-${entity_index}`"
+                      class="card-title"
+                    >
+                      {{ entity.title === "" ? "Untitled" : entity.title }}
+                      <Badge
+                        :type="FIELD_CONFIG[index].type"
+                        :text="FIELD_CONFIG[index].price"
+                      />
+                    </h3>
+                    <span class="card-datetime">{{
+                      formatTimestamp(entity.timestamp * 1000)
+                    }}</span>
+                  </span>
+                  <div class="message" v-html="entity.summary" />
+                  <div class="message" v-html="entity.translate" />
 
-                <!-- 卡片底部按钮 -->
-                <div class="card-actions">
-                  <button
-                    class="action-btn action-copy"
-                    title="Copy Link"
-                    @click.stop="clickCopyLink(entity.url)"
-                  >
-                    <svg
-                      t="1772717415932"
-                      class="icon icon-svg"
-                      viewBox="0 0 1024 1024"
-                      version="1.1"
-                      xmlns="http://www.w3.org/2000/svg"
-                      p-id="1622"
-                      width="200"
-                      height="200"
+                  <!-- 卡片底部按钮 -->
+                  <div class="card-actions">
+                    <button
+                      class="action-btn action-copy"
+                      title="Copy Link"
+                      @click.stop="clickCopyLink(entity.url)"
                     >
-                      <path
-                        d="M931.882 131.882l-103.764-103.764A96 96 0 0 0 760.236 0H416c-53.02 0-96 42.98-96 96v96H160c-53.02 0-96 42.98-96 96v640c0 53.02 42.98 96 96 96h448c53.02 0 96-42.98 96-96v-96h160c53.02 0 96-42.98 96-96V199.764a96 96 0 0 0-28.118-67.882zM596 928H172a12 12 0 0 1-12-12V300a12 12 0 0 1 12-12h148v448c0 53.02 42.98 96 96 96h192v84a12 12 0 0 1-12 12z m256-192H428a12 12 0 0 1-12-12V108a12 12 0 0 1 12-12h212v176c0 26.51 21.49 48 48 48h176v404a12 12 0 0 1-12 12z m12-512h-128V96h19.264c3.182 0 6.234 1.264 8.486 3.514l96.736 96.736a12 12 0 0 1 3.514 8.486V224z"
-                        p-id="1623"
-                        fill="#8a8a8a"
-                      ></path>
-                    </svg>
-                  </button>
-                  <button
-                    class="action-btn action-open"
-                    title="Open Link"
-                    @click.stop="handleCardClick(entity.url)"
-                  >
-                    <svg
-                      t="1772716796795"
-                      class="icon icon-svg"
-                      viewBox="0 0 1024 1024"
-                      version="1.1"
-                      xmlns="http://www.w3.org/2000/svg"
-                      p-id="6502"
-                      width="200"
-                      height="200"
+                      <svg
+                        t="1772717415932"
+                        class="icon icon-svg"
+                        viewBox="0 0 1024 1024"
+                        version="1.1"
+                        xmlns="http://www.w3.org/2000/svg"
+                        p-id="1622"
+                        width="200"
+                        height="200"
+                      >
+                        <path
+                          d="M931.882 131.882l-103.764-103.764A96 96 0 0 0 760.236 0H416c-53.02 0-96 42.98-96 96v96H160c-53.02 0-96 42.98-96 96v640c0 53.02 42.98 96 96 96h448c53.02 0 96-42.98 96-96v-96h160c53.02 0 96-42.98 96-96V199.764a96 96 0 0 0-28.118-67.882zM596 928H172a12 12 0 0 1-12-12V300a12 12 0 0 1 12-12h148v448c0 53.02 42.98 96 96 96h192v84a12 12 0 0 1-12 12z m256-192H428a12 12 0 0 1-12-12V108a12 12 0 0 1 12-12h212v176c0 26.51 21.49 48 48 48h176v404a12 12 0 0 1-12 12z m12-512h-128V96h19.264c3.182 0 6.234 1.264 8.486 3.514l96.736 96.736a12 12 0 0 1 3.514 8.486V224z"
+                          p-id="1623"
+                          fill="#8a8a8a"
+                        ></path>
+                      </svg>
+                    </button>
+                    <button
+                      class="action-btn action-open"
+                      title="Open Link"
+                      @click.stop="handleCardClick(entity.url)"
                     >
-                      <path
-                        d="M819.2 887.466667H136.533333V204.8h341.333334V68.266667H136.533333a136.533333 136.533333 0 0 0-136.533333 136.533333v682.666667a136.533333 136.533333 0 0 0 136.533333 136.533333h682.666667a136.533333 136.533333 0 0 0 136.533333-136.533333V546.133333h-136.533333v341.333334z"
-                        fill="#8a8a8a"
-                        p-id="6503"
-                      ></path>
-                      <path
-                        d="M955.733333 0h-273.066666a68.266667 68.266667 0 0 0 0 136.533333h108.202666L421.2736 506.129067a68.266667 68.266667 0 1 0 96.597333 96.597333L887.466667 233.130667V341.333333a68.266667 68.266667 0 0 0 136.533333 0V68.266667a68.266667 68.266667 0 0 0-68.266667-68.266667z"
-                        fill="#8a8a8a"
-                        p-id="6504"
-                      ></path>
-                    </svg>
-                  </button>
+                      <svg
+                        t="1772716796795"
+                        class="icon icon-svg"
+                        viewBox="0 0 1024 1024"
+                        version="1.1"
+                        xmlns="http://www.w3.org/2000/svg"
+                        p-id="6502"
+                        width="200"
+                        height="200"
+                      >
+                        <path
+                          d="M819.2 887.466667H136.533333V204.8h341.333334V68.266667H136.533333a136.533333 136.533333 0 0 0-136.533333 136.533333v682.666667a136.533333 136.533333 0 0 0 136.533333 136.533333h682.666667a136.533333 136.533333 0 0 0 136.533333-136.533333V546.133333h-136.533333v341.333334z"
+                          fill="#8a8a8a"
+                          p-id="6503"
+                        ></path>
+                        <path
+                          d="M955.733333 0h-273.066666a68.266667 68.266667 0 0 0 0 136.533333h108.202666L421.2736 506.129067a68.266667 68.266667 0 1 0 96.597333 96.597333L887.466667 233.130667V341.333333a68.266667 68.266667 0 0 0 136.533333 0V68.266667a68.266667 68.266667 0 0 0-68.266667-68.266667z"
+                          fill="#8a8a8a"
+                          p-id="6504"
+                        ></path>
+                      </svg>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -804,33 +809,56 @@ onMounted(() => {
 
 .card {
   border-radius: 20px;
-  overflow: hidden;
-
-  margin: 40px 0 40px 0;
+  overflow: visible;
+  margin: 20px 0;
   width: 100%;
   position: relative;
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .card-item {
   width: 100%;
+  /* 固定容器，为动画预留空间 */
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+/* 内部包装层，限制动画范围 */
+.card-wrapper {
+  position: relative;
+  width: 100%;
+  min-height: 200px;
+  overflow: hidden;
+  border-radius: 20px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, box-shadow;
+}
+
+.card-wrapper:hover {
+  transform: scale(1.02) translateY(-4px) rotate(0.5deg);
+  box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.3);
 }
 
 .cards-grid--two {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-  grid-auto-rows: max-content;
+  column-count: 2;
+  column-gap: 20px;
 }
 
 .cards-grid--two .card-item {
   width: 100%;
+  break-inside: avoid;
+  page-break-inside: avoid; /* 兼容旧浏览器 */
+  -webkit-column-break-inside: avoid; /* Safari */
+  margin-bottom: 20px;
 }
 
 .cards-grid--two .card {
   margin: 0;
   width: 100%;
+}
+
+.cards-grid--two .card-item {
+  padding: 10px;
 }
 
 @media (max-width: 960px) {
@@ -839,68 +867,60 @@ onMounted(() => {
   }
 }
 
-.card:hover {
-  transform: scale(1.04, 1.02) rotate(0.6deg);
-  box-shadow: 0 12px 24px -8px gray;
-}
-
 /* 卡片底部操作按钮面板 */
 .card-actions {
   position: relative;
   display: flex;
-  margin-top: 0;
-  max-height: 0;
+  margin-top: 1rem;
+  height: 44px;
   opacity: 0;
-  overflow: hidden;
-  transform: translateY(8px);
+  transform: translateY(-10px) scale(0.95);
   pointer-events: none;
   transition:
-    max-height 0.28s ease,
-    opacity 0.22s ease,
-    transform 0.28s ease,
-    margin-top 0.28s ease;
+    opacity 0.25s ease,
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.card:hover .card-actions {
-  max-height: 44px;
-  margin-top: 1rem;
+.card-wrapper:hover .card-actions {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
   pointer-events: auto;
 }
 
 .action-btn {
   flex: 1;
-  padding: 0.625rem;
+  padding: 0.75rem;
   border: none;
-  background: transparent;
-  color: var(--vp-c-text-1);
+  color: var(--vp-c-text-2);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
+  border-radius: 8px;
   transition: all 0.2s ease;
 }
 
 .action-btn:hover {
+  background: var(--vp-c-brand-soft);
   color: var(--vp-c-brand-1);
+  transform: translateY(-2px);
 }
 
-/* 按钮之间的竖线分隔符（放在右侧按钮的左边） */
-.action-btn + .action-btn::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  width: 1px;
-  height: 20px;
-  background: var(--vp-c-divider);
+/* 按钮之间的间距 */
+.action-btn + .action-btn {
+  margin-left: 8px;
 }
 
 .icon-svg {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   display: block;
+  transition: transform 0.2s ease;
+}
+
+.action-btn:hover .icon-svg {
+  transform: scale(1.1);
 }
 
 .icon-svg path {
