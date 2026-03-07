@@ -9,6 +9,7 @@ export default defineConfig({
   themeConfig: {
     socialLinks: [
       { icon: "github", link: "https://github.com/bGZo/hentai-daily" },
+      { icon: "telegram", link: "https://t.me/imbGZo" },
     ],
     footer: {
       message:
