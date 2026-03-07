@@ -86,16 +86,34 @@ def get_rss_content_dict():
     for key in rss_feed_dict.keys():
         for address in rss_feed_dict[key]:
             # 设置同源
-            request_headers['Referer'] = extract_root_url(address)
+            # request_headers['Referer'] = extract_root_url(address)
             # 模拟请求
-            response = requests.get(address, headers=request_headers)
+            response = requests.get(address, headers=request_headers, timeout=30, allow_redirects=True)
+            
+            logging.info("Request %s - Status: %s, Content-Length: %s, Content-Type: %s", 
+                        address, response.status_code, len(response.content), 
+                        response.headers.get('Content-Type', 'unknown'))
+            
             if response.status_code != 200:
                 logging.error('Request %s occurs error, response code: %s', address, response.status_code)
                 continue
 
+            # 检查是否有实际内容
+            if len(response.content) == 0:
+                logging.warning("Response content is empty for %s", address)
+                continue
+            
+            # 记录前200字符用于调试
+            content_preview = response.content[:200].decode('utf-8', errors='ignore')
+            logging.info("Response preview for %s: %s...", address, content_preview)
+
             feed = feedparser.parse(response.content)
             entries = feed.entries
-            logging.info("Scan RSS: %s with entries: %s", address, entries)
+            
+            # 增强调试信息
+            logging.info("Scan RSS: %s with entries count: %s", address, len(entries))
+            if len(entries) == 0 and feed.bozo:
+                logging.warning("Feed parsing failed for %s, bozo_exception: %s", address, feed.bozo_exception)
 
             for entry in entries:
                 content = entry_to_dict(entry)
