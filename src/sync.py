@@ -332,6 +332,27 @@ def output_feed_within_day(rss_content_dict, start, interval_days, feed_director
         fg.rss_file(feed_filename)
     logging.info("Output feeds of API successfully")
 
+# update docs/today.md and docs/zh-cn/today.md updateTime
+def update_markdown_frontmatter(filepath):
+    """更新 Markdown 文件的 Front Matter 中的 update 字段"""
+    try:
+        with open(filepath, 'r', encoding='utf-8') as file:
+            content = file.read()
+        
+        # 获取当前时间，格式化为 YYYY-MM-DDTHH:MM:SS
+        current_time = datetime.datetime.now(timezone).strftime('%Y-%m-%dT%H:%M:%S')
+        
+        # 匹配并替换 update 字段
+        pattern = r'(update:\s*).+?(?=\n|$)'
+        updated_content = re.sub(pattern, r'update: ' + current_time, content)
+        
+        with open(filepath, 'w', encoding='utf-8') as file:
+            file.write(updated_content)
+        
+        logging.info(f"Updated {filepath} - update time: {current_time}")
+    except Exception as e:
+        logging.warning(f"Failed to update {filepath}: {e}")
+
 
 if __name__ == '__main__':
     config_rss_opml = "config/rss.opml"
@@ -419,3 +440,7 @@ if __name__ == '__main__':
     output_archive(rss_content_dict, archive_filename)
     # output_content_within_day(rss_content_dict, start, interval_days, target_filename)
     output_feed_within_day(rss_content_dict, start, interval_days, feed_directory)
+
+    # 更新文档update时间
+    update_markdown_frontmatter('docs/today.md')
+    update_markdown_frontmatter('docs/zh-cn/today.md')
