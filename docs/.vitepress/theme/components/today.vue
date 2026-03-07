@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed, reactive, watch } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import CalHeatmap from "cal-heatmap";
 import "cal-heatmap/cal-heatmap.css";
 import { useToast } from "vue-toastification";
@@ -23,6 +23,16 @@ interface hentaiAPI {
   "DLsite Voice Ranking": rssEntity[];
   "DLsite Comic Ranking": rssEntity[];
 }
+
+type CategoryKey = keyof hentaiAPI;
+
+const createEmptyApiData = (): hentaiAPI => ({
+  Resources: [],
+  News: [],
+  "DLsite Game Ranking": [],
+  "DLsite Voice Ranking": [],
+  "DLsite Comic Ranking": [],
+});
 
 // 定义字段映射配置
 const FIELD_CONFIG = {
@@ -67,9 +77,7 @@ const FIELD_CONFIG = {
  * Fields
  */
 
-const data = ref<hentaiAPI>(null);
-const loading = ref(false);
-const error = ref(null);
+const data = ref<hentaiAPI>(createEmptyApiData());
 // 日期
 const currentDate = ref("");
 // 当前选中的年份
@@ -83,13 +91,9 @@ const availableYears = computed(() => {
   }
   return years.reverse(); // 降序排列，最新年份在前
 });
-// 目录限制
-const tocCountLimit = 5;
 const showContent = ref(true);
 // 卡片布局：false 为单栏，true 为双栏
 const isTwoColumn = ref(false);
-// 目录配置
-const showAllItems = reactive<Record<string, boolean>>({});
 // 消息通知
 const toast = useToast();
 // 是否是黑暗模式
@@ -100,6 +104,8 @@ const apiUrl = computed(() => {
 });
 
 const YESTERDAY_ONLY_KEYS = new Set(["Resources", "News"]);
+
+const CATEGORY_KEYS = Object.keys(FIELD_CONFIG) as CategoryKey[];
 
 /**
  * 获取昨日凌晨的时间戳（本地时间）
@@ -139,14 +145,11 @@ const getCurrentDate = (now: Date) => {
 // 格式化日期为 MM/DD 格式（用于显示）
 const formatDisplayDate = (dateStr: string): string => {
   // dateStr 格式为 YYYY/MM/DD
-  const [year, month, day] = dateStr.split("/");
+  const [, month, day] = dateStr.split("/");
   return `${month}/${day}/`;
 };
 
 const fetchData = async () => {
-  loading.value = true;
-  error.value = null;
-
   try {
     console.log("请求 URL:", apiUrl.value);
     const response = await fetch(apiUrl.value, {
@@ -158,7 +161,7 @@ const fetchData = async () => {
 
     if (!response.ok) {
       showContent.value = false;
-      data.value = {} as hentaiAPI;
+      data.value = createEmptyApiData();
       // error route
       if (404 == response.status) {
         toast.info("It seems not exist for today. Please check other days");
@@ -181,23 +184,20 @@ const fetchData = async () => {
       throw new Error("Invalid API response format");
     }
   } catch (err) {
-    error.value = err.message;
     console.error("API 请求失败:", err);
-  } finally {
-    loading.value = false;
   }
 };
 
 const clickCopyLink = (url: string) => {
   navigator.clipboard
     .writeText(url)
-    .then((i) => {
+    .then(() => {
       toast.info("Copy link successful.");
     })
     .catch((e) => console.error(e));
 };
 
-const handleSubscribeClick = (index: string) => {
+const handleSubscribeClick = (index: keyof typeof FIELD_CONFIG) => {
   window.open(FIELD_CONFIG[index].rss, "_blank");
 };
 
@@ -208,24 +208,21 @@ const handleCardClick = (url: string) => {
   window.open(url, "_blank");
 };
 
-const handleCardCss = (entity_index: number, index: string) => {
+const handleCardCss = (
+  entity_index: number,
+  index: keyof typeof FIELD_CONFIG,
+) => {
   if (!FIELD_CONFIG[index].ranking) {
     // no ranking no handle
     return "card-style-common";
-  } else {
-    switch (entity_index) {
-      case 0:
-        return "card-style-king";
-      case 1:
-        return "card-style-silver";
-      case 2:
-        return "card-style-bronze";
-      case 3:
-        return "card-style-common";
-      case 4:
-        return "card-style-common";
-    }
   }
+
+  const rankStyles = [
+    "card-style-king",
+    "card-style-silver",
+    "card-style-bronze",
+  ];
+  return rankStyles[entity_index] ?? "card-style-common";
 };
 
 // 类型验证函数
@@ -248,26 +245,10 @@ function isValidHentaiAPI(obj: any): obj is hentaiAPI {
   return true; // 先假设所有响应都是有效的，后续可以根据实际情况调整
 }
 
-function isValidRssEntity(obj: any): obj is rssEntity {
-  return (
-    obj &&
-    typeof obj === "object" &&
-    typeof obj.title === "string" &&
-    typeof obj.url === "string" &&
-    typeof obj.summary === "string" &&
-    typeof obj.timestamp === "number"
-  );
-}
-
-/**
- * 过滤出戒指昨天的内容
- * @param list
- */
-const filterToday = (list: rssEntity[]) => {
-  return list.filter((i) => i.timestamp > getYesterdayMidnightTimestamp());
-};
-
-const shouldDisplayEntity = (category: string, timestamp: number): boolean => {
+const shouldDisplayEntity = (
+  category: CategoryKey,
+  timestamp: number,
+): boolean => {
   if (YESTERDAY_ONLY_KEYS.has(category)) {
     const start = getYesterdayMidnightTimestamp();
     const end = getCurrentDayMidnightTimestamp();
@@ -279,11 +260,19 @@ const shouldDisplayEntity = (category: string, timestamp: number): boolean => {
 };
 
 const getVisibleEntries = (
-  category: string,
+  category: CategoryKey,
   list: rssEntity[],
 ): rssEntity[] => {
   return list.filter((i) => shouldDisplayEntity(category, i.timestamp));
 };
+
+const visibleData = computed(() => {
+  const result = createEmptyApiData();
+  for (const category of CATEGORY_KEYS) {
+    result[category] = getVisibleEntries(category, data.value[category]);
+  }
+  return result;
+});
 
 const refreshToday = (timestamp?: number) => {
   if (timestamp) {
@@ -306,20 +295,6 @@ const checkDateExists = async (dateStr: string): Promise<boolean> => {
   // }
   return true; // 先假设所有日期都存在，后续可以根据实际情况调整
 };
-
-function watchDarkMode(callback) {
-  if (typeof window === "undefined") return;
-  const observer = new MutationObserver(() => {
-    const isDark = document.documentElement.classList.contains("dark");
-    callback(isDark);
-  });
-  observer.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ["class"],
-  });
-  // 初始触发一次
-  // callback(document.documentElement.classList.contains('dark'))
-}
 
 function createCalHeatmap() {
   const cal = new CalHeatmap();
@@ -357,7 +332,7 @@ function createCalHeatmap() {
       [
         Tooltip,
         {
-          text: (t) => `${new Date(t).toLocaleDateString()}`,
+          text: (t: number) => `${new Date(t).toLocaleDateString()}`,
         },
       ],
     ],
@@ -426,8 +401,8 @@ onMounted(() => {
   });
 
   // 监听黑暗模式变化，重新渲染图表
-  watchDarkMode((isDark) => {
-    console.log("绘制为 ", isDark);
+  watch(isDark, (dark) => {
+    console.log("绘制为 ", dark);
     initCalHeatmap();
   });
 });
@@ -472,12 +447,12 @@ onMounted(() => {
     <main class="today-main">
       <!--------------------------Content-------------------------------->
       <div
-        v-for="(today, index) in data"
-        :key="`today-${index}-${getVisibleEntries(index, today).length}`"
+        v-for="(entries, index) in visibleData"
+        :key="`today-${index}-${entries.length}`"
       >
         <h2
           class="content-title"
-          v-if="getVisibleEntries(index, today).length > 0"
+          v-if="entries.length > 0"
           :id="`section-${index}`"
         >
           {{ index }}
@@ -491,7 +466,7 @@ onMounted(() => {
 
         <div class="cards-grid" :class="{ 'cards-grid--two': isTwoColumn }">
           <div
-            v-for="(entity, entity_index) in getVisibleEntries(index, today)"
+            v-for="(entity, entity_index) in entries"
             :key="`${entity.url}-${entity_index}`"
             class="card-item"
           >
@@ -517,7 +492,6 @@ onMounted(() => {
                     }}</span>
                   </span>
                   <div class="message" v-html="entity.summary" />
-                  <div class="message" v-html="entity.translate" />
 
                   <!-- 卡片底部按钮 -->
                   <div class="card-actions">
@@ -587,23 +561,26 @@ onMounted(() => {
         </div>
         <div class="toc-content">
           <ul class="toc-list">
-            <li v-for="(today, index) in data" :key="index" class="toc-section">
+            <li
+              v-for="(entries, index) in visibleData"
+              :key="index"
+              class="toc-section"
+            >
               <a
                 :href="`#section-${index}`"
-                v-if="getVisibleEntries(index, today).length !== 0"
+                v-if="entries.length !== 0"
                 class="section-link"
               >
-                {{ index }} ({{ getVisibleEntries(index, today).length }})
+                {{ index }} ({{ entries.length }})
               </a>
               <ul class="toc-items">
                 <li
-                  v-for="(entity, entity_index) in today"
+                  v-for="(entity, entity_index) in entries"
                   :key="entity_index"
                   class="toc-item"
                 >
                   <a
                     :href="`#item-${index}-${entity_index}`"
-                    v-if="shouldDisplayEntity(index, entity.timestamp)"
                     class="item-link"
                     :title="entity.title"
                   >
