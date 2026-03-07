@@ -86,6 +86,8 @@ const availableYears = computed(() => {
 // 目录限制
 const tocCountLimit = 5;
 const showContent = ref(true);
+// 卡片布局：false 为单栏，true 为双栏
+const isTwoColumn = ref(false);
 // 目录配置
 const showAllItems = reactive<Record<string, boolean>>({});
 // 消息通知
@@ -322,8 +324,8 @@ function watchDarkMode(callback) {
 function createCalHeatmap() {
   const cal = new CalHeatmap();
   // 根据选中的年份计算起始和结束日期，显示整个年份的12个月
-  const startDate = new Date(selectedYear.value, 0, 1); // 该年的1月1日
-  const endDate = new Date(selectedYear.value, 11, 31); // 该年的12月31日
+  const startDate = new Date(selectedYear.value, 1, 1); // 该年的1月1日
+  const endDate = new Date(selectedYear.value, 12, 31); // 该年的12月31日
 
   cal.paint(
     {
@@ -447,6 +449,25 @@ onMounted(() => {
   <div class="heatmap-scroll">
     <div id="cal-heatmap"></div>
   </div>
+  <!-------------------------Actions Bar---------------------------->
+  <div class="actions-bar">
+    <span class="label"> Column Switch</span>
+    <button
+      class="VPSwitch layout-switch"
+      type="button"
+      role="switch"
+      :aria-checked="isTwoColumn"
+      :title="isTwoColumn ? '切换为单栏' : '切换为双栏'"
+      @click="isTwoColumn = !isTwoColumn"
+    >
+      <span class="check">
+        <span class="icon">
+          <span class="single-col"></span>
+          <span class="two-col"></span>
+        </span>
+      </span>
+    </button>
+  </div>
   <div class="today-layout">
     <main class="today-main">
       <!--------------------------Content-------------------------------->
@@ -468,8 +489,12 @@ onMounted(() => {
         </h2>
         {{ FIELD_CONFIG[index].desc }}
 
-        <div v-for="(entity, entity_index) in today" :key="entity_index">
-          <div v-if="shouldDisplayEntity(index, entity.timestamp)">
+        <div class="cards-grid" :class="{ 'cards-grid--two': isTwoColumn }">
+          <div
+            v-for="(entity, entity_index) in getVisibleEntries(index, today)"
+            :key="`${entity.url}-${entity_index}`"
+            class="card-item"
+          >
             <div class="card">
               <div
                 :class="`card-content ${handleCardCss(entity_index, index)} card-style`"
@@ -617,11 +642,13 @@ onMounted(() => {
 
 .heatmap-scroll {
   overflow-x: auto;
-  padding-bottom: 20px; /* 为滚动条留出空间 */
+  width: 100%;
 }
 
 #cal-heatmap {
-  min-width: 600px; /* 热力图的最小宽度 */
+  width: 100%;
+  min-width: 100%;
+  margin: 0;
 }
 
 .today-title {
@@ -640,12 +667,13 @@ onMounted(() => {
   .date-selector {
     display: flex;
     align-items: center;
+    white-space: nowrap;
   }
 
   .date {
     color: var(--vp-c-text-1);
     font-size: 1em;
-    min-width: 100px;
+    min-width: 80px;
     text-align: right;
   }
 
@@ -669,12 +697,109 @@ onMounted(() => {
   }
 }
 
+/* 操作栏 */
+.actions-bar {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 12px 0;
+  margin-bottom: 8px;
+  .label {
+    color: var(--vp-c-text-1);
+    font-size: 0.9em;
+    margin-right: 8px;
+  }
+}
+
+/* VPSwitch 风格的布局切换按钮 */
+.VPSwitch.layout-switch {
+  position: relative;
+  display: inline-block;
+  border-radius: 11px;
+  width: 40px;
+  height: 22px;
+  background-color: var(--vp-c-default-soft);
+  border: 1px solid var(--vp-c-divider);
+  cursor: pointer;
+  transition:
+    background-color 0.25s,
+    border-color 0.25s;
+  margin-right: 28px;
+}
+
+.VPSwitch.layout-switch:hover {
+  border-color: var(--vp-c-gray);
+}
+
+.VPSwitch.layout-switch[aria-checked="true"] {
+  background-color: var(--vp-c-brand-1);
+  border-color: var(--vp-c-brand-1);
+}
+
+.VPSwitch.layout-switch .check {
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: var(--vp-c-bg);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+  transition: transform 0.25s;
+}
+
+.VPSwitch.layout-switch[aria-checked="true"] .check {
+  transform: translateX(18px);
+}
+
+.VPSwitch.layout-switch .icon {
+  position: relative;
+  display: block;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  text-align: center;
+}
+
+.VPSwitch.layout-switch .single-col,
+.VPSwitch.layout-switch .two-col {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 12px;
+  transition: opacity 0.25s;
+}
+
+.VPSwitch.layout-switch .single-col {
+  opacity: 1;
+}
+
+.VPSwitch.layout-switch .two-col {
+  opacity: 0;
+}
+
+.VPSwitch.layout-switch[aria-checked="true"] .single-col {
+  opacity: 0;
+}
+
+.VPSwitch.layout-switch[aria-checked="true"] .two-col {
+  opacity: 1;
+}
+
 #cal-heatmap {
   margin: 10px 0 20px 0;
 }
 
 .content-title {
   text-align: left;
+}
+
+.content-title:not(:first-of-type) {
+  border-top: 1px solid var(--vp-c-divider);
+  padding-top: 32px;
+  margin-top: 32px;
 }
 
 .card {
@@ -686,6 +811,32 @@ onMounted(() => {
   position: relative;
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.card-item {
+  width: 100%;
+}
+
+.cards-grid--two {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  grid-auto-rows: max-content;
+}
+
+.cards-grid--two .card-item {
+  width: 100%;
+}
+
+.cards-grid--two .card {
+  margin: 0;
+  width: 100%;
+}
+
+@media (max-width: 960px) {
+  .cards-grid--two {
+    column-count: 1;
+  }
 }
 
 .card:hover {
@@ -780,6 +931,15 @@ onMounted(() => {
   margin-bottom: 0.5rem;
   line-height: 1.4;
   color: var(--vp-c-text-1);
+}
+
+:deep(.message img) {
+  display: block;
+  width: calc(100% + 3rem);
+  max-width: none;
+  height: auto;
+  margin: 0.75rem -1.5rem;
+  object-fit: cover;
 }
 
 .card-title {
