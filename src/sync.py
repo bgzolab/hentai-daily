@@ -182,6 +182,35 @@ def output_archive(rss_content_dict, archive_filename):
             existing_dict = {}
     else:
         existing_dict = {}
+
+    # 解析归档日期，并计算昨天 00:00 的时间戳边界
+    date_match = re.search(r"(\d{4})/(\d{2})/(\d{2})\.json$", archive_filename)
+    if date_match:
+        archive_date = datetime.date(
+            int(date_match.group(1)),
+            int(date_match.group(2)),
+            int(date_match.group(3))
+        )
+    else:
+        archive_date = datetime.date.today()
+
+    today_start_dt = datetime.datetime.combine(archive_date, datetime.time.min)
+    yesterday_start_ts = int((today_start_dt - datetime.timedelta(days=1)).timestamp())
+
+    # 读取昨日归档（如果存在）
+    yesterday_date = archive_date - datetime.timedelta(days=1)
+    yesterday_filename = re.sub(
+        r"\d{4}/\d{2}/\d{2}\.json$",
+        yesterday_date.strftime("%Y/%m/%d") + ".json",
+        archive_filename
+    )
+    yesterday_dict = {}
+    if yesterday_filename != archive_filename and os.path.exists(yesterday_filename):
+        try:
+            with open(yesterday_filename, "r") as file:
+                yesterday_dict = json.load(file)
+        except (json.JSONDecodeError, IOError) as e:
+            logging.warning(f"Failed to read yesterday archive: {e}, skip merge")
     
     # 合并新的内容到现有内容
     merged_dict = existing_dict.copy()
@@ -219,6 +248,28 @@ def output_archive(rss_content_dict, archive_filename):
         else:
             # 其他分类保持覆盖行为
             merged_dict[key] = entries
+
+    # News/Resources 额外合并昨日归档，并舍弃前天及更早的数据
+    for key in merge_keys:
+        url_to_entry = {}
+
+        yesterday_entries = yesterday_dict.get(key, [])
+        if isinstance(yesterday_entries, list):
+            for entry in yesterday_entries:
+                if isinstance(entry, dict) and 'url' in entry:
+                    url_to_entry[entry['url']] = entry
+
+        current_entries = merged_dict.get(key, [])
+        if isinstance(current_entries, list):
+            for entry in current_entries:
+                if isinstance(entry, dict) and 'url' in entry:
+                    url_to_entry[entry['url']] = entry
+
+        # 仅保留昨天及之后，避免前天及更早的冗余数据
+        merged_dict[key] = [
+            entry for entry in url_to_entry.values()
+            if isinstance(entry, dict) and isinstance(entry.get('timestamp'), (int, float)) and entry['timestamp'] >= yesterday_start_ts
+        ]
     
     # 仅对 Resources 和 News 按 timestamp 倒序排序，其他分类保留原顺序
     sortable_keys = {"Resources", "News"}
@@ -231,8 +282,24 @@ def output_archive(rss_content_dict, archive_filename):
                 reverse=True
             )
 
+    # 强制输出顺序：先写固定分类，再追加其他分类
+    preferred_order = [
+        "Resources",
+        "News",
+        "DLsite Game Ranking",
+        "DLsite Voice Ranking",
+        "DLsite Comic Ranking"
+    ]
+    ordered_dict = {}
+    for key in preferred_order:
+        if key in merged_dict:
+            ordered_dict[key] = merged_dict[key]
+    for key, value in merged_dict.items():
+        if key not in ordered_dict:
+            ordered_dict[key] = value
+
     # 写入文件
-    str_dict = json.dumps(merged_dict)
+    str_dict = json.dumps(ordered_dict)
     
     with open(archive_filename, "w") as file:
         file.write(str_dict)

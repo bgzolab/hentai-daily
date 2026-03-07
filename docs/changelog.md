@@ -3,6 +3,19 @@ title: Changelog
 outline: deep
 ---
 
+## March 7, 2026 Sync Script Enhancement
+
+I apologize for the instability in updates over the past two days. The script modification wasn't fully tested during this period, causing unavailability at that times. This issue has now been largely fixed. 
+
+This modification focused on:
+
+1. Increasing the synchronization frequency from once a day to once every two hours to ensure more timely data.
+2. Adjusting the archive output structure, splitting data by category, supporting historical data merging (yesterday's and today's JSON) and deduplication (URL), discarding (from the day before yesterday) to prevent data bloat.
+3. Optimizing front-end display filtering; Resources and News now only display entries from the past 24 hours.
+4. The Ranking category maintains its original display logic.
+
+However, some issues remain unresolved. For example, an increasing number of sources are rejecting GitHub crawler access, returning 403 errors, resulting in unavailable data and significantly impacting the user experience. I may need to deploy a local crawler to compensate for this data shortfall.
+
 ## 20260305 TOC & HeatMap Improvement
 
 1. The directory style has been greatly improved, basically achieving the feeling of native Vitepress;
