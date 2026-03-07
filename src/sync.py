@@ -171,8 +171,69 @@ def output_content_within_day(content_dict, start, interval_days, target_filenam
 ## apis/archives
 def output_archive(rss_content_dict, archive_filename):
     os.makedirs(os.path.dirname(archive_filename), exist_ok=True)
-    str_dict = json.dumps(rss_content_dict)
+    
+    # 如果文件已存在，读取现有内容
+    if os.path.exists(archive_filename):
+        try:
+            with open(archive_filename, "r") as file:
+                existing_dict = json.load(file)
+        except (json.JSONDecodeError, IOError) as e:
+            logging.warning(f"Failed to read existing archive: {e}, starting fresh")
+            existing_dict = {}
+    else:
+        existing_dict = {}
+    
+    # 合并新的内容到现有内容
+    merged_dict = existing_dict.copy()
+    merge_keys = {"Resources", "News"}
+    ranking_keys = {
+        "DLsite Game Ranking",
+        "DLsite Voice Ranking",
+        "DLsite Comic Ranking"
+    }
+    
+    for key, entries in rss_content_dict.items():
+        if key in merge_keys:
+            # Resources/News: 在历史基础上新增，并按 URL 去重
+            existing_entries = merged_dict.get(key, [])
+            url_to_entry = {}
 
+            for entry in existing_entries:
+                if isinstance(entry, dict) and 'url' in entry:
+                    url_to_entry[entry['url']] = entry
+
+            for entry in entries:
+                if isinstance(entry, dict) and 'url' in entry:
+                    url_to_entry[entry['url']] = entry
+
+            merged_dict[key] = list(url_to_entry.values())
+        elif key in ranking_keys:
+            # Ranking: 仅在抓取成功（长度=5）时覆盖；否则保留历史值
+            if isinstance(entries, list) and len(entries) == 5:
+                merged_dict[key] = entries
+            elif key not in merged_dict:
+                # 首次运行没有历史数据时，仍然写入当前结果
+                merged_dict[key] = entries
+            else:
+                logging.warning("Skip overwrite for %s because fetched length is %s", key, len(entries) if isinstance(entries, list) else 'invalid')
+        else:
+            # 其他分类保持覆盖行为
+            merged_dict[key] = entries
+    
+    # 仅对 Resources 和 News 按 timestamp 倒序排序，其他分类保留原顺序
+    sortable_keys = {"Resources", "News"}
+    for key in sortable_keys:
+        entries = merged_dict.get(key)
+        if isinstance(entries, list):
+            merged_dict[key] = sorted(
+                entries,
+                key=lambda item: item.get('timestamp', 0) if isinstance(item, dict) else 0,
+                reverse=True
+            )
+
+    # 写入文件
+    str_dict = json.dumps(merged_dict)
+    
     with open(archive_filename, "w") as file:
         file.write(str_dict)
     logging.info("Output archives of API successfully")
