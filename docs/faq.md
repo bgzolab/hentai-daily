@@ -14,16 +14,16 @@ As [changelog](changelog.md#_2023-06-13-release-prototype-with-jekyll) saied, ba
 
 1. https://www.4gamers.com.tw
 2. https://mingqiceping.com
-3. ~~https://blog.reimu.net~~ return 403 
+3. https://blog.reimu.net (cloudflare worker)
 4. https://gmgard.com
 5. https://www.acg.gy
-5. ~~https://www.tiangal.com~~ return 403 
-6. ~~https://www.south-plus.net~~ return 403
+5. https://www.tiangal.com (cloudflare worker)
+6. https://www.south-plus.net (cloudflare worker)
 
 And fetch sale ranking on https://www.dlsite.com.
 
 ::: tip
-The true thing is, the fetch from GitHub isn't always reach on the above websites, sometimes the fetch will be blocked by the website(return 403), or the website is no longer provided the share links, even sometimes the hoster was arrested by police (https://www.south-plus.net / https://bbs.drdian.net)!
+The true thing is, the fetch from GitHub isn't always reach on the above websites, sometimes the fetch will be blocked by the website~~(return 403)~~, or the website is no longer provided the share links, even sometimes the hoster was arrested by police (https://www.south-plus.net / https://bbs.drdian.net)!
 
 Please be kindful as soon as possible. Wish you could have fun here. That's my pleasure.
 :::

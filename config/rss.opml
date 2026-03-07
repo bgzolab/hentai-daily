@@ -7,12 +7,9 @@
     <outline title="Resources" text="Resources">
         <outline title='gmgard' xmlUrl="https://feeds.feedburner.com/gmgard/bgzo"/>
         <outline title='hacgicu' xmlUrl="https://feeds.feedburner.com/hacgicu/bgzo" />
-        <!-- 403 -->
-        <outline title='reimu' xmlUrl="https://blog.reimu.net/feed"/>
-        <!-- 403 -->
-        <outline title='tiangal' xmlUrl="https://www.tiangal.com/feed"/>
-        <!-- 403 -->
-        <outline title='south-plus-221' xmlUrl="https://www.south-plus.net/rss.php?fid=221"/>
+        <outline title='reimu' xmlUrl="http://reimu.bgzo.cc"/>
+        <outline title='tiangal' xmlUrl="http://tiangal.bgzo.cc"/>
+        <outline title='south-plus-221' xmlUrl="http://south-plus-221.bgzo.cc"/>
     </outline>
 </body>
 </opml>

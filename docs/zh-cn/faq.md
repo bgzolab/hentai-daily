@@ -18,14 +18,14 @@ GitHub Action 已设置为每 2 小时运行一次。
 
 1. https://www.4gamers.com.tw
 2. https://mingqiceping.com
-3. ~~https://blog.reimu.net~~ 返回 403 
+3. https://blog.reimu.net (cloudflare worker)
 4. https://gmgard.com
 5. https://www.acg.gy
-5. ~~https://www.tiangal.com~~ 返回 403 
-6. ~~https://www.south-plus.net~~ 返回 403
+5. https://www.tiangal.com (cloudflare worker)
+6. https://www.south-plus.net (cloudflare worker)
 
 ::: tip
-事实上，GitHub 的爬虫并非总能访问上述网站，有时会屏蔽请求（返回 403 错误），或者不再提供分享链接（RSS），甚至有时托管方会被警方查封（https://www.south-plus.net / https://bbs.drdian.net）！
+事实上，GitHub 的爬虫并非总能访问上述网站，有时会屏蔽请求~~（返回 403 错误）~~，或者不再提供分享链接（RSS），甚至有时托管方会被警方查封（https://www.south-plus.net / https://bbs.drdian.net）！
 
 请尽量解。希望您在这里玩得开心。
 :::
