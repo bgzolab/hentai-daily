@@ -5,10 +5,10 @@
 </head>
 <body>
     <outline title="Resources" text="Resources">
-        <outline xmlUrl="https://feeds.feedburner.com/gmgard/bgzo"/>
-        <outline xmlUrl="https://feeds.feedburner.com/hacgicu/bgzo" />
-        <outline xmlUrl="https://blog.reimu.net/feed"/>
-        <outline xmlUrl="https://www.tiangal.com/feed"/>
+        <outline title='gmgard' xmlUrl="https://feeds.feedburner.com/gmgard/bgzo"/>
+        <outline title='hacgicu' xmlUrl="https://feeds.feedburner.com/hacgicu/bgzo" />
+        <outline title='reimu' xmlUrl="https://blog.reimu.net/feed"/>
+        <outline title='tiangal' xmlUrl="https://www.tiangal.com/feed"/>
     </outline>
 </body>
 </opml>
