@@ -41,3 +41,30 @@
    3. 日期显示去掉尾部多余 /：docs/.vitepress/theme/components/today.vue:146
 
 
+#### 布局优化
+
+1. 单双栏切换与交互优化
+   - 新增 `isTwoColumn` 状态控制布局模式切换
+   - 热力图下方新增操作栏 `.actions-bar`，水平居右布局
+   - 实现 VPSwitch 风格切换器：椭圆轨道 (40×22px) + 圆形滑块 (18×18px)，滑块平滑滑动配合图标淡入淡出
+   - 双栏布局从 column 改回 Grid (`grid-template-columns: repeat(2, 1fr)`)，避免 CSS 属性冲突警告
+   - 卡片内图片添加深度样式 `:deep(.message img)`，宽度突破内边距占满卡片 (`width: calc(100% + 3rem)`)
+2. 渲染逻辑修复
+   - 修复双栏模式过滤不生效：从"遍历全量+内层 v-if"改为"先过滤再遍历"(`v-for` 直接使用 `getVisibleEntries`)
+   - 首个分类标题去除 border-top (`:not(:first-of-type)`)，视觉更整洁
+3. 双栏布局改造为瀑布流
+   - 从 CSS Grid 改为 `column-count: 2` 多栏布局
+   - 实现卡片从上到下紧密排列，左右列自动平衡高度
+   - 添加 `break-inside: avoid` 防止卡片跨栏分割
+4. 解决 hover 动画重排问题
+   - 问题：scale/rotate 变换和按钮区域高度变化导致 column 布局重新计算
+   - 方案：引入固定高度容器层（`.card-item` + `.card-wrapper`）
+   - `.card-item` 添加 padding 预留动画缓冲空间，高度固定
+   - `.card-wrapper` 设置 `overflow: hidden` 限制动画范围
+   - 所有动画和按钮变化在 wrapper 内部，不影响外层布局
+5. 视觉效果优化
+   - 恢复 `rotate(0.5deg)` 旋转动画
+   - 按钮区域正常流式布局，添加背景色、圆角和间距
+   - 图标从 20px 调整为 24px，添加 hover scale 效果
+   - 单栏模式间距优化：margin 从 40px 减至 20px，padding 从 20px 减至 15px
+
