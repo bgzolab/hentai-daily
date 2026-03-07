@@ -90,10 +90,11 @@ def get_rss_content_dict():
             # 模拟请求
             response = requests.get(address, headers=request_headers, timeout=30, allow_redirects=True)
             
-            logging.info("Request %s - Status: %s, Content-Length: %s, Content-Type: %s", 
+            logging.info("Request %s - Status: %s, Content-Length: %s, Content-Type: %s, Content-Encoding: %s", 
                         address, response.status_code, len(response.content), 
-                        response.headers.get('Content-Type', 'unknown'))
-            
+                        response.headers.get('Content-Type', 'unknown'),
+                        response.headers.get('Content-Encoding', 'none'))
+
             if response.status_code != 200:
                 logging.error('Request %s occurs error, response code: %s', address, response.status_code)
                 continue
@@ -102,12 +103,16 @@ def get_rss_content_dict():
             if len(response.content) == 0:
                 logging.warning("Response content is empty for %s", address)
                 continue
+            # 使用 response.text 而不是 response.content，让 requests 自动处理编码
             
+            content_preview = response.text[:200] if len(response.text) > 200 else response.text
             # 记录前200字符用于调试
-            content_preview = response.content[:200].decode('utf-8', errors='ignore')
-            logging.info("Response preview for %s: %s...", address, content_preview)
+            content_preview = response.text[:200] if len(response.text) > 200 else response.text
+            # 使用 response.text 传递给 feedparser，确保内容已解压和解码
+            feed = feedparser.parse(response.text)
 
-            feed = feedparser.parse(response.content)
+            # 使用 response.text 传递给 feedparser，确保内容已解压和解码
+            feed = feedparser.parse(response.text)
             entries = feed.entries
             
             # 增强调试信息
