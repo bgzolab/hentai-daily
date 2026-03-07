@@ -14,11 +14,11 @@ As [changelog](changelog.md#_2023-06-13-release-prototype-with-jekyll) saied, ba
 
 1. https://www.4gamers.com.tw
 2. https://mingqiceping.com
-3. https://blog.reimu.net
+3. ~~https://blog.reimu.net~~ return 403 
 4. https://gmgard.com
 5. https://www.acg.gy
-5. https://www.tiangal.com
-6. https://www.south-plus.net
+5. ~~https://www.tiangal.com~~ return 403 
+6. ~~https://www.south-plus.net~~ return 403
 
 And fetch sale ranking on https://www.dlsite.com.
 
