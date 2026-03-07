@@ -1,10 +1,12 @@
 ## Q: When daily paper refreshed?
 
-The GitHub Action was set at 5:00 a.m. UTC+8:00. [^github-action]
+The GitHub Action was set run every 2 hours.
 
-[^github-action]: https://github.com/bGZo/hentai-daily/blob/f6b12f8517c4b96a5c2aff772e8f2cc88fc36dc7/.github/workflows/sync.yml#L8
+Check today page last update time, if the last update time is more than 2 hours ago, it will be updated immediately. 
 
-So if you reached website before the job running, you only could browse the yestoday info.
+Don't stay up late.
+
+![](https://raw.githack.com/bGZo/assets/dev/2026/20260307191144642.webp)
 
 ## Q: Which sources this site reached?
 
@@ -21,9 +23,9 @@ As [changelog](changelog.md#_2023-06-13-release-prototype-with-jekyll) saied, ba
 And fetch sale ranking on https://www.dlsite.com.
 
 ::: tip
-A more and more sad thing is, the website above isn't always accessible, because something could be happened(like admin was arrested). Especially like https://www.south-plus.net / https://bbs.drdian.net, which was no longer provided the Chinese version for galgame. I miss them very much.
+The true thing is, the fetch from GitHub isn't always reach on the above websites, sometimes the fetch will be blocked by the website(return 403), or the website is no longer provided the share links, even sometimes the hoster was arrested by police (https://www.south-plus.net / https://bbs.drdian.net)!
 
-So be kindful as soon as possible. Wish you could have fun here. That's my pleasure.
+Please be kindful as soon as possible. Wish you could have fun here. That's my pleasure.
 :::
 
 ## Q: Why the resources card get 404 or error page?

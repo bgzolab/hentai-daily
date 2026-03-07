@@ -2,13 +2,14 @@
 
 ## Q: 日报什么时候更新，我等不及了/
 
-GitHub 自动构建在（+8区）凌晨 5 点，因为绅士之庭的审核大多是在凌晨，如果提前运行，前一天的源头就会丢失。[^github-action]
+GitHub Action 已设置为每 2 小时运行一次。
 
-[^github-action]: https://github.com/bGZo/hentai-daily/blob/f6b12f8517c4b96a5c2aff772e8f2cc88fc36dc7/.github/workflows/sync.yml#L8
+请查看今日页面的最后更新时间，如果上次更新时间超过 2 小时，则会立即更新。
 
-所以如果你半夜兴致勃勃地打开网站，可能会只看到昨天的内容。
+别熬夜
 
-早点休息～
+![](https://raw.githack.com/bGZo/assets/dev/2026/20260307191144642.webp)
+
 
 ## Q: 日报聚合了哪些源？
 
@@ -25,12 +26,12 @@ GitHub 自动构建在（+8区）凌晨 5 点，因为绅士之庭的审核大�
 7. https://www.dlsite.com
 
 ::: tip
-一个越来越悲伤的事实是，上面的网站并不总是可访问的，因为可能发生了一些事情（比如管理员被捕）。尤其是像 https://www.south-plus.net / https://bbs.drdian.net 这样的站点，已经不再中文分发 Galgame 的资源。
+事实上，GitHub 的爬虫并非总能访问上述网站，有时会屏蔽请求（返回 403 错误），或者不再提供分享链接（RSS），甚至有时托管方会被警方查封（https://www.south-plus.net / https://bbs.drdian.net）！
 
-怎么办？生存空间不断收到挤压的现在，请你我尽量保持友善，没有人欠谁的，玩的开心最重要。
+请尽量解。希望您在这里玩得开心。
 :::
 
-如果你要更多好玩的源，请尝试给我提 ISSUE，我会加入日报中。
+如果你要更多好玩的源，请尝试给我提 ISSUE，或者通过 TG、Email 联系我，我会加入日报中。
 
 ## Q: 为什么我根本访问不了你聚合的资源？
 
