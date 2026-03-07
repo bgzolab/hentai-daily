@@ -426,7 +426,7 @@ onMounted(() => {
   </div>
   <!-------------------------Actions Bar---------------------------->
   <div class="actions-bar">
-    <span class="label">Double Column</span>
+    <span class="label">Double Columns</span>
     <button
       class="VPSwitch layout-switch"
       type="button"
@@ -841,6 +841,9 @@ onMounted(() => {
 @media (max-width: 960px) {
   .cards-grid--two {
     column-count: 1;
+  }
+  .actions-bar {
+    display: none;
   }
 }
 
