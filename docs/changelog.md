@@ -3,7 +3,7 @@ title: Changelog
 outline: deep
 ---
 
-## March 7, 2026 Sync Script Enhancement
+## 20260307 Sync Script Enhancement
 
 I apologize for the instability in updates over the past two days. The script modification wasn't fully tested during this period, causing unavailability at that times. This issue has now been largely fixed. 
 
