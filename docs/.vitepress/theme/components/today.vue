@@ -225,6 +225,26 @@ const handleCardCss = (
   return rankStyles[entity_index] ?? "card-style-common";
 };
 
+// 从 URL 提取根域名
+const extractRootDomain = (url: string): string => {
+  try {
+    let normalizedUrl = url;
+    // 处理 // 开头的 URL
+    if (url.startsWith("//")) {
+      normalizedUrl = "https:" + url;
+    } else if (!url.startsWith("http://") && !url.startsWith("https://")) {
+      normalizedUrl = "https://" + url;
+    }
+
+    const hostname = new URL(normalizedUrl).hostname;
+    // 移除 www. 前缀并提取根域名（取最后两个部分）
+    const parts = hostname.replace(/^www\./, "").split(".");
+    return parts.length >= 2 ? parts.slice(-2).join(".") : parts.join(".");
+  } catch {
+    return url;
+  }
+};
+
 // 类型验证函数
 function isValidHentaiAPI(obj: any): obj is hentaiAPI {
   // if (!obj || typeof obj !== "object") return false;
@@ -270,7 +290,7 @@ const visibleData = computed(() => {
   const result = createEmptyApiData();
   for (const category of CATEGORY_KEYS) {
     result[category] = getVisibleEntries(category, data.value[category]);
-  }
+      }
   return result;
 });
 
@@ -484,7 +504,7 @@ onMounted(() => {
                       {{ entity.title === "" ? "Untitled" : entity.title }}
                       <Badge
                         :type="FIELD_CONFIG[index].type"
-                        :text="FIELD_CONFIG[index].price"
+                        :text="extractRootDomain(entity.url)"
                       />
                     </h3>
                     <span class="card-datetime">{{
