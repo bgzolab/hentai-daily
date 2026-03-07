@@ -13,6 +13,14 @@ import logging
 import requests
 from feedgen.feed import FeedGenerator
 
+try:
+    import brotli
+except ImportError:
+    try:
+        import brotlicffi as brotli  # type: ignore
+    except ImportError:
+        brotli = None
+
 from common.strUtils import *
 from output import output_rss_feed, get_time_from_timestamp_offset_gmt
 from sources.bahamut import get_bahamut_article_from_author
@@ -30,7 +38,8 @@ today = datetime.datetime.today()
 logging.basicConfig(level=logging.INFO, stream=sys.stdout)
 request_headers={
     "Accept": "application/json, text/plain, */*",
-    "Accept-Encoding": "gzip, deflate, br",
+    # Avoid brotli in CI where br decoder may be unavailable.
+    "Accept-Encoding": "gzip, deflate",
     "Accept-Language": "zh,en-US;q=0.9,en;q=0.8,zh-HK;q=0.7,zh-TW;q=0.6,zh-CN;q=0.5",
     "Cache-Control": "no-cache",
     "Pragma":"no-cache",
@@ -103,16 +112,25 @@ def get_rss_content_dict():
             if len(response.content) == 0:
                 logging.warning("Response content is empty for %s", address)
                 continue
-            # 使用 response.text 而不是 response.content，让 requests 自动处理编码
-            
-            content_preview = response.text[:200] if len(response.text) > 200 else response.text
-            # 记录前200字符用于调试
-            content_preview = response.text[:200] if len(response.text) > 200 else response.text
-            # 使用 response.text 传递给 feedparser，确保内容已解压和解码
-            feed = feedparser.parse(response.text)
 
-            # 使用 response.text 传递给 feedparser，确保内容已解压和解码
-            feed = feedparser.parse(response.text)
+            response_text = response.text
+            content_encoding = response.headers.get('Content-Encoding', '').lower()
+
+            # Some CI environments do not auto-decode Brotli responses.
+            if 'br' in content_encoding:
+                if brotli is None:
+                    logging.warning("Brotli decoder is unavailable for %s; cannot decode br response", address)
+                else:
+                    try:
+                        response_text = brotli.decompress(response.content).decode(response.encoding or 'utf-8', errors='replace')
+                        logging.info("Manually decoded brotli response for %s", address)
+                    except Exception as e:
+                        logging.warning("Failed to manually decode brotli for %s: %s", address, e)
+
+            # 使用 response_text 传递给 feedparser，确保内容已解压和解码
+            content_preview = response_text[:200] if len(response_text) > 200 else response_text
+            logging.info("Response preview for %s: %s...", address, content_preview)
+            feed = feedparser.parse(response_text)
             entries = feed.entries
             
             # 增强调试信息
