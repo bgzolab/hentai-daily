@@ -73,8 +73,8 @@ jobs:
       - name: Push Articles
         run: |
           if [ -n "$(git status --porcelain)" ]; then
-            git config user.name bgzo
-            git config user.email im@bgzo.cc
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
             git add .
             git commit -m "Sync feed"
             git push
