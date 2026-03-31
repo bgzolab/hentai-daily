@@ -98,7 +98,14 @@ def get_rss_content_dict():
             # 设置同源
             # request_headers['Referer'] = extract_root_url(address)
             # 模拟请求
-            response = requests.get(address, headers=request_headers, timeout=30, allow_redirects=True)
+            try:
+                response = requests.get(address, headers=request_headers, timeout=30, allow_redirects=True)
+            except requests.exceptions.ReadTimeout as e:
+                logging.warning("Request timed out for %s: %s", address, e)
+                continue
+            except requests.exceptions.RequestException as e:
+                logging.warning("Request failed for %s: %s", address, e)
+                continue
             
             logging.info("Request %s - Status: %s, Content-Length: %s, Content-Type: %s, Content-Encoding: %s", 
                         address, response.status_code, len(response.content), 
