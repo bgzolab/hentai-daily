@@ -25,7 +25,7 @@ Hentai news all in one. Support RSS subscribe.
 > 2. RSSHub official instance had been banned or limit by many servers' provider. You could always get the response like: `address no respon`.
 > 3. Re-release the rss feed with custom function like translate / media replace / web-hook and more.
 
-I enjoy pornography, but if I put it alongside other subscriptions, I definitely won't spend any more time exploring other people's blogs. Plus, I'm easily aroused sexually, so pornography needs to be kept separate for me.
+I enjoy porn, but if I put it alongside other subscriptions, I definitely won't spend any more time exploring other people's blogs. Meanwhile, I'm easily aroused pron, so pron context needs to be kept separate for me.
 
 So why not just use RSShub and write your own rules in Python?
 
