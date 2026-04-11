@@ -5,7 +5,7 @@
 [![Licence](https://img.shields.io/github/license/bGZo/hentai-daily.svg?style=for-the-badge)](https://github.com/bGZo/hentai-daily/blob/template/LICENCE)
 [![Telegram](https://img.shields.io/badge/-telegram-black.svg?style=for-the-badge&logo=telegram&colorB=555)](https://t.me/imbGZo)
 
-![](https://raw.githack.com/bGZo/assets/dev/2025/202506162245177.png)
+![](https://img.bgzo.cc/2025/202506162245177.png)
 
 > [!WARNING]
 > This project may contain violence, pornography, sexual descriptions, or other content intended for readers aged 18 and over only.
