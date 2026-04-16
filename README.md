@@ -39,6 +39,7 @@ Of course, this project cannot be profitable, just for fun and love.
 
 - https://hentai.bgzo.cc
 - https://hentai-daily.vercel.app/
+- https://hentai-daily.lfh010618.workers.dev/
 - Self build and deploy by yourself, see [Contributing](#contributing) section below.
 
 ## API Usage
