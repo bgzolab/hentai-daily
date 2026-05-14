@@ -5,14 +5,16 @@
 [![Licence](https://img.shields.io/github/license/bGZo/hentai-daily.svg?style=for-the-badge)](https://github.com/bGZo/hentai-daily/blob/template/LICENCE)
 [![Telegram](https://img.shields.io/badge/-telegram-black.svg?style=for-the-badge&logo=telegram&colorB=555)](https://t.me/imbGZo)
 
-![](https://img.bgzo.cc/2025/202506162245177.png)
-
 > [!WARNING]
 > This project may contain violence, pornography, sexual descriptions, or other content intended for readers aged 18 and over only.
 >
 > Please read it with caution and discretion. If you are under 18 years old, please do not read this project. The author and publisher of this article do not take any responsibility for any consequences arising from reading this article.
 
-# Hentai Reader
+![](https://pub-89c11651a8434f18a530bd6f93e399da.r2.dev/2026/20260514220009609.webp)
+<!--
+![](https://pub-89c11651a8434f18a530bd6f93e399da.r2.dev/2025/202506162245177.png)
+# Hentai Daily
+-->
 
 Hentai news all in one. Support RSS subscribe.
 
