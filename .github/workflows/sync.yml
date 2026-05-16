@@ -13,8 +13,10 @@ on:
 
 jobs:
   sync:
-    name: Build
+    name: Fetch items and update JSON files
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # 需要允许 git push 回仓库
     steps:
       - name: Set TimeZone
         uses: szenius/set-timezone@v1.2
