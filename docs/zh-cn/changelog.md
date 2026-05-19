@@ -2,6 +2,19 @@
 title: 更新日志
 outline: deep
 ---
+## 20260519 CI/CD暂时不可用
+
+由于上周[瞎折腾](https://blog.bgzo.cc/20260516-mv-repo-to-github-organization)，把项目转移到了沙箱里面（新组织），在检查github action 一切正常后，我把这个事情给忘了，回去又去vibe 新的项目去了，我以为一切都会正常运行，但我错了。我忘了检查这个网站的构建了（cloudflare/vercel）。所以在过去的三天里，网站没有实时更新新的帖子。
+
+非常抱歉给您带来不便。我今晚已经修好了，这个网站在Cloudflare/Vercel上的构建恢复正常了。
+
+伤心的事，过去三天，没人提醒我，跟以前一样，对吧？如果你发现了什么错误，请创建一个[ISSUE](https://github.com/bgzo-sandbox/hentai-daily/issues/new)或给我留言（snitch-bulk-caviar#duck.com）。
+
+我认为这个项目其实还有人在看吧，最近好像掉了一颗 Star 🌟，但也许无人在意？
+
+无论如何，谢谢你的关注，我会尽量保持让这个项目走的远一些的。
+
+![](https://pub-89c11651a8434f18a530bd6f93e399da.r2.dev/2026/20260519234533673.webp)
 
 ## 20260307 同步改造
 

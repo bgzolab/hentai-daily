@@ -3,6 +3,20 @@ title: Changelog
 outline: deep
 ---
 
+## 20260519 Temporary Unavailability
+
+Due some [reason](https://blog.bgzo.cc/20260516-mv-repo-to-github-organization), I transfer this project to my new organization, and after checking github action, I go back to vibe coding new project again, I used to think it would be fine, but I was wrong. I forget to check the build status of this website(on cloudflare and vercel). So in the past few days, the sites are not updated for new posts.
+
+Very sorry for the inconvenience. I have fixed it tonight, and the build of this website on Cloudflare/Vercel is back to normal. 
+
+And past three days, nobody notice me, just like before, right? Very sad about that. If you found something mistake, please create a [issue](https://github.com/bgzo-sandbox/hentai-daily/issues/new) or drop me a line(snitch-bulk-caviar#duck.com).
+
+I thought this project is still being looked at, but maybe not?...
+
+![](https://pub-89c11651a8434f18a530bd6f93e399da.r2.dev/2026/20260519234533673.webp)
+
+Anyway, thanks for your attention, and I will try to keep it up to date as much as possible.
+
 ## 20260307 Sync Script Enhancement
 
 I apologize for the instability in updates over the past two days. The script modification wasn't fully tested during this period, causing unavailability at that times. This issue has now been largely fixed. 
@@ -26,7 +40,7 @@ The most disheartening thing is that no one has raised any issues with me. Is th
 
 So sad.
 
-![](https://syimg.3dmgame.com/uploadimg/xiaz/2022/1011/1665477061696.jpg)
+![](https://pub-89c11651a8434f18a530bd6f93e399da.r2.dev/2026/20260519234038378.webp)
 
 ## 20260304 Weak Internet
 
