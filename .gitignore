@@ -106,5 +106,6 @@ Gopkg.lock
 !.github/.bak/instructions-lang-default-disable/*
 .github/.bak/*.md
 .github/.bak/deprecated
+docs/implementation-plans/*.md
 
 debug/
