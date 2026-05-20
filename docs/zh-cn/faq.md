@@ -8,7 +8,7 @@ GitHub Action 已设置为每 2 小时运行一次。
 
 别熬夜
 
-![](https://raw.githack.com/bGZo/assets/dev/2026/20260307191144642.webp)
+![](https://pub-89c11651a8434f18a530bd6f93e399da.r2.dev/2026/20260307191144642.webp)
 
 
 ## Q: 日报聚合了哪些源？

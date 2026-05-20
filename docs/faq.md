@@ -6,7 +6,7 @@ Check today page last update time, if the last update time is more than 2 hours 
 
 Don't stay up late.
 
-![](https://raw.githack.com/bGZo/assets/dev/2026/20260307191144642.webp)
+![](https://pub-89c11651a8434f18a530bd6f93e399da.r2.dev/2026/20260307191144642.webp)
 
 ## Q: Which sources this site reached?
 
