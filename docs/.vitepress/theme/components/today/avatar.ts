@@ -32,6 +32,20 @@ export const getRootDomain = (url: string): string | null => {
   }
 };
 
+export const getHostnameLabel = (url: string): string => {
+  const origin = getRootDomain(url);
+
+  if (!origin) {
+    return "Unknown source";
+  }
+
+  try {
+    return new URL(origin).hostname.replace(/^www\./, "");
+  } catch {
+    return origin;
+  }
+};
+
 export const getFaviconUrl = (url: string): string => {
   const origin = getRootDomain(url);
   return origin ? `${origin}/favicon.ico` : DEFAULT_AVATAR_URL;

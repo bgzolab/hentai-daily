@@ -22,11 +22,6 @@ const props = defineProps<{
   isTwoColumn: boolean;
 }>();
 
-const emit = defineEmits<{
-  open: [url: string];
-  copy: [url: string];
-}>();
-
 const topEntries = computed(() => props.entries.slice(0, 3));
 const otherEntries = computed(() => props.entries.slice(3));
 
@@ -55,14 +50,6 @@ const getFallbackLabel = (rank: number): string => {
     .replace("DLsite ", "")
     .replace(" Ranking", "")
     .concat(` • Rank #${rank}`);
-};
-
-const handleOpen = (url: string): void => {
-  emit("open", url);
-};
-
-const handleCopy = (url: string): void => {
-  emit("copy", url);
 };
 
 const handleSubscribe = (): void => {
@@ -100,7 +87,7 @@ const handleSubscribe = (): void => {
         class="ranking-hero"
         :class="getRankingAccent(1)"
       >
-        <div class="ranking-hero__body" @click="handleOpen(topEntries[0].url)">
+        <div class="ranking-hero__body">
           <img
             v-if="extractFirstImageFromSummary(topEntries[0].summary)"
             class="ranking-media ranking-media--hero"
@@ -112,14 +99,17 @@ const handleSubscribe = (): void => {
           </div>
           <span class="ranking-badge" :class="getRankingAccent(1)">#1</span>
           <h3 class="ranking-hero__title">
-            {{ topEntries[0].title === "" ? "Untitled" : topEntries[0].title }}
+            <a
+              class="ranking-title-link"
+              :href="topEntries[0].url"
+              target="_blank"
+              rel="noreferrer"
+            >
+              {{ topEntries[0].title === "" ? "Untitled" : topEntries[0].title }}
+            </a>
           </h3>
           <p class="ranking-hero__summary">{{ extractTextFromSummary(topEntries[0].summary) }}</p>
           <span class="ranking-hero__time">{{ formatTimestamp(topEntries[0].timestamp) }}</span>
-        </div>
-        <div class="ranking-card__actions">
-          <button type="button" @click="handleCopy(topEntries[0].url)">Copy</button>
-          <button type="button" @click="handleOpen(topEntries[0].url)">Open</button>
         </div>
       </article>
 
@@ -131,7 +121,7 @@ const handleSubscribe = (): void => {
           class="ranking-secondary__card"
           :class="getRankingAccent(entityIndex + 2)"
         >
-          <div class="ranking-secondary__body" @click="handleOpen(entity.url)">
+          <div class="ranking-secondary__body">
             <img
               v-if="extractFirstImageFromSummary(entity.summary)"
               class="ranking-media"
@@ -143,14 +133,17 @@ const handleSubscribe = (): void => {
             </div>
             <span class="ranking-badge" :class="getRankingAccent(entityIndex + 2)">#{{ entityIndex + 2 }}</span>
             <h3 class="ranking-secondary__title">
-              {{ entity.title === "" ? "Untitled" : entity.title }}
+              <a
+                class="ranking-title-link"
+                :href="entity.url"
+                target="_blank"
+                rel="noreferrer"
+              >
+                {{ entity.title === "" ? "Untitled" : entity.title }}
+              </a>
             </h3>
             <p class="ranking-secondary__summary">{{ extractTextFromSummary(entity.summary) }}</p>
             <span class="ranking-secondary__time">{{ formatTimestamp(entity.timestamp) }}</span>
-          </div>
-          <div class="ranking-card__actions">
-            <button type="button" @click="handleCopy(entity.url)">Copy</button>
-            <button type="button" @click="handleOpen(entity.url)">Open</button>
           </div>
         </article>
       </div>
@@ -167,7 +160,7 @@ const handleSubscribe = (): void => {
         :key="`${entity.url}-${entityIndex + 3}`"
         class="ranking-row"
       >
-        <div class="ranking-row__body" @click="handleOpen(entity.url)">
+        <div class="ranking-row__body">
           <span class="ranking-row__rank">#{{ entityIndex + 4 }}</span>
           <img
             v-if="extractFirstImageFromSummary(entity.summary)"
@@ -180,15 +173,18 @@ const handleSubscribe = (): void => {
           </div>
           <div class="ranking-row__content">
             <h3 class="ranking-row__title">
-              {{ entity.title === "" ? "Untitled" : entity.title }}
+              <a
+                class="ranking-title-link"
+                :href="entity.url"
+                target="_blank"
+                rel="noreferrer"
+              >
+                {{ entity.title === "" ? "Untitled" : entity.title }}
+              </a>
             </h3>
             <p class="ranking-row__summary">{{ extractTextFromSummary(entity.summary) }}</p>
           </div>
           <span class="ranking-row__time">{{ formatTimestamp(entity.timestamp) }}</span>
-        </div>
-        <div class="ranking-card__actions">
-          <button type="button" @click="handleCopy(entity.url)">Copy</button>
-          <button type="button" @click="handleOpen(entity.url)">Open</button>
         </div>
       </article>
     </div>
@@ -281,12 +277,6 @@ const handleSubscribe = (): void => {
   padding: 18px;
 }
 
-.ranking-hero__body,
-.ranking-secondary__body,
-.ranking-row__body {
-  cursor: pointer;
-}
-
 .ranking-badge,
 .ranking-row__rank {
   display: inline-flex;
@@ -324,6 +314,18 @@ const handleSubscribe = (): void => {
 .ranking-secondary__title,
 .ranking-row__title {
   margin: 12px 0 8px;
+}
+
+.ranking-title-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.ranking-title-link:hover {
+  color: var(--vp-c-brand-1);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.16em;
 }
 
 .ranking-hero__summary,
@@ -403,38 +405,33 @@ const handleSubscribe = (): void => {
 .ranking-row__body {
   display: grid;
   grid-template-columns: auto auto minmax(0, 1fr) auto;
+  grid-template-areas: "rank media content time";
   align-items: center;
   gap: 16px;
 }
 
+.ranking-row__rank {
+  grid-area: rank;
+}
+
+.ranking-media--row,
+.ranking-media--row-fallback {
+  grid-area: media;
+}
+
 .ranking-row__content {
+  grid-area: content;
   min-width: 0;
 }
 
-.ranking-card__actions {
-  display: flex;
-  gap: 8px;
-  margin-top: 12px;
-}
-
-.ranking-card__actions button {
-  border: none;
-  padding: 0;
-  background: transparent;
-  color: var(--vp-c-text-2);
-  font-size: 13px;
-  cursor: pointer;
-}
-
-.ranking-card__actions button:hover {
-  color: var(--vp-c-brand-1);
+.ranking-row__time {
+  grid-area: time;
+  justify-self: end;
 }
 
 @media (max-width: 960px) {
-  .ranking-section__header,
-  .ranking-row__body {
+  .ranking-section__header {
     align-items: flex-start;
-    grid-template-columns: 1fr;
   }
 
   .ranking-secondary {
@@ -443,6 +440,18 @@ const handleSubscribe = (): void => {
 
   .ranking-rows--two {
     grid-template-columns: 1fr;
+  }
+
+  .ranking-row__body {
+    grid-template-columns: auto 72px minmax(0, 1fr);
+    grid-template-areas:
+      "rank media content"
+      ". . time";
+    align-items: start;
+  }
+
+  .ranking-row__time {
+    justify-self: start;
   }
 
   .subscribe-pill {

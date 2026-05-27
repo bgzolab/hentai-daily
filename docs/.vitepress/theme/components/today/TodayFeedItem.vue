@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { DEFAULT_AVATAR_URL, getFaviconUrl } from "./avatar.ts";
+import {
+  DEFAULT_AVATAR_URL,
+  getFaviconUrl,
+  getHostnameLabel,
+} from "./avatar.ts";
 import {
   extractFirstImageFromSummary,
   extractTextFromSummary,
@@ -19,11 +23,6 @@ const props = defineProps<{
   entityIndex: number;
 }>();
 
-const emit = defineEmits<{
-  open: [url: string];
-  copy: [url: string];
-}>();
-
 const formatTimestamp = (timestamp: number): string => {
   return new Date(timestamp * 1000).toLocaleString();
 };
@@ -38,6 +37,10 @@ const summaryText = computed(() => {
 
 const streamLabel = computed(() => {
   return props.sectionKey === "News" ? "Moments / News" : "Moments / Resources";
+});
+
+const sourceLabel = computed(() => {
+  return getHostnameLabel(props.entity.url);
 });
 
 const avatarUrl = computed(() => {
@@ -66,10 +69,18 @@ const handleAvatarError = (event: Event): void => {
       <div class="feed-item__meta">
         <div class="feed-item__channel">
           <span class="feed-item__source">{{ streamLabel }}</span>
+          <span class="feed-item__site">{{ sourceLabel }}</span>
           <span class="feed-item__time">{{ formatTimestamp(entity.timestamp) }}</span>
         </div>
         <h3 class="feed-item__title">
-          {{ entity.title === "" ? "Untitled" : entity.title }}
+          <a
+            class="feed-item__title-link"
+            :href="entity.url"
+            target="_blank"
+            rel="noreferrer"
+          >
+            {{ entity.title === "" ? "Untitled" : entity.title }}
+          </a>
         </h3>
       </div>
       <p
@@ -84,14 +95,6 @@ const handleAvatarError = (event: Event): void => {
         :src="previewImage"
         :alt="entity.title === '' ? 'Untitled preview image' : entity.title"
       />
-      <div class="feed-item__actions">
-        <button type="button" class="feed-item__action-btn" @click="emit('copy', entity.url)">
-          Copy link
-        </button>
-        <button type="button" class="feed-item__action-btn" @click="emit('open', entity.url)">
-          Open source
-        </button>
-      </div>
     </div>
   </article>
 </template>
@@ -149,6 +152,13 @@ const handleAvatarError = (event: Event): void => {
   letter-spacing: 0.02em;
 }
 
+.feed-item__site {
+  color: var(--vp-c-text-2);
+  font-size: 12px;
+  letter-spacing: 0.03em;
+  text-transform: lowercase;
+}
+
 .feed-item__title {
   margin: 0;
   font-size: 1.12rem;
@@ -157,6 +167,18 @@ const handleAvatarError = (event: Event): void => {
   overflow: hidden;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+}
+
+.feed-item__title-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.feed-item__title-link:hover {
+  color: var(--vp-c-brand-1);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.16em;
 }
 
 .feed-item__time {
@@ -186,25 +208,6 @@ const handleAvatarError = (event: Event): void => {
   border-radius: 16px;
   box-shadow: 0 20px 36px -28px rgba(0, 0, 0, 0.45);
   object-fit: cover;
-}
-
-.feed-item__actions {
-  display: flex;
-  gap: 8px;
-  margin-top: 2px;
-}
-
-.feed-item__action-btn {
-  border: none;
-  padding: 0;
-  background: transparent;
-  color: var(--vp-c-text-2);
-  font-size: 13px;
-  cursor: pointer;
-}
-
-.feed-item__action-btn:hover {
-  color: var(--vp-c-brand-1);
 }
 
 @media (max-width: 640px) {
