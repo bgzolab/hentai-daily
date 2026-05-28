@@ -47,3 +47,9 @@
 - feed 和 ranking 的视觉系统分别在子组件内部演进，但共享同一份 archive 数据与锚点命名规则。
 - 当前日报采用“朋友圈式信息流 + 榜单公告板”的双视觉策略，以降低与 VitePress 文档外壳的冲突。
 
+## 直接数据源接入（2026-05-28）
+
+- `src/sources/kungal.py`：新增 KUNGal JSON 源，负责调用 `https://www.kungal.com/api/galgame`，过滤 `contentLimit = nsfw` 的条目，并映射为统一的 `title/url/summary/timestamp` 结构。
+- `src/sync.py`：通过 `add_sources(rss_content_dict, 'Resources', get_kungal_posts(), 'kungal')` 将 KUNGal 接入 `Resources` 聚合链，不新增 archive 顶层分类。
+- `tests/test_kungal.py`：负责离线验证标题优先级、summary 拼接、单条映射与列表抓取行为；`debug/kungal.json` 作为固定回放样本。
+

@@ -29,6 +29,7 @@ from sources.dlsite import get_dlsite_news
 from template import TEMPLATE_CONTENT_PARENT, TEMPLATE_CONTENT_CHILD, TEMPLATE_POST
 from sources.mingqiceping import get_mingqiceping_post
 from sources.tw4gamers import get_4gamers_info_by_number
+from sources.kungal import get_kungal_posts
 from sources.dlsite import get_dlsite_game_ranking_with_limit
 from sources.dlsite import get_dlsite_voice_ranking_with_limit
 from sources.dlsite import get_dlsite_comic_ranking_with_limit
@@ -483,6 +484,16 @@ if __name__ == '__main__':
                 "bahamut-{}".format(author))
         except Exception as e:
             logging.warning(f"跳过bahamut-{author}: {e}")
+
+    try:
+        rss_content_dict = add_sources(
+            rss_content_dict,
+            'Resources',
+            get_kungal_posts(),
+            "kungal"
+        )
+    except Exception as e:
+        logging.warning(f"跳过kungal: {e}")
 
     try:
         rss_content_dict = add_sources(
