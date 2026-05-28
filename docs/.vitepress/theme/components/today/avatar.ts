@@ -50,3 +50,13 @@ export const getFaviconUrl = (url: string): string => {
   const origin = getRootDomain(url);
   return origin ? `${origin}/favicon.ico` : DEFAULT_AVATAR_URL;
 };
+
+export const getFaviconServiceUrl = (url: string): string => {
+  const origin = getRootDomain(url);
+
+  if (!origin) {
+    return DEFAULT_AVATAR_URL;
+  }
+
+  return `https://www.google.com/s2/favicons?sz=64&domain_url=${encodeURIComponent(origin)}`;
+};

@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import TodayFeedItem from "./TodayFeedItem.vue";
-import { getFaviconUrl, getHostnameLabel, getRootDomain } from "./avatar.ts";
+import {
+  DEFAULT_AVATAR_URL,
+  getFaviconServiceUrl,
+  getFaviconUrl,
+  getHostnameLabel,
+  getRootDomain,
+} from "./avatar.ts";
 
 interface rssEntity {
   title: string;
@@ -19,6 +25,8 @@ const props = defineProps<{
   rss: string;
   avatarSlots: number;
 }>();
+
+const feedIconUrl = new URL("../../assets/feed.svg", import.meta.url).href;
 
 const handleSubscribe = (): void => {
   window.open(props.rss, "_blank");
@@ -79,6 +87,19 @@ const toggleSourceFilter = (sourceKey: string): void => {
   selectedSource.value = selectedSource.value === sourceKey ? null : sourceKey;
 };
 
+const handleAvatarError = (event: Event, entryUrl: string): void => {
+  const target = event.target as HTMLImageElement;
+
+  if (target.dataset.faviconFallback !== "service") {
+    target.dataset.faviconFallback = "service";
+    target.src = getFaviconServiceUrl(entryUrl);
+    return;
+  }
+
+  target.onerror = null;
+  target.src = DEFAULT_AVATAR_URL;
+};
+
 </script>
 
 <template>
@@ -91,39 +112,46 @@ const toggleSourceFilter = (sourceKey: string): void => {
       <div class="feed-section__heading">
         <div class="feed-section__heading-main">
           <span class="feed-section__eyebrow">Moments Stream</span>
-          <h2 class="content-title">{{ title }}</h2>
+          <div class="feed-section__title-row">
+            <h2 class="content-title">{{ title }}</h2>
+            <button
+              type="button"
+              class="subscribe-icon"
+              :class="`subscribe-icon--${badgeType}`"
+              aria-label="Subscribe feed"
+              title="Subscribe feed"
+              @click="handleSubscribe"
+            >
+              <img :src="feedIconUrl" alt="" />
+            </button>
+          </div>
           <p class="feed-section__meta">{{ displayedEntryCount }}</p>
         </div>
-        <button
-          type="button"
-          class="subscribe-pill"
-          :class="`subscribe-pill--${badgeType}`"
-          @click="handleSubscribe"
-        >
-          subscribe
-        </button>
       </div>
-      <div class="feed-section__sources">
+      <div class="feed-section__toolbar">
         <span class="feed-section__sources-label">Sources</span>
-        <div class="feed-section__avatars" aria-label="Feed sources filter">
-          <button
-            v-for="source in sourceOptions"
-            :key="source.key"
-            type="button"
-            class="feed-section__source"
-            :class="{ 'feed-section__source--active': selectedSource === source.key }"
-            :title="`${source.label} · ${source.count}`"
-            @click="toggleSourceFilter(source.key)"
-          >
-            <img
-              class="feed-section__avatar"
-              :src="source.src"
-              :alt="source.alt"
-              loading="lazy"
-            />
-            <span class="feed-section__source-label">{{ source.label }}</span>
-            <span class="feed-section__source-count">{{ source.count }}</span>
-          </button>
+        <div class="feed-section__sources">
+          <div class="feed-section__avatars" aria-label="Feed sources filter">
+            <button
+              v-for="source in sourceOptions"
+              :key="source.key"
+              type="button"
+              class="feed-section__source"
+              :class="{ 'feed-section__source--active': selectedSource === source.key }"
+              :title="`${source.label} · ${source.count}`"
+              @click="toggleSourceFilter(source.key)"
+            >
+              <img
+                class="feed-section__avatar"
+                :src="source.src"
+                :alt="source.alt"
+                loading="lazy"
+                @error="handleAvatarError($event, source.key)"
+              />
+              <span class="feed-section__source-label">{{ source.label }}</span>
+              <span class="feed-section__source-count">{{ source.count }}</span>
+            </button>
+          </div>
         </div>
       </div>
     </header>
@@ -171,6 +199,12 @@ const toggleSourceFilter = (sourceKey: string): void => {
   gap: 2px;
 }
 
+.feed-section__title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .feed-section__eyebrow {
   color: var(--feed-accent);
   font-size: 12px;
@@ -191,10 +225,25 @@ const toggleSourceFilter = (sourceKey: string): void => {
   font-size: 13px;
 }
 
+.feed-section__toolbar {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+}
+
+.feed-section__sources {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
 .feed-section__avatars {
   display: flex;
   align-items: center;
   gap: 0;
+  min-width: 0;
   max-width: 100%;
   overflow-x: auto;
   padding: 2px 0 2px 4px;
@@ -203,11 +252,6 @@ const toggleSourceFilter = (sourceKey: string): void => {
 
 .feed-section__avatars::-webkit-scrollbar {
   display: none;
-}
-
-.feed-section__sources {
-  display: grid;
-  gap: 8px;
 }
 
 .feed-section__sources-label {
@@ -288,23 +332,32 @@ const toggleSourceFilter = (sourceKey: string): void => {
   color: var(--vp-c-text-2);
 }
 
-.subscribe-pill {
-  border: 1px solid color-mix(in srgb, var(--feed-accent) 38%, transparent);
-  border-radius: 999px;
-  padding: 7px 14px;
+.subscribe-icon {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  height: auto;
+  border: none;
+  padding: 0;
   background: transparent;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
+  line-height: 1;
   cursor: pointer;
 }
 
-.subscribe-pill--tip {
-  color: color-mix(in srgb, var(--feed-accent) 72%, white);
+.subscribe-icon img {
+  display: block;
+  width: 17px;
+  height: 17px;
+  opacity: 0.78;
+  transition: opacity 0.18s ease, transform 0.18s ease;
 }
 
-.subscribe-pill--danger {
-  color: #fecdd3;
+.subscribe-icon:hover img,
+.subscribe-icon:focus-visible img {
+  opacity: 1;
+  transform: translateY(-1px);
 }
 
 @media (max-width: 640px) {
@@ -313,12 +366,20 @@ const toggleSourceFilter = (sourceKey: string): void => {
     flex-direction: column;
   }
 
-  .feed-section__source {
-    margin-left: -16px;
+  .feed-section__toolbar {
+    grid-template-columns: 1fr;
   }
 
-  .subscribe-pill {
-    align-self: flex-start;
+  .feed-section__sources {
+    width: 100%;
+  }
+
+  .feed-section__title-row {
+    flex-wrap: wrap;
+  }
+
+  .feed-section__source {
+    margin-left: -16px;
   }
 }
 </style>

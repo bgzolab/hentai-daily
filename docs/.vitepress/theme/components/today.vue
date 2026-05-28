@@ -143,8 +143,6 @@ const availableYears = computed(() => {
   return years.reverse(); // 降序排列，最新年份在前
 });
 const showContent = ref(true);
-// 卡片布局：false 为单栏，true 为双栏
-const isTwoColumn = ref(false);
 // 热力图 count.json 原始数据缓存
 const heatmapCountData = ref<countEntity[]>([]);
 // 热力图可用日期集合（来自 /api/count.json）
@@ -381,12 +379,6 @@ const sectionModels = computed<sectionModelEntity[]>(() => {
   });
 });
 
-const hasRankingSections = computed(() => {
-  return sectionModels.value.some(
-    (section) => section.variant === "ranking" && section.entries.length > 0,
-  );
-});
-
 const refreshToday = (timestamp?: number) => {
   const targetDate = timestamp
     ? getCurrentDate(new Date(timestamp))
@@ -534,25 +526,6 @@ onMounted(async () => {
   <div class="heatmap-scroll">
     <div id="cal-heatmap"></div>
   </div>
-  <!-------------------------Actions Bar---------------------------->
-  <div v-if="hasRankingSections" class="actions-bar">
-    <span class="label">Ranking Columns</span>
-    <button
-      class="VPSwitch layout-switch"
-      type="button"
-      role="switch"
-      :aria-checked="isTwoColumn"
-      :title="isTwoColumn ? '切换排行榜为单栏' : '切换排行榜为双栏'"
-      @click="isTwoColumn = !isTwoColumn"
-    >
-      <span class="check">
-        <span class="icon">
-          <span class="single-col"></span>
-          <span class="two-col"></span>
-        </span>
-      </span>
-    </button>
-  </div>
   <div class="today-layout">
     <main class="today-main">
       <!--------------------------Content-------------------------------->
@@ -567,7 +540,6 @@ onMounted(async () => {
         :badge-type="section.badgeType"
         :rss="section.rss"
         :avatar-slots="section.avatarSlots"
-        :is-two-column="isTwoColumn"
         @open="handleCardClick"
         @copy="clickCopyLink"
       />
@@ -696,103 +668,6 @@ onMounted(async () => {
   .year-select:focus {
     outline: none;
     border-bottom-color: var(--vp-c-brand-1);
-  }
-}
-
-/* 操作栏 */
-.actions-bar {
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 12px 0;
-  margin-bottom: 8px;
-  .label {
-    color: var(--vp-c-text-1);
-    font-size: 0.9em;
-    margin-right: 8px;
-  }
-}
-
-/* VPSwitch 风格的布局切换按钮 */
-.VPSwitch.layout-switch {
-  position: relative;
-  display: inline-block;
-  border-radius: 11px;
-  width: 40px;
-  height: 22px;
-  background-color: var(--vp-c-default-soft);
-  border: 1px solid var(--vp-c-divider);
-  cursor: pointer;
-  transition:
-    background-color 0.25s,
-    border-color 0.25s;
-  margin-right: 28px;
-}
-
-.VPSwitch.layout-switch:hover {
-  border-color: var(--vp-c-gray);
-}
-
-.VPSwitch.layout-switch[aria-checked="true"] {
-  background-color: var(--vp-c-brand-1);
-  border-color: var(--vp-c-brand-1);
-}
-
-.VPSwitch.layout-switch .check {
-  position: absolute;
-  top: 1px;
-  left: 1px;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background-color: var(--vp-c-bg);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
-  transition: transform 0.25s;
-}
-
-.VPSwitch.layout-switch[aria-checked="true"] .check {
-  transform: translateX(18px);
-}
-
-.VPSwitch.layout-switch .icon {
-  position: relative;
-  display: block;
-  width: 18px;
-  height: 18px;
-  line-height: 18px;
-  text-align: center;
-}
-
-.VPSwitch.layout-switch .single-col,
-.VPSwitch.layout-switch .two-col {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 12px;
-  transition: opacity 0.25s;
-}
-
-.VPSwitch.layout-switch .single-col {
-  opacity: 1;
-}
-
-.VPSwitch.layout-switch .two-col {
-  opacity: 0;
-}
-
-.VPSwitch.layout-switch[aria-checked="true"] .single-col {
-  opacity: 0;
-}
-
-.VPSwitch.layout-switch[aria-checked="true"] .two-col {
-  opacity: 1;
-}
-
-@media (max-width: 960px) {
-  .actions-bar {
-    display: none;
   }
 }
 

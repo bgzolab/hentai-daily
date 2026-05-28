@@ -4,6 +4,7 @@ import {
   extractFirstImageFromSummary,
   extractTextFromSummary,
 } from "./summary";
+import TodayPreviewImage from "./TodayPreviewImage.vue";
 
 interface rssEntity {
   title: string;
@@ -19,8 +20,9 @@ const props = defineProps<{
   desc: string;
   badgeType: string;
   rss: string;
-  isTwoColumn: boolean;
 }>();
+
+const feedIconUrl = new URL("../../assets/feed.svg", import.meta.url).href;
 
 const topEntries = computed(() => props.entries.slice(0, 3));
 const otherEntries = computed(() => props.entries.slice(3));
@@ -66,17 +68,21 @@ const handleSubscribe = (): void => {
     >
       <div class="ranking-section__heading-main">
         <span class="ranking-section__eyebrow">Leaderboard Board</span>
-        <h2 class="content-title">{{ title }}</h2>
+        <div class="ranking-section__title-row">
+          <h2 class="content-title">{{ title }}</h2>
+          <button
+            type="button"
+            class="subscribe-icon"
+            :class="`subscribe-icon--${badgeType}`"
+            aria-label="Subscribe feed"
+            title="Subscribe feed"
+            @click="handleSubscribe"
+          >
+            <img :src="feedIconUrl" alt="" />
+          </button>
+        </div>
         <p class="ranking-section__meta">{{ entries.length }} ranked entries</p>
       </div>
-      <button
-        type="button"
-        class="subscribe-pill"
-        :class="`subscribe-pill--${badgeType}`"
-        @click="handleSubscribe"
-      >
-        subscribe
-      </button>
     </header>
     <p v-if="desc" class="ranking-section__desc">{{ desc }}</p>
 
@@ -88,11 +94,11 @@ const handleSubscribe = (): void => {
         :class="getRankingAccent(1)"
       >
         <div class="ranking-hero__body">
-          <img
+          <TodayPreviewImage
             v-if="extractFirstImageFromSummary(topEntries[0].summary)"
-            class="ranking-media ranking-media--hero"
             :src="extractFirstImageFromSummary(topEntries[0].summary) || undefined"
             :alt="topEntries[0].title === '' ? 'Untitled ranking preview' : topEntries[0].title"
+            variant="ranking-hero"
           />
           <div v-else class="ranking-media ranking-media--fallback">
             {{ getFallbackLabel(1) }}
@@ -122,11 +128,11 @@ const handleSubscribe = (): void => {
           :class="getRankingAccent(entityIndex + 2)"
         >
           <div class="ranking-secondary__body">
-            <img
+            <TodayPreviewImage
               v-if="extractFirstImageFromSummary(entity.summary)"
-              class="ranking-media"
               :src="extractFirstImageFromSummary(entity.summary) || undefined"
               :alt="entity.title === '' ? 'Untitled ranking preview' : entity.title"
+              variant="ranking-card"
             />
             <div v-else class="ranking-media ranking-media--fallback">
               {{ getFallbackLabel(entityIndex + 2) }}
@@ -152,7 +158,6 @@ const handleSubscribe = (): void => {
     <div
       v-if="otherEntries.length > 0"
       class="ranking-rows"
-      :class="{ 'ranking-rows--two': isTwoColumn }"
     >
       <article
         v-for="(entity, entityIndex) in otherEntries"
@@ -162,11 +167,11 @@ const handleSubscribe = (): void => {
       >
         <div class="ranking-row__body">
           <span class="ranking-row__rank">#{{ entityIndex + 4 }}</span>
-          <img
+          <TodayPreviewImage
             v-if="extractFirstImageFromSummary(entity.summary)"
-            class="ranking-media ranking-media--row"
             :src="extractFirstImageFromSummary(entity.summary) || undefined"
             :alt="entity.title === '' ? 'Untitled ranking preview' : entity.title"
+            variant="ranking-row"
           />
           <div v-else class="ranking-media ranking-media--fallback ranking-media--row-fallback">
             {{ entityIndex + 4 }}
@@ -210,12 +215,31 @@ const handleSubscribe = (): void => {
   gap: 2px;
 }
 
-.ranking-section__eyebrow {
-  color: var(--ranking-accent);
-  font-size: 12px;
+.ranking-section__title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ranking-section__sources-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  width: auto;
+  height: auto;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+}
+
+.subscribe-icon img {
 }
 
 .ranking-section__meta,
@@ -231,46 +255,36 @@ const handleSubscribe = (): void => {
   font-size: 13px;
 }
 
-.subscribe-pill {
-  border: 1px solid color-mix(in srgb, var(--ranking-accent) 34%, transparent);
-  border-radius: 999px;
-  padding: 8px 14px;
+.subscribe-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  height: auto;
+  border: none;
+  padding: 0;
   background: transparent;
-  font-size: 13px;
-  font-weight: 700;
+  line-height: 1;
   cursor: pointer;
 }
 
-.subscribe-pill--tip {
-  background: rgba(99, 102, 241, 0.2);
-  color: #c7d2fe;
+.subscribe-icon img {
+  display: block;
+  width: 17px;
+  height: 17px;
+  opacity: 0.78;
+  transition: opacity 0.18s ease, transform 0.18s ease;
 }
 
-.subscribe-pill--danger {
-  background: rgba(244, 63, 94, 0.18);
-  color: #fecdd3;
-}
-
-.ranking-section__desc {
-  margin: 0;
+.subscribe-icon:hover img,
+.subscribe-icon:focus-visible img {
+  opacity: 1;
+  transform: translateY(-1px);
 }
 
 .ranking-top {
   display: grid;
   gap: 16px;
-}
-
-.ranking-hero,
-.ranking-secondary__card {
-  border: 1px solid var(--vp-c-divider);
-  border-radius: 22px;
-  background:
-    linear-gradient(180deg, color-mix(in srgb, var(--vp-c-bg-soft) 90%, transparent), color-mix(in srgb, var(--vp-c-bg-elv) 72%, transparent));
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
-}
-
-.ranking-hero {
-  padding: 24px;
 }
 
 .ranking-secondary__card {
@@ -345,25 +359,6 @@ const handleSubscribe = (): void => {
   padding: 16px 0;
 }
 
-.ranking-media {
-  display: block;
-  width: 100%;
-  height: 180px;
-  margin-bottom: 14px;
-  border-radius: 16px;
-  object-fit: cover;
-}
-
-.ranking-media--hero {
-  height: 240px;
-}
-
-.ranking-media--row {
-  width: 72px;
-  height: 72px;
-  margin: 0;
-}
-
 .ranking-media--fallback {
   display: grid;
   place-items: center;
@@ -393,15 +388,6 @@ const handleSubscribe = (): void => {
   border-bottom: 1px solid color-mix(in srgb, var(--vp-c-divider) 72%, transparent);
 }
 
-.ranking-rows--two {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px 26px;
-}
-
-.ranking-rows--two .ranking-row {
-  padding-top: 0;
-}
-
 .ranking-row__body {
   display: grid;
   grid-template-columns: auto auto minmax(0, 1fr) auto;
@@ -414,7 +400,7 @@ const handleSubscribe = (): void => {
   grid-area: rank;
 }
 
-.ranking-media--row,
+.preview-image--ranking-row,
 .ranking-media--row-fallback {
   grid-area: media;
 }
@@ -438,10 +424,6 @@ const handleSubscribe = (): void => {
     grid-template-columns: 1fr;
   }
 
-  .ranking-rows--two {
-    grid-template-columns: 1fr;
-  }
-
   .ranking-row__body {
     grid-template-columns: auto 72px minmax(0, 1fr);
     grid-template-areas:
@@ -454,8 +436,12 @@ const handleSubscribe = (): void => {
     justify-self: start;
   }
 
-  .subscribe-pill {
-    align-self: flex-start;
+  .ranking-section__toolbar {
+    justify-content: flex-start;
+  }
+
+  .ranking-section__title-row {
+    flex-wrap: wrap;
   }
 }
 </style>

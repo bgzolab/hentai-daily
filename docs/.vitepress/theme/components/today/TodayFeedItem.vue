@@ -3,12 +3,14 @@ import { computed } from "vue";
 import {
   DEFAULT_AVATAR_URL,
   getFaviconUrl,
+  getFaviconServiceUrl,
   getHostnameLabel,
 } from "./avatar.ts";
 import {
   extractFirstImageFromSummary,
   extractTextFromSummary,
 } from "./summary";
+import TodayPreviewImage from "./TodayPreviewImage.vue";
 
 interface rssEntity {
   title: string;
@@ -49,6 +51,13 @@ const avatarUrl = computed(() => {
 
 const handleAvatarError = (event: Event): void => {
   const target = event.target as HTMLImageElement;
+
+  if (target.dataset.faviconFallback !== "service") {
+    target.dataset.faviconFallback = "service";
+    target.src = getFaviconServiceUrl(props.entity.url);
+    return;
+  }
+
   target.onerror = null;
   target.src = DEFAULT_AVATAR_URL;
 };
@@ -89,11 +98,11 @@ const handleAvatarError = (event: Event): void => {
       >
         {{ summaryText || "No summary available." }}
       </p>
-      <img
+      <TodayPreviewImage
         v-if="previewImage"
-        class="feed-item__image"
         :src="previewImage"
         :alt="entity.title === '' ? 'Untitled preview image' : entity.title"
+        variant="feed"
       />
     </div>
   </article>
@@ -200,16 +209,6 @@ const handleAvatarError = (event: Event): void => {
   -webkit-line-clamp: 4;
 }
 
-.feed-item__image {
-  display: block;
-  width: min(100%, 520px);
-  max-height: 220px;
-  margin: 0;
-  border-radius: 16px;
-  box-shadow: 0 20px 36px -28px rgba(0, 0, 0, 0.45);
-  object-fit: cover;
-}
-
 @media (max-width: 640px) {
   .feed-item {
     grid-template-columns: 44px minmax(0, 1fr);
@@ -220,8 +219,7 @@ const handleAvatarError = (event: Event): void => {
     justify-content: flex-start;
   }
 
-  .feed-item__summary,
-  .feed-item__image {
+  .feed-item__summary {
     max-width: 100%;
     width: 100%;
   }
