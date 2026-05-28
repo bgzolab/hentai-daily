@@ -1,4 +1,4 @@
-## 公开API
+## 公开RSS
 
 ### 名器之家 [^why_mingqizhijia]
 
