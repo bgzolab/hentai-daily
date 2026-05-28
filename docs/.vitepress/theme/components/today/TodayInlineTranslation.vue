@@ -7,11 +7,9 @@ const props = withDefaults(defineProps<{
   cacheKey: string;
   href?: string;
   linkClass?: string;
-  canTranslate?: boolean;
 }>(), {
   href: undefined,
   linkClass: "",
-  canTranslate: undefined,
 });
 
 const translatedText = ref("");
@@ -23,10 +21,6 @@ const normalizedText = computed(() => {
 });
 
 const shouldShowTranslateAction = computed(() => {
-  if (typeof props.canTranslate === "boolean") {
-    return props.canTranslate;
-  }
-
   return canTranslateToChinese(normalizedText.value);
 });
 

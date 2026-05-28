@@ -92,7 +92,6 @@ const handleAvatarError = (event: Event): void => {
             :cache-key="`${sectionKey}-${entityIndex}-title`"
             :href="entity.url"
             link-class="feed-item__title-link"
-            :can-translate="entity.title !== ''"
           />
         </h3>
       </div>
@@ -104,7 +103,6 @@ const handleAvatarError = (event: Event): void => {
           v-if="summaryText"
           :text="summaryText"
           :cache-key="`${sectionKey}-${entityIndex}-summary`"
-          :can-translate="summaryText !== ''"
         />
         <span v-else>No summary available.</span>
       </p>

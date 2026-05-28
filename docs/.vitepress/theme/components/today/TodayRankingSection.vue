@@ -116,14 +116,12 @@ const handleSubscribe = (): void => {
               :cache-key="`${sectionKey}-0-title`"
               :href="topEntries[0].url"
               link-class="ranking-title-link"
-              :can-translate="topEntries[0].title !== ''"
             />
           </h3>
           <p class="ranking-hero__summary">
             <TodayInlineTranslation
               :text="getRawSummary(topEntries[0])"
               :cache-key="`${sectionKey}-0-summary`"
-              :can-translate="getRawSummary(topEntries[0]) !== ''"
             />
           </p>
           <span class="ranking-hero__time">{{ formatTimestamp(topEntries[0].timestamp) }}</span>
@@ -155,14 +153,12 @@ const handleSubscribe = (): void => {
                 :cache-key="`${sectionKey}-${entityIndex + 1}-title`"
                 :href="entity.url"
                 link-class="ranking-title-link"
-                :can-translate="entity.title !== ''"
               />
             </h3>
             <p class="ranking-secondary__summary">
               <TodayInlineTranslation
                 :text="getRawSummary(entity)"
                 :cache-key="`${sectionKey}-${entityIndex + 1}-summary`"
-                :can-translate="getRawSummary(entity) !== ''"
               />
             </p>
             <span class="ranking-secondary__time">{{ formatTimestamp(entity.timestamp) }}</span>
@@ -199,14 +195,12 @@ const handleSubscribe = (): void => {
                 :cache-key="`${sectionKey}-${entityIndex + 3}-title`"
                 :href="entity.url"
                 link-class="ranking-title-link"
-                :can-translate="entity.title !== ''"
               />
             </h3>
             <p class="ranking-row__summary">
               <TodayInlineTranslation
                 :text="getRawSummary(entity)"
                 :cache-key="`${sectionKey}-${entityIndex + 3}-summary`"
-                :can-translate="getRawSummary(entity) !== ''"
               />
             </p>
           </div>

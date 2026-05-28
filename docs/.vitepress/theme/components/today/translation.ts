@@ -1,8 +1,8 @@
 const TRANSLATE_API_URL = "https://api.mymemory.translated.net/get";
 const TRANSLATE_STORAGE_KEY = "hentai-daily-ranking-translation-cache-v1";
 const MAX_QUERY_BYTES = 480;
-const CHINESE_ONLY_RE = /^[\u4e00-\u9fff0-9\s，。！？、；：“”‘’（）《》【】—…,.!?:;'"\-_/]+$/;
-const JAPANESE_KANA_RE = /[\u3040-\u30ff\u31f0-\u31ff\uff66-\uff9f]/;
+const JAPANESE_KANA_RE = /[\u3040-\u30ff\u31f0-\u31ff\uff66-\uff9f]/g;
+const MIN_JAPANESE_KANA_COUNT = 2;
 
 const translationCache = new Map<string, string>();
 const pendingTranslations = new Map<string, Promise<string>>();
@@ -19,11 +19,8 @@ export const canTranslateToChinese = (text: string): boolean => {
     return false;
   }
 
-  if (JAPANESE_KANA_RE.test(normalized)) {
-    return true;
-  }
-
-  return !CHINESE_ONLY_RE.test(normalized);
+  const matches = normalized.match(JAPANESE_KANA_RE);
+  return (matches?.length ?? 0) >= MIN_JAPANESE_KANA_COUNT;
 };
 
 const trimToByteLimit = (text: string, maxBytes = MAX_QUERY_BYTES): string => {
