@@ -5,10 +5,8 @@ on:
   schedule:
     # https://github.blog/changelog/2026-03-19-github-actions-late-march-2026-updates/?ref=dailydev
     # https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#onschedule
-    - cron: "0 */2 * * *"
-      timezone: "Asia/Singapore"
-    - cron: "1 0 * * *"
-      timezone: "Asia/Singapore"
+    - cron: "1 2-22/2 * * *"
+      timezone: "Asia/Shanghai"
   push:
     branches:
       # 开发分支验证路由
