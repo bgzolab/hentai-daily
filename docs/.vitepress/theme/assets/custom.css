@@ -15,7 +15,7 @@ html.dark :is(img, image) {
 /**
  * for https://www.hacg.icu
  */
-.meta-nav{
+.meta-nav {
     display: none;
 }
 
@@ -42,6 +42,7 @@ html.dark :is(img, image) {
     color: white;
     box-shadow: 0 8px 16px -8px rgba(139, 69, 19, 0.3);
 }
+
 /** Other */
 .card-style-1 {
     background: linear-gradient(135deg, #FF61D2, #FE9090);
@@ -98,4 +99,9 @@ html.dark :is(img, image) {
 .global-message.Vue-Toastification__toast--info {
     background-color: var(--vp-local-nav-bg-color) !important;
     color: var(--vp-c-text-1) !important;
+}
+
+
+.vp-doc h2 {
+    margin-top: 0 !important;
 }

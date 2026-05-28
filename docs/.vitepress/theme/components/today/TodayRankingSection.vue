@@ -220,27 +220,6 @@ const handleSubscribe = (): void => {
   gap: 8px;
 }
 
-.ranking-section__sources-label {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  width: auto;
-  height: auto;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  border: none;
-  cursor: pointer;
-}
-
-.subscribe-icon img {
-}
-
 .ranking-section__meta,
 .ranking-section__desc,
 .ranking-hero__time,
@@ -303,6 +282,23 @@ const handleSubscribe = (): void => {
 .ranking-top {
   display: grid;
   gap: 16px;
+}
+
+.ranking-hero,
+.ranking-secondary__card {
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 22px;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--vp-c-bg-soft) 90%, transparent),
+      color-mix(in srgb, var(--vp-c-bg-elv) 72%, transparent)
+    );
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.ranking-hero {
+  padding: 24px;
 }
 
 .ranking-secondary__card {

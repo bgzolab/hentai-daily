@@ -130,7 +130,7 @@ onBeforeUnmount(() => {
 }
 
 .preview-image--feed .preview-image__img {
-  max-height: 220px;
+  max-height: 320px;
   box-shadow: 0 20px 36px -28px rgba(0, 0, 0, 0.45);
 }
 
@@ -141,11 +141,11 @@ onBeforeUnmount(() => {
 }
 
 .preview-image--ranking-hero .preview-image__img {
-  height: 240px;
+  max-height: 320px;
 }
 
 .preview-image--ranking-card .preview-image__img {
-  height: 180px;
+  max-height: 200px;
 }
 
 .preview-image--ranking-row {
