@@ -5,27 +5,29 @@ layout: home
 hero:
   name: "绅士日报"
   text: "对不良诱惑说"
-  tagline: 今天是什么日子？戒色第一天
+  tagline: 今天是戒色第一天
   image:
     src: /favicon-512x512.png
     alt: VitePress
   actions:
     - theme: brand
-      text: 快
+      text: 快给我
       link: /zh-cn/today
     - theme: alt
-      text: 还不够
+      text: 我有更好的点子💡
       link: https://github.com/bgzo/hentai-daily/issues
 
 features:
-  - title: 聚合
-    details: 聚合各大 RSS 源，提供每日更新的内容，无需辗转各个网站；
-  - title: 稳定且友好
-    details: 比 RSSHub 更加轻量，更少的429提示；对上游的拉去更少；对各个源头做客制化；
-  - title: API
-    details: 提供对外封装好的 RSS Feed，支持外部重新订阅
-    link: /zh-cn/rss
-  - title: 集成 (Next)
-    details: 翻译、排名、保存页面到 Obsidian、Logseq 等等
+  - title: 足够 Hentai
+    details: 聚合各个Hentai源，提供昨天更新的内容，无需辗转各个网站，不够Hentai 不考虑；
+  - title: 比较稳定
+    details: GitHub Action + Cloudflare Worker，想方设法拉取，比 RSSHub 更加轻量，更少的429提示；不做链接提取，对上游友好；
+  - title: 公开 API
+    details: 提供对外封装好的 RSS 地址，支持外部重新订阅，自由使用本项目 API
+    link: /zh-cn/api
+  - title: 翻译
+    details: 支持日文到中文翻译，支持由 https://mymemory.translated.net 提供
+  # - title: 集成 (Next)
+  #   details: 周报、月报、年报、下一步集成方向
 ---
 

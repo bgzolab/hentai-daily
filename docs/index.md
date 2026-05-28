@@ -18,14 +18,16 @@ hero:
       link: https://github.com/bgzo/hentai-daily/issues
 
 features:
-  - title: ALl in one
-    details: No need to browser origin website one by one.
+  - title: ALl Hentai in one
+    details: No need to browser origin website one by one. Only Hentai contents, no more.
   - title: Stable and less fetch 
-    details: More usefull than RSSHub with response like `address no respon`.
-  - title: API support
-    details: Browser content via RSS and url fetched.
-    link: /rss
-  - title: Integration (Next)
-    details: Translate ranking and more. 
+    details: Use GitHub + Cloudflare Worker, try best to fetch resource. More useful than RSSHub with response like `address no respon`, No link extraction, be friendly to upstream.
+  - title: API and RSS public support
+    details: Browser content via RSS reader. Feel free to use API for your own project.
+    link: /api
+  - title: Translate
+    details: Support Japanese to Chinese translation, support by  https://mymemory.translated.net
+  # - title: Integration(Next)
+  #   details: Weekly, Monthly, Yearly and more.
 ---
 
