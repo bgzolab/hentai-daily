@@ -11,6 +11,7 @@ import {
   extractTextFromSummary,
 } from "./summary";
 import TodayPreviewImage from "./TodayPreviewImage.vue";
+import TodayInlineTranslation from "./TodayInlineTranslation.vue";
 
 interface rssEntity {
   title: string;
@@ -35,6 +36,10 @@ const previewImage = computed(() => {
 
 const summaryText = computed(() => {
   return extractTextFromSummary(props.entity.summary);
+});
+
+const titleText = computed(() => {
+  return props.entity.title === "" ? "Untitled" : props.entity.title;
 });
 
 const streamLabel = computed(() => {
@@ -82,21 +87,26 @@ const handleAvatarError = (event: Event): void => {
           <span class="feed-item__time">{{ formatTimestamp(entity.timestamp) }}</span>
         </div>
         <h3 class="feed-item__title">
-          <a
-            class="feed-item__title-link"
+          <TodayInlineTranslation
+            :text="titleText"
+            :cache-key="`${sectionKey}-${entityIndex}-title`"
             :href="entity.url"
-            target="_blank"
-            rel="noreferrer"
-          >
-            {{ entity.title === "" ? "Untitled" : entity.title }}
-          </a>
+            link-class="feed-item__title-link"
+            :can-translate="entity.title !== ''"
+          />
         </h3>
       </div>
       <p
         class="feed-item__summary"
         :class="{ 'feed-item__summary--clamped': !previewImage }"
       >
-        {{ summaryText || "No summary available." }}
+        <TodayInlineTranslation
+          v-if="summaryText"
+          :text="summaryText"
+          :cache-key="`${sectionKey}-${entityIndex}-summary`"
+          :can-translate="summaryText !== ''"
+        />
+        <span v-else>No summary available.</span>
       </p>
       <TodayPreviewImage
         v-if="previewImage"
