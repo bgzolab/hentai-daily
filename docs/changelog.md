@@ -3,6 +3,10 @@ title: Changelog
 outline: deep
 ---
 
+## 20260528 New layout
+
+Remove the card layout, use a more simple list layout, support the filter by sites.
+
 ## 20260519 Temporary Unavailability
 
 Due some [reason](https://blog.bgzo.cc/20260516-mv-repo-to-github-organization), I transfer this project to my new organization, and after checking github action, I go back to vibe coding new project again, I used to think it would be fine, but I was wrong. I forget to check the build status of this website(on cloudflare and vercel). So in the past few days, the sites are not updated for new posts.

@@ -13,35 +13,42 @@ GitHub Action 已设置为每 2 小时运行一次。
 
 ## Q: 日报聚合了哪些源？
 
+| 源 | 死了么 | 分类 |
+| --- | --- | --- |
+| https://blog.reimu.net | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://blog.reimu.net)   | Resource |
+| https://gmgard.com | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://gmgard.com)   | Resource |
+| https://hacg.me | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://hacg.me)   | Resource |
+| https://www.tiangal.com | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://www.tiangal.com)   | Resource |
+| https://www.south-plus.net | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://www.south-plus.net)   | Resource |
+| https://mingqiceping.com | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://mingqiceping.com)   | News |
+| https://www.4gamers.com.tw/ | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://www.4gamers.com.tw/)   | News |
+| https://home.gamer.com.tw/ | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://home.gamer.com.tw/)   | News |
+| https://www.dlsite.com | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://www.dlsite.com)   | Ranking |
 
-就想 [更新日志](changelog.md#_2023-06-13-release-prototype-with-jekyll) 里面写的, 基本负载了:
+除了上面的站点，还有一些私心推荐，虽然可能不符合日报收录的标准，但仍然值得一看：
 
-1. https://www.4gamers.com.tw
-2. https://mingqiceping.com
-3. https://blog.reimu.net (cloudflare worker)
-4. https://gmgard.com
-5. https://www.acg.gy
-5. https://www.tiangal.com (cloudflare worker)
-6. https://www.south-plus.net (cloudflare worker)
+Except for above sites, there are some other sites that I would recommand to you, which are maybe not meet the daily paper standard, but still worth to check:
+
+| Source | Status | Category |
+| ------ | ------ | -------- |
+| https://www.asmr.one | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://www.asmr.one)   | ASMR |
+| https://nysoure.com | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://nysoure.com)   | Galgame |
+| https://www.kungal.com/ | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://www.kungal.com/)   | Galgame(Too much) |
 
 ::: tip
-事实上，GitHub 的爬虫并非总能访问上述网站，有时会屏蔽请求~~（返回 403 错误）~~，或者不再提供分享链接（RSS），甚至有时托管方会被警方查封（https://www.south-plus.net / https://bbs.drdian.net）！
+最近 AI 垃圾内容充斥 GitHub 社区，GitHub Action 的稳定性不如以前了，有时候 CI 会因为奇怪的错误而失败。
 
-请尽量解。希望您在这里玩得开心。
+并且越来越多的网站不再提供分享链接，并且阻止 GitHub 的抓取请求（403），甚至有的站长还被按头了(https://bbs.drdian.net).
+
+因此，虽然我会尽力保持更新，但我无法保证这个站点的稳定性。
+
+如果这个站点对你有帮助，那就太好了。
 :::
-
-如果你要更多好玩的源，请尝试给我提 ISSUE，或者通过 TG、Email 联系我，我会加入日报中。
 
 ## Q: 为什么我根本访问不了你聚合的资源？
 
-:::danger
-如果你拿不到分发的资源，请尝试注册一个账号吧，全都是免费且匿名的，没有人关心你是谁。
-
-如果某个网站或者邮件要求你付费，请不要相信他们。
-:::
-
-各个网站的资源策略各不相同，这取决于网站管理员的设置。有些网站如 http://gmgard.com 需要用户注册才能浏览其内容，而有些网站如 http://blog.reimu.net 则不再在博客上提供分享链接，而是转向他们的 Telegram 频道。
+如果你拿不到分发的资源，请尝试注册一个账号吧，全都是免费且匿名的，没有人关心你是谁。如果有人让你付费，请不要相信他们，举报他们，我会删除这个站点。
 
 如果你遇到需要邀请码的网站，请随时联系我，我会尽力帮助你。
 
-玩的开心
+祝你玩的开心。

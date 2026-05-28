@@ -10,33 +10,44 @@ Don't stay up late.
 
 ## Q: Which sources this site reached?
 
-As [changelog](changelog.md#_2023-06-13-release-prototype-with-jekyll) saied, basically included:
+| Source | Status | Category |
+| --- | --- | --- |
+| https://blog.reimu.net | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://blog.reimu.net)   | Resource |
+| https://gmgard.com | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://gmgard.com)   | Resource |
+| https://hacg.me | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://hacg.me)   | Resource |
+| https://www.tiangal.com | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://www.tiangal.com)   | Resource |
+| https://www.south-plus.net | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://www.south-plus.net)   | Resource |
+| https://mingqiceping.com | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://mingqiceping.com)   | News |
+| https://www.4gamers.com.tw/ | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://www.4gamers.com.tw/)   | News |
+| https://home.gamer.com.tw/ | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://home.gamer.com.tw/)   | News |
+| https://www.dlsite.com | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://www.dlsite.com)   | Ranking |
 
-1. https://www.4gamers.com.tw
-2. https://mingqiceping.com
-3. https://blog.reimu.net (cloudflare worker)
-4. https://gmgard.com
-5. https://www.acg.gy
-5. https://www.tiangal.com (cloudflare worker)
-6. https://www.south-plus.net (cloudflare worker)
+Except for above sites, there are some other sites that I would recommand to you, which are maybe not meet the daily paper standard, but still worth to check:
 
-And fetch sale ranking on https://www.dlsite.com.
+| Source | Status | Category |
+| ------ | ------ | -------- |
+| https://www.asmr.one | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://www.asmr.one)   | ASMR |
+| https://nysoure.com | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://nysoure.com)   | Galgame |
+| https://www.kungal.com/ | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://www.kungal.com/)   | Galgame(Too much) |
 
 ::: tip
-The true thing is, the fetch from GitHub isn't always reach on the above websites, sometimes the fetch will be blocked by the website~~(return 403)~~, or the website is no longer provided the share links, even sometimes the hoster was arrested by police (https://www.south-plus.net / https://bbs.drdian.net)!
+As AI slop full of GitHub community, GitHub Action is not stable as before, sometimes CI will fail due with weird error.
 
-Please be kindful as soon as possible. Wish you could have fun here. That's my pleasure.
+And more and more websites are no longer provided the share links, and block GitHub fetch request(403). 
+
+Even some websiter hoster was arrested by police(https://bbs.drdian.net).
+
+Above all, this site would try best to keep update, but I cannot guarantee the stability of this site.
+
+Wish you could have fun here.
+
+That would be my pleasure. 
 :::
 
 ## Q: Why the resources card get 404 or error page?
 
-:::danger
-So if you cannot get the resource, try to sign up an account. Basically they're free and anonymity.
-If somewhere or website ask you paying for, please don't trust them.
-:::
+If you cannot access the resources, try to sign up a free account. If they ask you to pay, please don't trust them. Report them, and I would remove it.
 
-The strategy for resources are different each other, depends on website's admin, some sites like http://gmgard.com need to be a user to browser their contents, some website like http://blog.reimu.net no longer provide the share links on blog, instead of their telegram channel.
-
-If any website need an invited code, you could drop me a line for this. 
+If any website need an invited code, you could drop me a line for this. (amply-either-jawed#duck.com)
 
 I would try my best to help you. 
