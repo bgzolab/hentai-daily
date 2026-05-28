@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref, watch } from "vue";
 import {
   extractFirstImageFromSummary,
   extractTextFromSummary,
 } from "./summary";
 import TodayPreviewImage from "./TodayPreviewImage.vue";
+import { translateToChinese } from "./translation";
 
 interface rssEntity {
   title: string;
@@ -26,6 +27,12 @@ const feedIconUrl = new URL("../../assets/feed.svg", import.meta.url).href;
 
 const topEntries = computed(() => props.entries.slice(0, 3));
 const otherEntries = computed(() => props.entries.slice(3));
+const translatedTitles = ref<Record<string, string>>({});
+const translatedSummaries = ref<Record<string, string>>({});
+const showTranslatedText = ref(false);
+const isTranslating = ref(false);
+
+let translationRequestId = 0;
 
 const formatTimestamp = (timestamp: number): string => {
   return new Date(timestamp * 1000).toLocaleString();
@@ -53,6 +60,104 @@ const getFallbackLabel = (rank: number): string => {
     .replace(" Ranking", "")
     .concat(` • Rank #${rank}`);
 };
+
+const getEntryKey = (entity: rssEntity, index: number): string => {
+  return `${entity.url}::${entity.timestamp}::${index}`;
+};
+
+const getRawTitle = (entity: rssEntity): string => {
+  return entity.title === "" ? "Untitled" : entity.title;
+};
+
+const getRawSummary = (entity: rssEntity): string => {
+  return extractTextFromSummary(entity.summary);
+};
+
+const getDisplayTitle = (entity: rssEntity, index: number): string => {
+  if (!showTranslatedText.value) {
+    return getRawTitle(entity);
+  }
+
+  return translatedTitles.value[getEntryKey(entity, index)] ?? getRawTitle(entity);
+};
+
+const getDisplaySummary = (entity: rssEntity, index: number): string => {
+  if (!showTranslatedText.value) {
+    return getRawSummary(entity);
+  }
+
+  return translatedSummaries.value[getEntryKey(entity, index)] ?? getRawSummary(entity);
+};
+
+const syncTranslations = async (): Promise<void> => {
+  const requestId = ++translationRequestId;
+  const nextTitles: Record<string, string> = {};
+  const nextSummaries: Record<string, string> = {};
+
+  isTranslating.value = true;
+
+  await Promise.all(
+    props.entries.map(async (entity, index) => {
+      const key = getEntryKey(entity, index);
+      const rawTitle = getRawTitle(entity);
+      const rawSummary = getRawSummary(entity);
+
+      const [title, summary] = await Promise.all([
+        translateToChinese(rawTitle),
+        translateToChinese(rawSummary),
+      ]);
+
+      nextTitles[key] = title || rawTitle;
+      nextSummaries[key] = summary || rawSummary;
+    }),
+  );
+
+  if (requestId !== translationRequestId) {
+    return;
+  }
+
+  translatedTitles.value = nextTitles;
+  translatedSummaries.value = nextSummaries;
+  isTranslating.value = false;
+};
+
+watch(
+  () => props.entries,
+  () => {
+    translationRequestId += 1;
+    translatedTitles.value = {};
+    translatedSummaries.value = {};
+    isTranslating.value = false;
+
+    if (showTranslatedText.value) {
+      void syncTranslations();
+    }
+  },
+  { immediate: true },
+);
+
+const handleToggleTranslation = async (): Promise<void> => {
+  if (showTranslatedText.value) {
+    showTranslatedText.value = false;
+    return;
+  }
+
+  showTranslatedText.value = true;
+
+  if (Object.keys(translatedTitles.value).length > 0) {
+    return;
+  }
+
+  await syncTranslations();
+};
+
+const translationButtonLabel = computed(() => {
+  if (isTranslating.value) {
+    return "翻译中...";
+  }
+
+  return showTranslatedText.value ? "隐藏中文" : "翻译成中文";
+});
 
 const handleSubscribe = (): void => {
   window.open(props.rss, "_blank");
@@ -96,7 +201,7 @@ const handleSubscribe = (): void => {
           <TodayPreviewImage
             v-if="extractFirstImageFromSummary(topEntries[0].summary)"
             :src="extractFirstImageFromSummary(topEntries[0].summary) || undefined"
-            :alt="topEntries[0].title === '' ? 'Untitled ranking preview' : topEntries[0].title"
+            :alt="getDisplayTitle(topEntries[0], 0) === '' ? 'Untitled ranking preview' : getDisplayTitle(topEntries[0], 0)"
             variant="ranking-hero"
           />
           <div v-else class="ranking-media ranking-media--fallback">
@@ -110,10 +215,10 @@ const handleSubscribe = (): void => {
               target="_blank"
               rel="noreferrer"
             >
-              {{ topEntries[0].title === "" ? "Untitled" : topEntries[0].title }}
+              {{ getDisplayTitle(topEntries[0], 0) }}
             </a>
           </h3>
-          <p class="ranking-hero__summary">{{ extractTextFromSummary(topEntries[0].summary) }}</p>
+          <p class="ranking-hero__summary">{{ getDisplaySummary(topEntries[0], 0) }}</p>
           <span class="ranking-hero__time">{{ formatTimestamp(topEntries[0].timestamp) }}</span>
         </div>
       </article>
@@ -130,7 +235,7 @@ const handleSubscribe = (): void => {
             <TodayPreviewImage
               v-if="extractFirstImageFromSummary(entity.summary)"
               :src="extractFirstImageFromSummary(entity.summary) || undefined"
-              :alt="entity.title === '' ? 'Untitled ranking preview' : entity.title"
+              :alt="getDisplayTitle(entity, entityIndex + 1) === '' ? 'Untitled ranking preview' : getDisplayTitle(entity, entityIndex + 1)"
               variant="ranking-card"
             />
             <div v-else class="ranking-media ranking-media--fallback">
@@ -144,10 +249,10 @@ const handleSubscribe = (): void => {
                 target="_blank"
                 rel="noreferrer"
               >
-                {{ entity.title === "" ? "Untitled" : entity.title }}
+                {{ getDisplayTitle(entity, entityIndex + 1) }}
               </a>
             </h3>
-            <p class="ranking-secondary__summary">{{ extractTextFromSummary(entity.summary) }}</p>
+            <p class="ranking-secondary__summary">{{ getDisplaySummary(entity, entityIndex + 1) }}</p>
             <span class="ranking-secondary__time">{{ formatTimestamp(entity.timestamp) }}</span>
           </div>
         </article>
@@ -169,7 +274,7 @@ const handleSubscribe = (): void => {
           <TodayPreviewImage
             v-if="extractFirstImageFromSummary(entity.summary)"
             :src="extractFirstImageFromSummary(entity.summary) || undefined"
-            :alt="entity.title === '' ? 'Untitled ranking preview' : entity.title"
+            :alt="getDisplayTitle(entity, entityIndex + 3) === '' ? 'Untitled ranking preview' : getDisplayTitle(entity, entityIndex + 3)"
             variant="ranking-row"
           />
           <div v-else class="ranking-media ranking-media--fallback ranking-media--row-fallback">
@@ -183,14 +288,25 @@ const handleSubscribe = (): void => {
                 target="_blank"
                 rel="noreferrer"
               >
-                {{ entity.title === "" ? "Untitled" : entity.title }}
+                {{ getDisplayTitle(entity, entityIndex + 3) }}
               </a>
             </h3>
-            <p class="ranking-row__summary">{{ extractTextFromSummary(entity.summary) }}</p>
+            <p class="ranking-row__summary">{{ getDisplaySummary(entity, entityIndex + 3) }}</p>
           </div>
           <span class="ranking-row__time">{{ formatTimestamp(entity.timestamp) }}</span>
         </div>
       </article>
+    </div>
+
+    <div v-if="entries.length > 0" class="ranking-section__actions">
+      <button
+        type="button"
+        class="translation-toggle"
+        :disabled="isTranslating"
+        @click="handleToggleTranslation"
+      >
+        {{ translationButtonLabel }}
+      </button>
     </div>
   </section>
 </template>
@@ -212,6 +328,11 @@ const handleSubscribe = (): void => {
 .ranking-section__heading-main {
   display: grid;
   gap: 2px;
+}
+
+.ranking-section__actions {
+  display: flex;
+  justify-content: flex-end;
 }
 
 .ranking-section__title-row {
@@ -277,6 +398,32 @@ const handleSubscribe = (): void => {
 .subscribe-icon:focus-visible .subscribe-icon__glyph {
   opacity: 1;
   transform: translateY(-1px);
+}
+
+.translation-toggle {
+  border: 1px solid color-mix(in srgb, var(--vp-c-brand-1) 28%, var(--vp-c-divider));
+  border-radius: 999px;
+  padding: 8px 14px;
+  background: color-mix(in srgb, var(--vp-c-bg-soft) 78%, var(--vp-c-brand-soft) 22%);
+  color: var(--vp-c-text-1);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 0.18s ease, transform 0.18s ease, background-color 0.18s ease;
+}
+
+.translation-toggle:hover,
+.translation-toggle:focus-visible {
+  border-color: color-mix(in srgb, var(--vp-c-brand-1) 55%, var(--vp-c-divider));
+  background: color-mix(in srgb, var(--vp-c-bg-soft) 55%, var(--vp-c-brand-soft) 45%);
+  transform: translateY(-1px);
+}
+
+.translation-toggle:disabled {
+  opacity: 0.7;
+  cursor: progress;
+  transform: none;
 }
 
 .ranking-top {
