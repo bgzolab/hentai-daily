@@ -111,7 +111,6 @@ const handleAvatarError = (event: Event, entryUrl: string): void => {
     >
       <div class="feed-section__heading">
         <div class="feed-section__heading-main">
-          <span class="feed-section__eyebrow">Moments Stream</span>
           <div class="feed-section__title-row">
             <h2 class="content-title">{{ title }}</h2>
             <button
@@ -122,7 +121,7 @@ const handleAvatarError = (event: Event, entryUrl: string): void => {
               title="Subscribe feed"
               @click="handleSubscribe"
             >
-              <img :src="feedIconUrl" alt="" />
+              <span class="subscribe-icon__glyph" aria-hidden="true"></span>
             </button>
           </div>
           <p class="feed-section__meta">{{ displayedEntryCount }}</p>
@@ -203,14 +202,6 @@ const handleAvatarError = (event: Event, entryUrl: string): void => {
   display: flex;
   align-items: center;
   gap: 8px;
-}
-
-.feed-section__eyebrow {
-  color: var(--feed-accent);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
 }
 
 .content-title {
@@ -343,19 +334,38 @@ const handleAvatarError = (event: Event, entryUrl: string): void => {
   padding: 0;
   background: transparent;
   line-height: 1;
+  color: color-mix(in srgb, var(--vp-c-text-2) 88%, var(--feed-accent) 12%);
   cursor: pointer;
 }
 
-.subscribe-icon img {
+.subscribe-icon__glyph {
   display: block;
   width: 17px;
   height: 17px;
+  background-color: currentColor;
+  mask-image: url("../../assets/feed.svg");
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-image: url("../../assets/feed.svg");
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
   opacity: 0.78;
-  transition: opacity 0.18s ease, transform 0.18s ease;
+  transition: opacity 0.18s ease, transform 0.18s ease, background-color 0.18s ease;
 }
 
-.subscribe-icon:hover img,
-.subscribe-icon:focus-visible img {
+:global(html.dark) .subscribe-icon {
+  color: color-mix(in srgb, white 90%, var(--feed-accent) 10%);
+}
+
+.subscribe-icon:hover,
+.subscribe-icon:focus-visible {
+  color: var(--vp-c-brand-1);
+}
+
+.subscribe-icon:hover .subscribe-icon__glyph,
+.subscribe-icon:focus-visible .subscribe-icon__glyph {
   opacity: 1;
   transform: translateY(-1px);
 }

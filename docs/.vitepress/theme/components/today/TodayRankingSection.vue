@@ -67,7 +67,6 @@ const handleSubscribe = (): void => {
       class="ranking-section__header"
     >
       <div class="ranking-section__heading-main">
-        <span class="ranking-section__eyebrow">Leaderboard Board</span>
         <div class="ranking-section__title-row">
           <h2 class="content-title">{{ title }}</h2>
           <button
@@ -78,7 +77,7 @@ const handleSubscribe = (): void => {
             title="Subscribe feed"
             @click="handleSubscribe"
           >
-            <img :src="feedIconUrl" alt="" />
+            <span class="subscribe-icon__glyph" aria-hidden="true"></span>
           </button>
         </div>
         <p class="ranking-section__meta">{{ entries.length }} ranked entries</p>
@@ -265,19 +264,38 @@ const handleSubscribe = (): void => {
   padding: 0;
   background: transparent;
   line-height: 1;
+  color: color-mix(in srgb, var(--vp-c-text-2) 88%, var(--ranking-accent) 12%);
   cursor: pointer;
 }
 
-.subscribe-icon img {
+.subscribe-icon__glyph {
   display: block;
   width: 17px;
   height: 17px;
+  background-color: currentColor;
+  mask-image: url("../../assets/feed.svg");
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-image: url("../../assets/feed.svg");
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
   opacity: 0.78;
-  transition: opacity 0.18s ease, transform 0.18s ease;
+  transition: opacity 0.18s ease, transform 0.18s ease, background-color 0.18s ease;
 }
 
-.subscribe-icon:hover img,
-.subscribe-icon:focus-visible img {
+:global(html.dark) .subscribe-icon {
+  color: color-mix(in srgb, white 90%, var(--ranking-accent) 10%);
+}
+
+.subscribe-icon:hover,
+.subscribe-icon:focus-visible {
+  color: var(--vp-c-brand-1);
+}
+
+.subscribe-icon:hover .subscribe-icon__glyph,
+.subscribe-icon:focus-visible .subscribe-icon__glyph {
   opacity: 1;
   transform: translateY(-1px);
 }
