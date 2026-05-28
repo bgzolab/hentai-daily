@@ -1,6 +1,8 @@
 const TRANSLATE_API_URL = "https://api.mymemory.translated.net/get";
 const TRANSLATE_STORAGE_KEY = "hentai-daily-ranking-translation-cache-v1";
 const MAX_QUERY_BYTES = 480;
+const CHINESE_ONLY_RE = /^[\u4e00-\u9fff0-9\s，。！？、；：“”‘’（）《》【】—…,.!?:;'"\-_/]+$/;
+const JAPANESE_KANA_RE = /[\u3040-\u30ff\u31f0-\u31ff\uff66-\uff9f]/;
 
 const translationCache = new Map<string, string>();
 const pendingTranslations = new Map<string, Promise<string>>();
@@ -11,8 +13,17 @@ const normalizeText = (text: string): string => {
   return text.replace(/\s+/g, " ").trim();
 };
 
-const shouldTranslate = (text: string): boolean => {
-  return normalizeText(text) !== "" && /[^\x00-\x7F]/.test(text);
+export const canTranslateToChinese = (text: string): boolean => {
+  const normalized = normalizeText(text);
+  if (normalized === "") {
+    return false;
+  }
+
+  if (JAPANESE_KANA_RE.test(normalized)) {
+    return true;
+  }
+
+  return !CHINESE_ONLY_RE.test(normalized);
 };
 
 const trimToByteLimit = (text: string, maxBytes = MAX_QUERY_BYTES): string => {
@@ -102,7 +113,7 @@ const requestTranslation = async (text: string): Promise<string> => {
 
 export const translateToChinese = async (text: string): Promise<string> => {
   const normalized = normalizeText(text);
-  if (!shouldTranslate(normalized)) {
+  if (!canTranslateToChinese(normalized)) {
     return normalized;
   }
 

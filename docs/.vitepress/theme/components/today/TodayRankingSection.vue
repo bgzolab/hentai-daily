@@ -5,7 +5,7 @@ import {
   extractTextFromSummary,
 } from "./summary";
 import TodayPreviewImage from "./TodayPreviewImage.vue";
-import { translateToChinese } from "./translation";
+import { canTranslateToChinese, translateToChinese } from "./translation";
 
 interface rssEntity {
   title: string;
@@ -23,16 +23,12 @@ const props = defineProps<{
   rss: string;
 }>();
 
-const feedIconUrl = new URL("../../assets/feed.svg", import.meta.url).href;
-
 const topEntries = computed(() => props.entries.slice(0, 3));
 const otherEntries = computed(() => props.entries.slice(3));
 const translatedTitles = ref<Record<string, string>>({});
 const translatedSummaries = ref<Record<string, string>>({});
-const showTranslatedText = ref(false);
-const isTranslating = ref(false);
-
-let translationRequestId = 0;
+const visibleTranslations = ref<Record<string, boolean>>({});
+const translatingFields = ref<Record<string, boolean>>({});
 
 const formatTimestamp = (timestamp: number): string => {
   return new Date(timestamp * 1000).toLocaleString();
@@ -65,6 +61,14 @@ const getEntryKey = (entity: rssEntity, index: number): string => {
   return `${entity.url}::${entity.timestamp}::${index}`;
 };
 
+const getFieldKey = (
+  entity: rssEntity,
+  index: number,
+  field: "title" | "summary",
+): string => {
+  return `${getEntryKey(entity, index)}::${field}`;
+};
+
 const getRawTitle = (entity: rssEntity): string => {
   return entity.title === "" ? "Untitled" : entity.title;
 };
@@ -74,90 +78,105 @@ const getRawSummary = (entity: rssEntity): string => {
 };
 
 const getDisplayTitle = (entity: rssEntity, index: number): string => {
-  if (!showTranslatedText.value) {
+  const fieldKey = getFieldKey(entity, index, "title");
+  if (!visibleTranslations.value[fieldKey]) {
     return getRawTitle(entity);
   }
 
-  return translatedTitles.value[getEntryKey(entity, index)] ?? getRawTitle(entity);
+  return translatedTitles.value[fieldKey] ?? getRawTitle(entity);
 };
 
 const getDisplaySummary = (entity: rssEntity, index: number): string => {
-  if (!showTranslatedText.value) {
+  const fieldKey = getFieldKey(entity, index, "summary");
+  if (!visibleTranslations.value[fieldKey]) {
     return getRawSummary(entity);
   }
 
-  return translatedSummaries.value[getEntryKey(entity, index)] ?? getRawSummary(entity);
-};
-
-const syncTranslations = async (): Promise<void> => {
-  const requestId = ++translationRequestId;
-  const nextTitles: Record<string, string> = {};
-  const nextSummaries: Record<string, string> = {};
-
-  isTranslating.value = true;
-
-  await Promise.all(
-    props.entries.map(async (entity, index) => {
-      const key = getEntryKey(entity, index);
-      const rawTitle = getRawTitle(entity);
-      const rawSummary = getRawSummary(entity);
-
-      const [title, summary] = await Promise.all([
-        translateToChinese(rawTitle),
-        translateToChinese(rawSummary),
-      ]);
-
-      nextTitles[key] = title || rawTitle;
-      nextSummaries[key] = summary || rawSummary;
-    }),
-  );
-
-  if (requestId !== translationRequestId) {
-    return;
-  }
-
-  translatedTitles.value = nextTitles;
-  translatedSummaries.value = nextSummaries;
-  isTranslating.value = false;
+  return translatedSummaries.value[fieldKey] ?? getRawSummary(entity);
 };
 
 watch(
   () => props.entries,
   () => {
-    translationRequestId += 1;
     translatedTitles.value = {};
     translatedSummaries.value = {};
-    isTranslating.value = false;
-
-    if (showTranslatedText.value) {
-      void syncTranslations();
-    }
+    visibleTranslations.value = {};
+    translatingFields.value = {};
   },
   { immediate: true },
 );
 
-const handleToggleTranslation = async (): Promise<void> => {
-  if (showTranslatedText.value) {
-    showTranslatedText.value = false;
-    return;
-  }
-
-  showTranslatedText.value = true;
-
-  if (Object.keys(translatedTitles.value).length > 0) {
-    return;
-  }
-
-  await syncTranslations();
+const shouldShowTranslateAction = (
+  entity: rssEntity,
+  field: "title" | "summary",
+): boolean => {
+  const rawText = field === "title" ? getRawTitle(entity) : getRawSummary(entity);
+  return canTranslateToChinese(rawText);
 };
 
-const translationButtonLabel = computed(() => {
-  if (isTranslating.value) {
+const isFieldTranslating = (
+  entity: rssEntity,
+  index: number,
+  field: "title" | "summary",
+): boolean => {
+  return Boolean(translatingFields.value[getFieldKey(entity, index, field)]);
+};
+
+const isFieldTranslatedVisible = (
+  entity: rssEntity,
+  index: number,
+  field: "title" | "summary",
+): boolean => {
+  return Boolean(visibleTranslations.value[getFieldKey(entity, index, field)]);
+};
+
+const handleToggleFieldTranslation = async (
+  entity: rssEntity,
+  index: number,
+  field: "title" | "summary",
+): Promise<void> => {
+  const fieldKey = getFieldKey(entity, index, field);
+
+  if (visibleTranslations.value[fieldKey]) {
+    visibleTranslations.value[fieldKey] = false;
+    return;
+  }
+
+  visibleTranslations.value[fieldKey] = true;
+
+  const hasCachedTranslation = field === "title"
+    ? translatedTitles.value[fieldKey]
+    : translatedSummaries.value[fieldKey];
+
+  if (hasCachedTranslation) {
+    return;
+  }
+
+  translatingFields.value[fieldKey] = true;
+
+  const rawText = field === "title" ? getRawTitle(entity) : getRawSummary(entity);
+  const translated = await translateToChinese(rawText);
+
+  if (field === "title") {
+    translatedTitles.value[fieldKey] = translated || rawText;
+  } else {
+    translatedSummaries.value[fieldKey] = translated || rawText;
+  }
+
+  translatingFields.value[fieldKey] = false;
+};
+
+const getTranslateActionTitle = (
+  entity: rssEntity,
+  index: number,
+  field: "title" | "summary",
+): string => {
+  if (isFieldTranslating(entity, index, field)) {
     return "翻译中...";
   }
 
-  return showTranslatedText.value ? "隐藏中文" : "翻译成中文";
-});
+  return isFieldTranslatedVisible(entity, index, field) ? "隐藏中文" : "翻译成中文";
+};
 
 const handleSubscribe = (): void => {
   window.open(props.rss, "_blank");
@@ -209,16 +228,52 @@ const handleSubscribe = (): void => {
           </div>
           <span class="ranking-badge" :class="getRankingAccent(1)">#1</span>
           <h3 class="ranking-hero__title">
-            <a
-              class="ranking-title-link"
-              :href="topEntries[0].url"
-              target="_blank"
-              rel="noreferrer"
-            >
-              {{ getDisplayTitle(topEntries[0], 0) }}
-            </a>
+            <span class="ranking-text-inline">
+              <a
+                class="ranking-title-link"
+                :href="topEntries[0].url"
+                target="_blank"
+                rel="noreferrer"
+              >
+                {{ getDisplayTitle(topEntries[0], 0) }}
+              </a>
+              <button
+                v-if="shouldShowTranslateAction(topEntries[0], 'title')"
+                type="button"
+                class="translate-icon"
+                :class="{
+                  'translate-icon--active': isFieldTranslatedVisible(topEntries[0], 0, 'title'),
+                  'translate-icon--loading': isFieldTranslating(topEntries[0], 0, 'title'),
+                }"
+                :disabled="isFieldTranslating(topEntries[0], 0, 'title')"
+                :title="getTranslateActionTitle(topEntries[0], 0, 'title')"
+                :aria-label="getTranslateActionTitle(topEntries[0], 0, 'title')"
+                @click="handleToggleFieldTranslation(topEntries[0], 0, 'title')"
+              >
+                <span class="translate-icon__glyph" aria-hidden="true"></span>
+              </button>
+            </span>
           </h3>
-          <p class="ranking-hero__summary">{{ getDisplaySummary(topEntries[0], 0) }}</p>
+          <p class="ranking-hero__summary">
+            <span class="ranking-text-inline">
+              <span>{{ getDisplaySummary(topEntries[0], 0) }}</span>
+              <button
+                v-if="shouldShowTranslateAction(topEntries[0], 'summary')"
+                type="button"
+                class="translate-icon"
+                :class="{
+                  'translate-icon--active': isFieldTranslatedVisible(topEntries[0], 0, 'summary'),
+                  'translate-icon--loading': isFieldTranslating(topEntries[0], 0, 'summary'),
+                }"
+                :disabled="isFieldTranslating(topEntries[0], 0, 'summary')"
+                :title="getTranslateActionTitle(topEntries[0], 0, 'summary')"
+                :aria-label="getTranslateActionTitle(topEntries[0], 0, 'summary')"
+                @click="handleToggleFieldTranslation(topEntries[0], 0, 'summary')"
+              >
+                <span class="translate-icon__glyph" aria-hidden="true"></span>
+              </button>
+            </span>
+          </p>
           <span class="ranking-hero__time">{{ formatTimestamp(topEntries[0].timestamp) }}</span>
         </div>
       </article>
@@ -243,16 +298,52 @@ const handleSubscribe = (): void => {
             </div>
             <span class="ranking-badge" :class="getRankingAccent(entityIndex + 2)">#{{ entityIndex + 2 }}</span>
             <h3 class="ranking-secondary__title">
-              <a
-                class="ranking-title-link"
-                :href="entity.url"
-                target="_blank"
-                rel="noreferrer"
-              >
-                {{ getDisplayTitle(entity, entityIndex + 1) }}
-              </a>
+              <span class="ranking-text-inline">
+                <a
+                  class="ranking-title-link"
+                  :href="entity.url"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {{ getDisplayTitle(entity, entityIndex + 1) }}
+                </a>
+                <button
+                  v-if="shouldShowTranslateAction(entity, 'title')"
+                  type="button"
+                  class="translate-icon"
+                  :class="{
+                    'translate-icon--active': isFieldTranslatedVisible(entity, entityIndex + 1, 'title'),
+                    'translate-icon--loading': isFieldTranslating(entity, entityIndex + 1, 'title'),
+                  }"
+                  :disabled="isFieldTranslating(entity, entityIndex + 1, 'title')"
+                  :title="getTranslateActionTitle(entity, entityIndex + 1, 'title')"
+                  :aria-label="getTranslateActionTitle(entity, entityIndex + 1, 'title')"
+                  @click="handleToggleFieldTranslation(entity, entityIndex + 1, 'title')"
+                >
+                  <span class="translate-icon__glyph" aria-hidden="true"></span>
+                </button>
+              </span>
             </h3>
-            <p class="ranking-secondary__summary">{{ getDisplaySummary(entity, entityIndex + 1) }}</p>
+            <p class="ranking-secondary__summary">
+              <span class="ranking-text-inline">
+                <span>{{ getDisplaySummary(entity, entityIndex + 1) }}</span>
+                <button
+                  v-if="shouldShowTranslateAction(entity, 'summary')"
+                  type="button"
+                  class="translate-icon"
+                  :class="{
+                    'translate-icon--active': isFieldTranslatedVisible(entity, entityIndex + 1, 'summary'),
+                    'translate-icon--loading': isFieldTranslating(entity, entityIndex + 1, 'summary'),
+                  }"
+                  :disabled="isFieldTranslating(entity, entityIndex + 1, 'summary')"
+                  :title="getTranslateActionTitle(entity, entityIndex + 1, 'summary')"
+                  :aria-label="getTranslateActionTitle(entity, entityIndex + 1, 'summary')"
+                  @click="handleToggleFieldTranslation(entity, entityIndex + 1, 'summary')"
+                >
+                  <span class="translate-icon__glyph" aria-hidden="true"></span>
+                </button>
+              </span>
+            </p>
             <span class="ranking-secondary__time">{{ formatTimestamp(entity.timestamp) }}</span>
           </div>
         </article>
@@ -282,31 +373,56 @@ const handleSubscribe = (): void => {
           </div>
           <div class="ranking-row__content">
             <h3 class="ranking-row__title">
-              <a
-                class="ranking-title-link"
-                :href="entity.url"
-                target="_blank"
-                rel="noreferrer"
-              >
-                {{ getDisplayTitle(entity, entityIndex + 3) }}
-              </a>
+              <span class="ranking-text-inline">
+                <a
+                  class="ranking-title-link"
+                  :href="entity.url"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {{ getDisplayTitle(entity, entityIndex + 3) }}
+                </a>
+                <button
+                  v-if="shouldShowTranslateAction(entity, 'title')"
+                  type="button"
+                  class="translate-icon"
+                  :class="{
+                    'translate-icon--active': isFieldTranslatedVisible(entity, entityIndex + 3, 'title'),
+                    'translate-icon--loading': isFieldTranslating(entity, entityIndex + 3, 'title'),
+                  }"
+                  :disabled="isFieldTranslating(entity, entityIndex + 3, 'title')"
+                  :title="getTranslateActionTitle(entity, entityIndex + 3, 'title')"
+                  :aria-label="getTranslateActionTitle(entity, entityIndex + 3, 'title')"
+                  @click="handleToggleFieldTranslation(entity, entityIndex + 3, 'title')"
+                >
+                  <span class="translate-icon__glyph" aria-hidden="true"></span>
+                </button>
+              </span>
             </h3>
-            <p class="ranking-row__summary">{{ getDisplaySummary(entity, entityIndex + 3) }}</p>
+            <p class="ranking-row__summary">
+              <span class="ranking-text-inline">
+                <span>{{ getDisplaySummary(entity, entityIndex + 3) }}</span>
+                <button
+                  v-if="shouldShowTranslateAction(entity, 'summary')"
+                  type="button"
+                  class="translate-icon"
+                  :class="{
+                    'translate-icon--active': isFieldTranslatedVisible(entity, entityIndex + 3, 'summary'),
+                    'translate-icon--loading': isFieldTranslating(entity, entityIndex + 3, 'summary'),
+                  }"
+                  :disabled="isFieldTranslating(entity, entityIndex + 3, 'summary')"
+                  :title="getTranslateActionTitle(entity, entityIndex + 3, 'summary')"
+                  :aria-label="getTranslateActionTitle(entity, entityIndex + 3, 'summary')"
+                  @click="handleToggleFieldTranslation(entity, entityIndex + 3, 'summary')"
+                >
+                  <span class="translate-icon__glyph" aria-hidden="true"></span>
+                </button>
+              </span>
+            </p>
           </div>
           <span class="ranking-row__time">{{ formatTimestamp(entity.timestamp) }}</span>
         </div>
       </article>
-    </div>
-
-    <div v-if="entries.length > 0" class="ranking-section__actions">
-      <button
-        type="button"
-        class="translation-toggle"
-        :disabled="isTranslating"
-        @click="handleToggleTranslation"
-      >
-        {{ translationButtonLabel }}
-      </button>
     </div>
   </section>
 </template>
@@ -328,11 +444,6 @@ const handleSubscribe = (): void => {
 .ranking-section__heading-main {
   display: grid;
   gap: 2px;
-}
-
-.ranking-section__actions {
-  display: flex;
-  justify-content: flex-end;
 }
 
 .ranking-section__title-row {
@@ -400,30 +511,78 @@ const handleSubscribe = (): void => {
   transform: translateY(-1px);
 }
 
-.translation-toggle {
-  border: 1px solid color-mix(in srgb, var(--vp-c-brand-1) 28%, var(--vp-c-divider));
-  border-radius: 999px;
-  padding: 8px 14px;
-  background: color-mix(in srgb, var(--vp-c-bg-soft) 78%, var(--vp-c-brand-soft) 22%);
-  color: var(--vp-c-text-1);
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 1;
-  cursor: pointer;
-  transition: border-color 0.18s ease, transform 0.18s ease, background-color 0.18s ease;
+.ranking-text-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
 }
 
-.translation-toggle:hover,
-.translation-toggle:focus-visible {
-  border-color: color-mix(in srgb, var(--vp-c-brand-1) 55%, var(--vp-c-divider));
-  background: color-mix(in srgb, var(--vp-c-bg-soft) 55%, var(--vp-c-brand-soft) 45%);
+.translate-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: none;
+  padding: 0;
+  background: transparent;
+  color: color-mix(in srgb, var(--vp-c-text-2) 84%, var(--ranking-accent) 16%);
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+.translate-icon__glyph {
+  display: block;
+  width: 16px;
+  height: 16px;
+  background-color: currentColor;
+  mask-image: url("../../assets/translate.svg");
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-image: url("../../assets/translate.svg");
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+  opacity: 0.8;
+  transition: opacity 0.18s ease, transform 0.18s ease, background-color 0.18s ease;
+}
+
+.translate-icon:hover,
+.translate-icon:focus-visible,
+.translate-icon--active {
+  color: var(--vp-c-brand-1);
+}
+
+.translate-icon:hover .translate-icon__glyph,
+.translate-icon:focus-visible .translate-icon__glyph,
+.translate-icon--active .translate-icon__glyph {
+  opacity: 1;
   transform: translateY(-1px);
 }
 
-.translation-toggle:disabled {
-  opacity: 0.7;
+.translate-icon--loading {
   cursor: progress;
-  transform: none;
+}
+
+.translate-icon--loading .translate-icon__glyph {
+  opacity: 0.88;
+  animation: ranking-translate-spin 0.9s linear infinite;
+}
+
+.translate-icon:disabled {
+  cursor: progress;
+}
+
+@keyframes ranking-translate-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .ranking-top {
