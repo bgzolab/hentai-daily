@@ -13,8 +13,8 @@ export default defineConfig({
     ],
     footer: {
       message:
-        'Found this useful? Give me a ⭐ on <a href="https://github.com/bGZo/hentai-daily">Github</a>.',
-      copyright: "Copyright © 2023-present 菜就多練練",
+        'Found this useful? Give me a <a href="https://github.com/bGZo/hentai-daily">Ciallo ～(∠・ω< )⌒</a> ⭐',
+      copyright: "Copyright © 2023-present 華仔",
     },
     search: {
       // provider: 'local'
@@ -62,8 +62,8 @@ export default defineConfig({
         ],
         footer: {
           message:
-            '项目有用吗? 有用的话请考虑给我个 <a href="https://github.com/bGZo/hentai-daily">Github</a> 的 ⭐ 鼓励一下我吧～',
-          copyright: "Copyright © 2023-present 菜就多練練",
+            '有帮到你吗? 鼓励一下我吧 <a href="https://github.com/bGZo/hentai-daily">Ciallo ～(∠・ω< )⌒</a> ⭐ ',
+          copyright: "Copyright © 2023-present 華仔",
         },
       },
     },
