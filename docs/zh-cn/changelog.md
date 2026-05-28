@@ -73,7 +73,7 @@ outline: deep
 
 Favicon 和 logo 来自于 [@猛禽bot](https://weibo.com/n/%E7%8C%9B%E7%A6%BDbot) 的表情包；
 
-如果你对旧站点感兴趣，可以访问 https://github.com/bGZo/hentai-daily/tree/v1.0
+如果你对旧站点感兴趣，可以访问 https://github.com/bgzo/hentai-daily/tree/v1.0
 
 ## 20240121 ~ 20241123 项目存档
 

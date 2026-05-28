@@ -1,9 +1,9 @@
-[![Contributors](https://img.shields.io/github/contributors/bGZo/hentai-daily.svg?style=for-the-badge)](https://github.com/bGZo/hentai-daily/graphs/contributors)
-[![Forks](https://img.shields.io/github/forks/bGZo/hentai-daily.svg?style=for-the-badge)](https://github.com/bGZo/hentai-daily/network/members)
-[![Stargazers](https://img.shields.io/github/stars/bGZo/hentai-daily.svg?style=for-the-badge)](https://github.com/bGZo/hentai-daily/stargazers)
-[![Issues](https://img.shields.io/github/issues/bGZo/hentai-daily.svg?style=for-the-badge)](https://github.com/bGZo/hentai-daily/issues)
-[![Licence](https://img.shields.io/github/license/bGZo/hentai-daily.svg?style=for-the-badge)](https://github.com/bGZo/hentai-daily/blob/template/LICENCE)
-[![Telegram](https://img.shields.io/badge/-telegram-black.svg?style=for-the-badge&logo=telegram&colorB=555)](https://t.me/imbGZo)
+[![Contributors](https://img.shields.io/github/contributors/bgzo/hentai-daily.svg?style=for-the-badge)](https://github.com/bgzo/hentai-daily/graphs/contributors)
+[![Forks](https://img.shields.io/github/forks/bgzo/hentai-daily.svg?style=for-the-badge)](https://github.com/bgzo/hentai-daily/network/members)
+[![Stargazers](https://img.shields.io/github/stars/bgzo/hentai-daily.svg?style=for-the-badge)](https://github.com/bgzo/hentai-daily/stargazers)
+[![Issues](https://img.shields.io/github/issues/bgzo/hentai-daily.svg?style=for-the-badge)](https://github.com/bgzo/hentai-daily/issues)
+[![Licence](https://img.shields.io/github/license/bgzo/hentai-daily.svg?style=for-the-badge)](https://github.com/bgzo/hentai-daily/blob/template/LICENCE)
+[![Telegram](https://img.shields.io/badge/-telegram-black.svg?style=for-the-badge&logo=telegram&colorB=555)](https://t.me/imbgzo)
 
 > [!WARNING]
 > This project may contain violence, pornography, sexual descriptions, or other content intended for readers aged 18 and over only.
@@ -72,8 +72,8 @@ Don't forget to give the project a star! Thanks again!
 
 Top contributors:
 
-<a href="https://github.com/bGZo/hentai-daily/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=bGZo/hentai-daily" alt="contrib.rocks image" />
+<a href="https://github.com/bgzo/hentai-daily/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=bgzo/hentai-daily" alt="contrib.rocks image" />
 </a>
 
 ## License

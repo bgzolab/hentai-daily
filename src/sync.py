@@ -364,7 +364,7 @@ def output_feed_within_day(rss_content_dict, start, interval_days, feed_director
         feed_filename = feed_directory + re.sub(r' ', r'-', key.lower()) + '.xml'
 
         fg = FeedGenerator()
-        fg.title(key + ' made by bGZo')
+        fg.title(key + ' made by bgzo')
         fg.link(href='http://hentai.bgzo.cc', rel='alternate')
         fg.description('Have fun )')
 

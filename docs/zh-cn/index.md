@@ -15,7 +15,7 @@ hero:
       link: /zh-cn/today
     - theme: alt
       text: 还不够
-      link: https://github.com/bGZo/hentai-daily/issues
+      link: https://github.com/bgzo/hentai-daily/issues
 
 features:
   - title: 聚合

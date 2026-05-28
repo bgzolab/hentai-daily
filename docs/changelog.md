@@ -74,7 +74,7 @@ Rewrite UI/UX using vue to replace jekyll.
 
 Favicon & logo from meme created by [@猛禽bot](https://weibo.com/n/%E7%8C%9B%E7%A6%BDbot)
 
-Old site had archived on https://github.com/bGZo/hentai-daily/tree/v1.0
+Old site had archived on https://github.com/bgzo/hentai-daily/tree/v1.0
 
 ## 20240121 ~ 20241123 Project archivedc
 

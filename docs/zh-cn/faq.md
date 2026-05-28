@@ -20,6 +20,7 @@ GitHub Action 已设置为每 2 小时运行一次。
 | https://hacg.me | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://hacg.me)   | Resource |
 | https://www.tiangal.com | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://www.tiangal.com)   | Resource |
 | https://www.south-plus.net | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://www.south-plus.net)   | Resource |
+| https://www.kungal.com/ | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://www.kungal.com/)   | Resource(Too many SFW, so filter) |
 | https://mingqiceping.com | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://mingqiceping.com)   | News |
 | https://www.4gamers.com.tw/ | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://www.4gamers.com.tw/)   | News |
 | https://home.gamer.com.tw/ | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://home.gamer.com.tw/)   | News |
@@ -33,7 +34,6 @@ Except for above sites, there are some other sites that I would recommand to you
 | ------ | ------ | -------- |
 | https://www.asmr.one | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://www.asmr.one)   | ASMR |
 | https://nysoure.com | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://nysoure.com)   | Galgame |
-| https://www.kungal.com/ | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://www.kungal.com/)   | Galgame(Too much) |
 
 ::: tip
 最近 AI 垃圾内容充斥 GitHub 社区，GitHub Action 的稳定性不如以前了，有时候 CI 会因为奇怪的错误而失败。

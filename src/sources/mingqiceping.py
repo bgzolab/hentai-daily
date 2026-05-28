@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-@Author : bGZo
+@Author : bgzo
 @Date : 2025-02-16
-@Links : https://github.com/bGZo
+@Links : https://github.com/bgzo
 """
 import datetime
 import logging

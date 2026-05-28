@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-@Author : bGZo
+@Author : bgzo
 @Date : 2025-06-22
-@Links : https://github.com/bGZo
+@Links : https://github.com/bgzo
 """
 from interceptor.request import MySession
 from datetime import datetime
