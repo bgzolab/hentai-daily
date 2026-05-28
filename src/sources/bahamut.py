@@ -7,6 +7,8 @@
 """
 from interceptor.request import MySession
 from datetime import datetime
+from datetime import timedelta
+import re
 import time
 
 session = MySession()
@@ -33,28 +35,59 @@ def package_content(title, url, summary, timestamp):
 def parse_ctime_to_timestamp(ctime_str):
     now = datetime.now()
     current_year = now.year
+    normalized_ctime = ctime_str.strip()
+
+    if normalized_ctime == '剛剛':
+        return int(now.timestamp())
+
+    relative_minute_match = re.fullmatch(r'(\d+)\s*(?:分|分鐘)前', normalized_ctime)
+    if relative_minute_match:
+        return int((now - timedelta(minutes=int(relative_minute_match.group(1)))).timestamp())
+
+    relative_hour_match = re.fullmatch(r'(\d+)\s*(?:小時|小时)前', normalized_ctime)
+    if relative_hour_match:
+        return int((now - timedelta(hours=int(relative_hour_match.group(1)))).timestamp())
+
+    relative_day_match = re.fullmatch(r'(\d+)\s*天前', normalized_ctime)
+    if relative_day_match:
+        return int((now - timedelta(days=int(relative_day_match.group(1)))).timestamp())
+
+    day_offset_match = re.fullmatch(r'(昨天|前天)\s+(\d{2}:\d{2})', normalized_ctime)
+    if day_offset_match:
+        day_offset = 1 if day_offset_match.group(1) == '昨天' else 2
+        target_day = now - timedelta(days=day_offset)
+        target_time = datetime.strptime(day_offset_match.group(2), "%H:%M")
+        dt = target_day.replace(
+            hour=target_time.hour,
+            minute=target_time.minute,
+            second=0,
+            microsecond=0,
+        )
+        return int(dt.timestamp())
 
     # 尝试解析完整日期格式 (YYYY-MM-DD)
     try:
-        dt = datetime.strptime(ctime_str, "%Y-%m-%d")
+        dt = datetime.strptime(normalized_ctime, "%Y-%m-%d")
         return int(dt.timestamp())
     except ValueError:
         pass
 
     # 尝试解析省略年份的格式 (MM-DD HH:mm)
-    try:
-        # 解析月、日、时、分
-        dt_no_year = datetime.strptime(ctime_str, "%m-%d %H:%M")
-        # 组合当前年份
-        dt = dt_no_year.replace(year=current_year)
+    month_day_time_match = re.fullmatch(r'(\d{2})-(\d{2})\s+(\d{2}):(\d{2})', normalized_ctime)
+    if month_day_time_match:
+        dt = datetime(
+            current_year,
+            int(month_day_time_match.group(1)),
+            int(month_day_time_match.group(2)),
+            int(month_day_time_match.group(3)),
+            int(month_day_time_match.group(4)),
+        )
 
         # 处理跨年问题：如果组合后日期超过当前时间，则使用前一年
         if dt > now:
             dt = dt.replace(year=current_year - 1)
 
         return int(dt.timestamp())
-    except ValueError:
-        pass
 
     raise ValueError(f"Unsupported ctime format: {ctime_str}")
 
