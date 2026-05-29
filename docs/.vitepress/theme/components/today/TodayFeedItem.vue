@@ -42,12 +42,8 @@ const titleText = computed(() => {
   return props.entity.title === "" ? "Untitled" : props.entity.title;
 });
 
-const streamLabel = computed(() => {
-  return props.sectionKey === "News" ? "Moments / News" : "Moments / Resources";
-});
-
 const sourceLabel = computed(() => {
-  return getHostnameLabel(props.entity.url);
+  return `@${getHostnameLabel(props.entity.url)}`;
 });
 
 const avatarUrl = computed(() => {
@@ -82,8 +78,7 @@ const handleAvatarError = (event: Event): void => {
     <div class="feed-item__content">
       <div class="feed-item__meta">
         <div class="feed-item__channel">
-          <span class="feed-item__source">{{ streamLabel }}</span>
-          <span class="feed-item__site">{{ sourceLabel }}</span>
+          <span class="feed-item__source">{{ sourceLabel }}</span>
           <span class="feed-item__time">{{ formatTimestamp(entity.timestamp) }}</span>
         </div>
         <h3 class="feed-item__title">
@@ -167,12 +162,6 @@ const handleAvatarError = (event: Event): void => {
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.02em;
-}
-
-.feed-item__site {
-  color: var(--vp-c-text-2);
-  font-size: 12px;
-  letter-spacing: 0.03em;
   text-transform: lowercase;
 }
 
