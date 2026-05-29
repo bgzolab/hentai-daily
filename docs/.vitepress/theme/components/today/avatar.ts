@@ -3,6 +3,10 @@ export const DEFAULT_AVATAR_URL = new URL(
   import.meta.url,
 ).href;
 
+const DEFAULT_AVATAR_HOSTNAME_ALLOWLIST = new Set([
+  "asmr.one",
+]);
+
 const normalizeUrl = (url: string): string | null => {
   try {
     if (url.startsWith("//")) {
@@ -46,12 +50,35 @@ export const getHostnameLabel = (url: string): string => {
   }
 };
 
+const shouldUseDefaultAvatar = (url: string): boolean => {
+  const origin = getRootDomain(url);
+
+  if (!origin) {
+    return true;
+  }
+
+  try {
+    const hostname = new URL(origin).hostname.replace(/^www\./, "");
+    return DEFAULT_AVATAR_HOSTNAME_ALLOWLIST.has(hostname);
+  } catch {
+    return true;
+  }
+};
+
 export const getFaviconUrl = (url: string): string => {
+  if (shouldUseDefaultAvatar(url)) {
+    return DEFAULT_AVATAR_URL;
+  }
+
   const origin = getRootDomain(url);
   return origin ? `${origin}/favicon.ico` : DEFAULT_AVATAR_URL;
 };
 
 export const getFaviconServiceUrl = (url: string): string => {
+  if (shouldUseDefaultAvatar(url)) {
+    return DEFAULT_AVATAR_URL;
+  }
+
   const origin = getRootDomain(url);
 
   if (!origin) {
