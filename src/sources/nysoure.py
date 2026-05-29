@@ -56,7 +56,7 @@ def build_summary(entry):
     image_id = image.get("id") if isinstance(image, dict) else None
     if image_id is not None:
         summary_parts.append(
-            f'<img src="https://nysoure.com/api/image/{image_id}.jpg" />'
+            f'<img src="https://nysoure.com/api/image/{image_id}" />'
         )
     else:
         logger.warning("Build nysoure summary without image id")
