@@ -507,15 +507,15 @@ if __name__ == '__main__':
     except Exception as e:
         logging.warning(f"跳过nysoure: {e}")
 
-    try:
-        rss_content_dict = add_sources(
-            rss_content_dict,
-            'Resources',
-            get_kungal_posts(),
-            "kungal"
-        )
-    except Exception as e:
-        logging.warning(f"跳过kungal: {e}")
+    # try:
+    #     rss_content_dict = add_sources(
+    #         rss_content_dict,
+    #         'Resources',
+    #         get_kungal_posts(),
+    #         "kungal"
+    #     )
+    # except Exception as e:
+    #     logging.warning(f"跳过kungal: {e}")
 
     try:
         rss_content_dict = add_sources(
