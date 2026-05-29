@@ -300,26 +300,6 @@ const fetchData = async () => {
   }
 };
 
-const clickCopyLink = (url: string) => {
-  navigator.clipboard
-    .writeText(url)
-    .then(() => {
-      toast.info("Copy link successful.");
-    })
-    .catch((e) => console.error(e));
-};
-
-const handleSubscribeClick = (index: CategoryKey) => {
-  window.open(SECTION_CONFIG[index].rss, "_blank");
-};
-
-const handleCardClick = (url: string) => {
-  // NOTE: open in current tab
-  // window.location.href = url
-  // NOTE: open new tab
-  window.open(url, "_blank");
-};
-
 // 类型验证函数
 function isValidHentaiAPI(obj: any): obj is hentaiAPI {
   // if (!obj || typeof obj !== "object") return false;
@@ -540,8 +520,6 @@ onMounted(async () => {
         :badge-type="section.badgeType"
         :rss="section.rss"
         :avatar-slots="section.avatarSlots"
-        @open="handleCardClick"
-        @copy="clickCopyLink"
       />
     </main>
 
