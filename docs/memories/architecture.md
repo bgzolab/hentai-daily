@@ -50,6 +50,9 @@
 ## 直接数据源接入（2026-05-28）
 
 - `src/sources/kungal.py`：新增 KUNGal JSON 源，负责调用 `https://www.kungal.com/api/galgame`，过滤 `contentLimit = nsfw` 的条目，并映射为统一的 `title/url/summary/timestamp` 结构。
+- `src/sources/nysoure.py`：新增 nysoure JSON 源，负责调用 `https://nysoure.com/api/resource?page=1&sort=7`，将 `id/title/release_date/image.id` 映射为统一的 `title/url/summary/timestamp` 结构，并对缺图条目做文本降级。
 - `src/sync.py`：通过 `add_sources(rss_content_dict, 'Resources', get_kungal_posts(), 'kungal')` 将 KUNGal 接入 `Resources` 聚合链，不新增 archive 顶层分类。
+- `src/sync.py`：通过 `add_sources(rss_content_dict, 'Resources', get_nysoure_posts(), 'nysoure')` 将 nysoure 接入 `Resources` 聚合链，并输出 `api/feeds/nysoure.xml`。
 - `tests/test_kungal.py`：负责离线验证标题优先级、summary 拼接、单条映射与列表抓取行为；`debug/kungal.json` 作为固定回放样本。
+- `tests/test_nysoure.py`：负责离线验证 nysoure 的时间解析、summary 拼接、单条映射与 monkeypatch 抓取行为；`debug/nysoure.json` 作为固定回放样本。
 
