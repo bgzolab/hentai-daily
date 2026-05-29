@@ -50,6 +50,29 @@ def parse_create_date_timestamp(create_date):
     return int(parsed_datetime.timestamp())
 
 
+def get_tag_names(entry):
+    tags = entry.get("tags") if isinstance(entry, dict) else None
+    if not isinstance(tags, list):
+        return []
+
+    tag_names = []
+    for tag in tags:
+        if not isinstance(tag, dict):
+            continue
+        name = tag.get("name")
+        if not isinstance(name, str):
+            i18n = tag.get("i18n")
+            zh_cn = i18n.get("zh-cn") if isinstance(i18n, dict) else None
+            name = zh_cn.get("name") if isinstance(zh_cn, dict) else None
+        if not isinstance(name, str):
+            continue
+        text = name.strip()
+        if text:
+            tag_names.append(text)
+
+    return tag_names
+
+
 def build_summary(entry):
     if not isinstance(entry, dict):
         entry = {}
@@ -79,6 +102,10 @@ def build_summary(entry):
     if text_parts:
         escaped_text = escape("/".join(text_parts))
         summary_parts.append(f"<p>{escaped_text}</p>")
+
+    tag_names = get_tag_names(entry)
+    if tag_names:
+        summary_parts.append(f"<p>{escape('/'.join(tag_names))}</p>")
 
     return "".join(summary_parts)
 

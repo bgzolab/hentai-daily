@@ -38,14 +38,14 @@ def test_build_summary_includes_image_and_escaped_title():
     summary = build_summary(payload['data'][0])
     assert summary == (
         '<img src="https://nysoure.com/api/image/19016.jpg" />'
-        '<p>Relirium - レリリウム - 遺跡と出逢いと冒険と</p>'
+        '<p>校园/PC/ADV</p>'
     )
 
 
 def test_build_summary_falls_back_to_text_only_without_image():
     payload = load_debug(os.path.join(ROOT, 'debug', 'nysoure.json'))
     summary = build_summary(payload['data'][1])
-    assert summary == '<p>放課後カウンセリングルーム &lt;R18&gt;</p>'
+    assert summary == '<p>喜剧/异世界</p>'
 
 
 def test_map_resource_entry_returns_standard_shape():
@@ -56,7 +56,7 @@ def test_map_resource_entry_returns_standard_shape():
         'url': 'https://nysoure.com/resources/1024',
         'summary': (
             '<img src="https://nysoure.com/api/image/19016.jpg" />'
-            '<p>Relirium - レリリウム - 遺跡と出逢いと冒険と</p>'
+            '<p>校园/PC/ADV</p>'
         ),
         'timestamp': 1780012800,
     }
@@ -91,14 +91,14 @@ def test_get_nysoure_posts_from_payload(monkeypatch):
             'url': 'https://nysoure.com/resources/1024',
             'summary': (
                 '<img src="https://nysoure.com/api/image/19016.jpg" />'
-                '<p>Relirium - レリリウム - 遺跡と出逢いと冒険と</p>'
+                '<p>校园/PC/ADV</p>'
             ),
             'timestamp': 1780012800,
         },
         {
             'title': '放課後カウンセリングルーム <R18>',
             'url': 'https://nysoure.com/resources/1023',
-            'summary': '<p>放課後カウンセリングルーム &lt;R18&gt;</p>',
+            'summary': '<p>喜剧/异世界</p>',
             'timestamp': 1780012800,
         },
     ]

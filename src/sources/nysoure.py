@@ -43,25 +43,44 @@ def parse_release_timestamp(release_date):
     return int(parsed_time.timestamp())
 
 
+def get_tag_names(entry):
+    tags = entry.get("tags") if isinstance(entry, dict) else None
+    if not isinstance(tags, list):
+        return []
+
+    tag_names = []
+    for tag in tags:
+        if not isinstance(tag, dict):
+            continue
+        name = tag.get("name")
+        if not isinstance(name, str):
+            continue
+        text = name.strip()
+        if text:
+            tag_names.append(text)
+
+    return tag_names
+
+
 def build_summary(entry):
     if not isinstance(entry, dict):
         entry = {}
 
-    title = entry.get("title")
-    title_text = title.strip() if isinstance(title, str) else ""
-    escaped_title = escape(title_text)
     summary_parts = []
 
     image = entry.get("image")
     image_id = image.get("id") if isinstance(image, dict) else None
     if image_id is not None:
         summary_parts.append(
-            f'<img src="https://nysoure.com/api/image/{image_id}" />'
+            f'<img src="https://nysoure.com/api/image/{image_id}.jpg" />'
         )
     else:
         logger.warning("Build nysoure summary without image id")
 
-    summary_parts.append(f"<p>{escaped_title}</p>")
+    tag_names = get_tag_names(entry)
+    if tag_names:
+        summary_parts.append(f"<p>{escape('/'.join(tag_names))}</p>")
+
     return "".join(summary_parts)
 
 
