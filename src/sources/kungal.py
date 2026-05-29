@@ -10,7 +10,7 @@ session = MySession()
 
 KUNGAL_API_URL = (
     "https://www.kungal.com/api/galgame?page=1&limit=24&type=all"
-    "&language=all&platform=all&sortField=time&sortOrder=desc"
+    "&language=all&platform=all&sortField=created&sortOrder=desc"
 )
 
 KUNGAL_COOKIE_VALUE = (
