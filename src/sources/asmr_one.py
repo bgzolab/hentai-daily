@@ -85,6 +85,10 @@ def build_summary(entry):
     else:
         logger.warning("Build ASMR.one summary without mainCoverUrl")
 
+    price = entry.get("price")
+    if isinstance(price, (int, float)) and price > 0:
+        summary_parts.append(f"<p>{escape(str(int(price)))} JPY</p>")
+
     name = entry.get("name")
     text_parts = []
     if isinstance(name, str) and name.strip():

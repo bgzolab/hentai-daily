@@ -38,6 +38,7 @@ def test_build_summary_includes_cover_and_text_parts():
     summary = build_summary(payload['works'][0])
     assert summary == (
         '<img src="https://api.asmr-200.com/api/cover/1576433.jpg?type=main" />'
+        '<p>1980 JPY</p>'
         '<p>J〇ほんぽ/秋山はるる/A &amp; B</p>'
         '<p>胸部/奶子/女忍者/低语</p>'
     )
@@ -48,6 +49,7 @@ def test_build_summary_keeps_image_only_when_text_is_missing():
     summary = build_summary(payload['works'][3])
     assert summary == (
         '<img src="https://api.asmr-200.com/api/cover/1575100.jpg?type=main" />'
+        '<p>1320 JPY</p>'
         '<p>内射/中出</p>'
     )
 
@@ -60,6 +62,7 @@ def test_map_work_entry_returns_standard_shape():
         'url': 'https://www.asmr.one/work/RJ01576433',
         'summary': (
             '<img src="https://api.asmr-200.com/api/cover/1576433.jpg?type=main" />'
+            '<p>1980 JPY</p>'
             '<p>J〇ほんぽ/秋山はるる/A &amp; B</p>'
             '<p>胸部/奶子/女忍者/低语</p>'
         ),
@@ -97,6 +100,7 @@ def test_get_asmr_one_posts_from_payload(monkeypatch):
             'url': 'https://www.asmr.one/work/RJ01576433',
             'summary': (
                 '<img src="https://api.asmr-200.com/api/cover/1576433.jpg?type=main" />'
+                '<p>1980 JPY</p>'
                 '<p>J〇ほんぽ/秋山はるる/A &amp; B</p>'
                 '<p>胸部/奶子/女忍者/低语</p>'
             ),
@@ -107,6 +111,7 @@ def test_get_asmr_one_posts_from_payload(monkeypatch):
             'url': 'https://www.asmr.one/work/RJ01575100',
             'summary': (
                 '<img src="https://api.asmr-200.com/api/cover/1575100.jpg?type=main" />'
+                '<p>1320 JPY</p>'
                 '<p>内射/中出</p>'
             ),
             'timestamp': 1780012800,
