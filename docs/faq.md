@@ -18,6 +18,7 @@ Don't stay up late.
 | https://www.tiangal.com | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://www.tiangal.com)   | Resource |
 | https://www.south-plus.net | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://www.south-plus.net)   | Resource |
 | https://www.kungal.com/ | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://www.kungal.com/)   | Resource(Too many SFW, so filter) |
+| https://nysoure.com | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://nysoure.com)   | Galgame |
 | https://mingqiceping.com | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://mingqiceping.com)   | News |
 | https://www.4gamers.com.tw/ | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://www.4gamers.com.tw/)   | News |
 | https://home.gamer.com.tw/ | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://home.gamer.com.tw/)   | News |
@@ -28,7 +29,6 @@ Except for above sites, there are some other sites that I would recommand to you
 | Source | Status | Category |
 | ------ | ------ | -------- |
 | https://www.asmr.one | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://www.asmr.one)   | ASMR |
-| https://nysoure.com | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://nysoure.com)   | Galgame |
 
 ::: tip
 As AI slop full of GitHub community, GitHub Action is not stable as before, sometimes CI will fail due with weird error.
