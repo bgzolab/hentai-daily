@@ -29,6 +29,8 @@ Except for above sites, there are some other sites that I would recommand to you
 | Source | Status | Remark |
 | ------ | ------ | -------- |
 | https://www.kungal.com/ | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://www.kungal.com/)   | Resource(Too many SFW and old, so deleted from fetch list) |
+| https://www.touchgal.ink | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://www.touchgal.ink)   | Resource |
+| https://www.singureo.com | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://www.singureo.com)   | Resource |
 
 ::: tip
 As AI slop full of GitHub community, GitHub Action is not stable as before, sometimes CI will fail due with weird error.

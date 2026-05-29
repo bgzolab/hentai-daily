@@ -34,6 +34,9 @@ Except for above sites, there are some other sites that I would recommand to you
 | Source | Status | Category |
 | ------ | ------ | -------- |
 | https://www.kungal.com/ | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://www.kungal.com/)   | Resource(太多了，质量也不高，试跑了两天，最后移除了) |
+| https://www.touchgal.ink | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://www.touchgal.ink)   | Resource |
+| https://www.singureo.com | ![](https://img.shields.io/website?style=for-the-badge&label=&url=https://www.singureo.com)   | Resource |
+
 
 ::: tip
 最近 AI 垃圾内容充斥 GitHub 社区，GitHub Action 的稳定性不如以前了，有时候 CI 会因为奇怪的错误而失败。
