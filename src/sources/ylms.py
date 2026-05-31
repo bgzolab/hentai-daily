@@ -40,7 +40,9 @@ def package_content(title, url, summary, timestamp):
 
 
 def get_cf_clearance():
-    return os.getenv(YLMS_COOKIE_ENV, "").strip()
+    return os.getenv(YLMS_COOKIE_ENV, 
+                     "m0XR0UXE8tXXL.DK4Z90bLav7LDq54IcXwmWKsEWLO8-1780195300-1.2.1.1-9FJVskV5iG9yNl40VBD0NFeFLFYq5BgXu9PI61187VdI6HFUwnyOk3WDxB14nqUKwYcs4lgTKfmRvnP4Vl0KDPugJs4zo2KZQKJC83IWOBd8_TjqL8QY0nc596sIgvxi9HkFQZk3ok7Uo0GnYLPCOJuLddf_3x8NCcJO6PaAjvGqHl7MwPzGoZuJk6giEw2HmxILC7rKY4ZrwFfVYEYQkXqx1eKpDiYNBJ1JEn7eti.CLCIt43GUcxjgT37oqim7.UFOCCABgXO5mrKz6Zi1hmYPjBj378koCyUQaJfl2Z2JW_Ahj6pysHuMJs3W_4VINhMlNwy6yztoNg45cOg2EA"
+                     ).strip()
 
 
 def build_request_headers():
