@@ -14,9 +14,10 @@ session = MySession()
 logger = logging.getLogger(__name__)
 thumbnail_cache = {}
 
-YLMS_URL = "https://blog.reimu.net/"
+# YLMS_URL = "https://blog.reimu.net/"
+YLMS_URL = "https://reimu-home.bgzo.cc/"
 YLMS_RSS_FALLBACK_URL = "http://reimu.bgzo.cc"
-YLMS_REFERER = "https://blog.reimu.net/page/2"
+YLMS_REFERER = "https://blog.reimu.net/"
 YLMS_USER_AGENT = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:149.0) "
     "Gecko/20100101 Firefox/149.0"
