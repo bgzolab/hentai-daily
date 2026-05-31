@@ -14,6 +14,9 @@ session = MySession()
 logger = logging.getLogger(__name__)
 thumbnail_cache = {}
 
+YLMS_IMAGE_HOST = "https://blog.reimu.net"
+YLMS_IMAGE_PROXY_HOST = "https://reimu-proxy.bgzo.cc"
+
 # YLMS_URL = "https://blog.reimu.net/"
 YLMS_URL = "https://reimu-home.bgzo.cc/"
 YLMS_RSS_FALLBACK_URL = "http://reimu.bgzo.cc"
@@ -38,6 +41,21 @@ def package_content(title, url, summary, timestamp):
         "summary": summary,
         "timestamp": timestamp,
     }
+
+
+def rewrite_ylms_image_url(image_url):
+    if not isinstance(image_url, str):
+        return ""
+
+    normalized_url = image_url.strip()
+    if not normalized_url:
+        return ""
+
+    upload_prefix = f"{YLMS_IMAGE_HOST}/wp-content/uploads/"
+    if normalized_url.startswith(upload_prefix):
+        return normalized_url.replace(YLMS_IMAGE_HOST, YLMS_IMAGE_PROXY_HOST, 1)
+
+    return normalized_url
 
 
 def get_cf_clearance():
@@ -143,7 +161,7 @@ def parse_ylms_posts(html):
         thumbnail_tag = article.select_one("a.post-thumbnail img[src]")
         thumbnail_url = ""
         if thumbnail_tag:
-            thumbnail_url = thumbnail_tag.get("src", "").strip()
+            thumbnail_url = rewrite_ylms_image_url(thumbnail_tag.get("src", ""))
 
         summary_text = content_block.get_text("", strip=True)
         if thumbnail_url:
@@ -187,7 +205,7 @@ def parse_ylms_thumbnail_from_html(response_text, article_url=""):
 
             image_tag = article.select_one("a.post-thumbnail img[src], .entry-content img[src]")
             if image_tag is not None:
-                image_url = image_tag.get("src", "").strip()
+                image_url = rewrite_ylms_image_url(image_tag.get("src", ""))
                 if image_url:
                     return image_url
 
@@ -195,13 +213,13 @@ def parse_ylms_thumbnail_from_html(response_text, article_url=""):
         ".post-thumbnail img[src], article.post.type-post.status-publish a.post-thumbnail img[src], .entry-content img[src]"
     )
     if image_tag is not None:
-        image_url = image_tag.get("src", "").strip()
+        image_url = rewrite_ylms_image_url(image_tag.get("src", ""))
         if image_url:
             return image_url
 
     og_image = soup.select_one('meta[property="og:image"][content]')
     if og_image is not None:
-        image_url = og_image.get("content", "").strip()
+        image_url = rewrite_ylms_image_url(og_image.get("content", ""))
         if image_url:
             return image_url
 
@@ -241,7 +259,7 @@ def build_ylms_rss_summary(summary_html, article_url):
     thumbnail_tag = soup.select_one("img[src]")
     thumbnail_url = ""
     if thumbnail_tag is not None:
-        thumbnail_url = thumbnail_tag.get("src", "").strip()
+        thumbnail_url = rewrite_ylms_image_url(thumbnail_tag.get("src", ""))
         thumbnail_tag.decompose()
 
     for more_link in soup.select("a.more-link"):

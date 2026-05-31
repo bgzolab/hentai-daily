@@ -26,7 +26,7 @@ def test_parse_ylms_posts_from_local_html_sample():
     assert len(posts) >= 2
     assert posts[0]['title'] == '御所动态'
     assert posts[0]['url'] == 'https://blog.reimu.net/archives/10309'
-    assert posts[0]['summary'].startswith('<img src="https://blog.reimu.net/wp-content/uploads/')
+    assert posts[0]['summary'].startswith('<img src="https://reimu-proxy.bgzo.cc/wp-content/uploads/')
     assert isinstance(posts[0]['timestamp'], int)
 
 
@@ -78,7 +78,7 @@ def test_get_ylms_posts_falls_back_on_cloudflare_html(monkeypatch):
 
     assert posts[0]['title'].startswith('【R4084】')
     assert posts[0]['url'] == 'https://blog.reimu.net/archives/123807'
-    assert posts[0]['summary'].startswith('<img src="https://blog.reimu.net/wp-content/uploads/')
+    assert posts[0]['summary'].startswith('<img src="https://reimu-proxy.bgzo.cc/wp-content/uploads/')
     assert '这个周末依旧没蹲到巫女' in posts[0]['summary']
 
 
@@ -108,7 +108,7 @@ def test_get_ylms_posts_falls_back_when_direct_request_raises(monkeypatch):
 
     assert len(posts) == 2
     assert posts[1]['url'] == 'https://blog.reimu.net/archives/123810'
-    assert posts[1]['summary'].startswith('<img src="https://blog.reimu.net/wp-content/uploads/')
+    assert posts[1]['summary'].startswith('<img src="https://reimu-proxy.bgzo.cc/wp-content/uploads/')
     assert '由狗叫社 ONEONE1 开发' in posts[1]['summary']
 
 
@@ -123,7 +123,7 @@ def test_get_ylms_posts_falls_back_without_cookie(monkeypatch):
         def raise_for_status(self):
             return None
 
-    monkeypatch.delenv('YLMS_CF_CLEARANCE', raising=False)
+    monkeypatch.setenv('YLMS_CF_CLEARANCE', '')
 
     def fake_get(url, headers=None):
         if url == ylms.YLMS_RSS_FALLBACK_URL:
@@ -160,7 +160,7 @@ def test_get_ylms_posts_uses_embedded_rss_image_without_detail_fetch(monkeypatch
         def raise_for_status(self):
             return None
 
-    monkeypatch.delenv('YLMS_CF_CLEARANCE', raising=False)
+    monkeypatch.setenv('YLMS_CF_CLEARANCE', '')
 
     def fake_get(url, headers=None):
         assert url == ylms.YLMS_RSS_FALLBACK_URL
