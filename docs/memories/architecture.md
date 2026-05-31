@@ -52,10 +52,13 @@
 - `src/sources/kungal.py`：新增 KUNGal JSON 源，负责调用 `https://www.kungal.com/api/galgame`，过滤 `contentLimit = nsfw` 的条目，并映射为统一的 `title/url/summary/timestamp` 结构。
 - `src/sources/asmr_one.py`：新增 ASMR.one JSON 源，负责调用 `https://api.asmr-200.com/api/works`，过滤 `nsfw = true` 的条目，并将 `title/source_id/create_date/mainCoverUrl/name/vas` 映射为统一的 `title/url/summary/timestamp` 结构。
 - `src/sources/nysoure.py`：新增 nysoure JSON 源，负责调用 `https://nysoure.com/api/resource?page=1&sort=7`，将 `id/title/release_date/image.id` 映射为统一的 `title/url/summary/timestamp` 结构，并对缺图条目做文本降级。
+- `src/sources/ylms.py`：新增 ylms 混合源，优先使用带 `cf_clearance`、`Referer`、浏览器 `User-Agent` 的 HTML 直连抓取 `https://blog.reimu.net/`，按 WordPress 首页结构提取统一 `title/url/summary/timestamp`；当直连失败、缺失 cookie 或命中 Cloudflare 挑战页时，自动回滚到 `http://reimu.bgzo.cc` RSS。
 - `src/sync.py`：通过 `add_sources(rss_content_dict, 'Resources', get_kungal_posts(), 'kungal')` 将 KUNGal 接入 `Resources` 聚合链，不新增 archive 顶层分类。
 - `src/sync.py`：通过 `add_sources(rss_content_dict, 'Resources', get_asmr_one_posts(), 'asmr-one')` 将 ASMR.one 接入 `Resources` 聚合链，并输出 `api/feeds/asmr-one.xml`。
 - `src/sync.py`：通过 `add_sources(rss_content_dict, 'Resources', get_nysoure_posts(), 'nysoure')` 将 nysoure 接入 `Resources` 聚合链，并输出 `api/feeds/nysoure.xml`。
+- `src/sync.py`：通过 `add_sources(rss_content_dict, 'Resources', get_ylms_posts(), 'ylms')` 将 ylms 接入 `Resources` 聚合链；在 ylms 注入前用 `dedupe_entries_by_url()` 做最小 URL 去重，避免与当前 `Resources` 已有条目重复。
 - `tests/test_kungal.py`：负责离线验证标题优先级、summary 拼接、单条映射与列表抓取行为；`debug/kungal.json` 作为固定回放样本。
 - `tests/test_asmr_one.py`：负责离线验证 ASMR.one 的日期解析、summary 拼接、NSFW 过滤、单条映射与 monkeypatch 抓取行为；`debug/asmr_one.json` 作为固定回放样本。
 - `tests/test_nysoure.py`：负责离线验证 nysoure 的时间解析、summary 拼接、单条映射与 monkeypatch 抓取行为；`debug/nysoure.json` 作为固定回放样本。
+- `tests/test_ylms.py`：负责离线验证 ylms 的 HTML 解析、Cloudflare 误判控制、请求异常回滚、无 cookie 回滚与 RSS 回滚映射；[docs/implementation-plans/ylms.html](/home/bgzo/workspaces/hentai/docs/implementation-plans/ylms.html) 与 [debug/ylms-rss.xml](/home/bgzo/workspaces/hentai/debug/ylms-rss.xml) 作为固定样本。
 

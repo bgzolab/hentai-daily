@@ -32,6 +32,7 @@ from sources.tw4gamers import get_4gamers_info_by_number
 from sources.kungal import get_kungal_posts
 from sources.asmr_one import get_asmr_one_posts
 from sources.nysoure import get_nysoure_posts
+from sources.ylms import get_ylms_posts
 from sources.dlsite import get_dlsite_game_ranking_with_limit
 from sources.dlsite import get_dlsite_voice_ranking_with_limit
 from sources.dlsite import get_dlsite_comic_ranking_with_limit
@@ -171,6 +172,29 @@ def add_sources(content_dict, key, entries_list, rss_feed_name):
         logging.info(key + " cannot be found, so create it!😜")
         content_dict[key] = entries_list
     return content_dict
+
+
+def dedupe_entries_by_url(entries_list, existing_entries=None):
+    existing_entries = existing_entries or []
+    seen_urls = set()
+
+    for entry in existing_entries:
+        if isinstance(entry, dict) and entry.get('url'):
+            seen_urls.add(entry['url'])
+
+    deduped_entries = []
+    for entry in entries_list:
+        if not isinstance(entry, dict):
+            continue
+
+        entry_url = entry.get('url')
+        if not entry_url or entry_url in seen_urls:
+            continue
+
+        seen_urls.add(entry_url)
+        deduped_entries.append(entry)
+
+    return deduped_entries
 
 
 def sort_content_dict(content_dict):
@@ -506,6 +530,20 @@ if __name__ == '__main__':
         )
     except Exception as e:
         logging.warning(f"跳过nysoure: {e}")
+
+    try:
+        ylms_entries = dedupe_entries_by_url(
+            get_ylms_posts(),
+            rss_content_dict.get('Resources', []),
+        )
+        rss_content_dict = add_sources(
+            rss_content_dict,
+            'Resources',
+            ylms_entries,
+            "ylms"
+        )
+    except Exception as e:
+        logging.warning(f"跳过ylms: {e}")
 
     # try:
     #     rss_content_dict = add_sources(
