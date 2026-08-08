@@ -19,7 +19,7 @@ def load_text(path):
 
 
 def test_parse_ylms_posts_from_local_html_sample():
-    html = load_text(os.path.join(ROOT, 'docs', 'implementation-plans', 'ylms.html'))
+    html = load_text(os.path.join(ROOT, 'debug', 'ylms.html'))
 
     posts = parse_ylms_posts(html)
 
@@ -31,7 +31,7 @@ def test_parse_ylms_posts_from_local_html_sample():
 
 
 def test_get_ylms_posts_returns_direct_html_when_cookie_exists(monkeypatch):
-    html = load_text(os.path.join(ROOT, 'docs', 'implementation-plans', 'ylms.html'))
+    html = load_text(os.path.join(ROOT, 'debug', 'ylms.html'))
 
     class DummyResponse:
         def __init__(self, text):
@@ -54,7 +54,7 @@ def test_get_ylms_posts_returns_direct_html_when_cookie_exists(monkeypatch):
 
 def test_get_ylms_posts_falls_back_on_cloudflare_html(monkeypatch):
     rss_xml = load_text(os.path.join(ROOT, 'debug', 'ylms-rss.xml'))
-    article_html = load_text(os.path.join(ROOT, 'docs', 'implementation-plans', 'ylms.html'))
+    article_html = load_text(os.path.join(ROOT, 'debug', 'ylms.html'))
 
     class DummyResponse:
         def __init__(self, text):
@@ -84,7 +84,7 @@ def test_get_ylms_posts_falls_back_on_cloudflare_html(monkeypatch):
 
 def test_get_ylms_posts_falls_back_when_direct_request_raises(monkeypatch):
     rss_xml = load_text(os.path.join(ROOT, 'debug', 'ylms-rss.xml'))
-    article_html = load_text(os.path.join(ROOT, 'docs', 'implementation-plans', 'ylms.html'))
+    article_html = load_text(os.path.join(ROOT, 'debug', 'ylms.html'))
 
     class DummyResponse:
         def __init__(self, text):
@@ -114,7 +114,7 @@ def test_get_ylms_posts_falls_back_when_direct_request_raises(monkeypatch):
 
 def test_get_ylms_posts_falls_back_without_cookie(monkeypatch):
     rss_xml = load_text(os.path.join(ROOT, 'debug', 'ylms-rss.xml'))
-    article_html = load_text(os.path.join(ROOT, 'docs', 'implementation-plans', 'ylms.html'))
+    article_html = load_text(os.path.join(ROOT, 'debug', 'ylms.html'))
 
     class DummyResponse:
         def __init__(self, text):
