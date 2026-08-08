@@ -180,7 +180,7 @@ export default defineConfig({
 
   cleanUrls: true,
 
-  srcExclude: ["memories/**/*.md", "implementation-plans/**/*.md"],
+  srcExclude: ["memories/**/*.md", "implement-plans/**/*.md"],
 
   // via: https://github.com/vuejs/vitepress/issues/1923#issuecomment-1431479500
   markdown: {

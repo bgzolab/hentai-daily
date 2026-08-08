@@ -19,7 +19,7 @@
 │   ├── prompts # 使用slash 调用的预制提示词
 │   └── workflows # GitHub CI/CD
 ├── docs # 项目文档，包含项目的设计文档、架构文档、技术栈规范、实施计划等
-│   ├── implementation-plans # 项目的实施计划，每次修BUG、新增改能全部记录在这里，包含每个功能的分步指令和验证正确性的测试
+│   ├── implement-plans # 项目的实施计划，每次修BUG、新增改能全部记录在这里，包含每个功能的分步指令和验证正确性的测试
 │   │   ├── feature-a.md # feature-a 的实施计划，包含分步指令和验证正确性的测试
 │   │   └── feature-a-progress.md # feature-a 的实施进度，包含每个步骤的完成情况和测试结果
 │   ├── memories # 项目的记忆库，包含项目的设计文档、架构文档、技术栈规范等，是 LLM 必须加载的上下文；
@@ -60,5 +60,4 @@
 - `tests/test_kungal.py`：负责离线验证标题优先级、summary 拼接、单条映射与列表抓取行为；`debug/kungal.json` 作为固定回放样本。
 - `tests/test_asmr_one.py`：负责离线验证 ASMR.one 的日期解析、summary 拼接、NSFW 过滤、单条映射与 monkeypatch 抓取行为；`debug/asmr_one.json` 作为固定回放样本。
 - `tests/test_nysoure.py`：负责离线验证 nysoure 的时间解析、summary 拼接、单条映射与 monkeypatch 抓取行为；`debug/nysoure.json` 作为固定回放样本。
-- `tests/test_ylms.py`：负责离线验证 ylms 的 HTML 解析、Cloudflare 误判控制、请求异常回滚、无 cookie 回滚与 RSS 回滚映射；[docs/implementation-plans/ylms.html](/home/bgzo/workspaces/hentai/docs/implementation-plans/ylms.html) 与 [debug/ylms-rss.xml](/home/bgzo/workspaces/hentai/debug/ylms-rss.xml) 作为固定样本。
-
+- `tests/test_ylms.py`：负责离线验证 ylms 的 HTML 解析、Cloudflare 误判控制、请求异常回滚、无 cookie 回滚与 RSS 回滚映射；[docs/implement-plans/ylms.html](/home/bgzo/workspaces/hentai/docs/implement-plans/ylms.html) 与 [debug/ylms-rss.xml](/home/bgzo/workspaces/hentai/debug/ylms-rss.xml) 作为固定样本。
