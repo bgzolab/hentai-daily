@@ -387,6 +387,7 @@ const tryNavigateTo = (target: Date) => {
   }
 
   refreshToday(target.getTime());
+  window.scrollTo({ top: 0, behavior: "smooth" });
 };
 
 const navigateDay = (offset: number) => {
