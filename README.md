@@ -1,8 +1,8 @@
-[![Contributors](https://img.shields.io/github/contributors/bgzo/hentai-daily.svg?style=for-the-badge)](https://github.com/bgzo/hentai-daily/graphs/contributors)
-[![Forks](https://img.shields.io/github/forks/bgzo/hentai-daily.svg?style=for-the-badge)](https://github.com/bgzo/hentai-daily/network/members)
-[![Stargazers](https://img.shields.io/github/stars/bgzo/hentai-daily.svg?style=for-the-badge)](https://github.com/bgzo/hentai-daily/stargazers)
-[![Issues](https://img.shields.io/github/issues/bgzo/hentai-daily.svg?style=for-the-badge)](https://github.com/bgzo/hentai-daily/issues)
-[![Licence](https://img.shields.io/github/license/bgzo/hentai-daily.svg?style=for-the-badge)](https://github.com/bgzo/hentai-daily/blob/template/LICENCE)
+[![Contributors](https://img.shields.io/github/contributors/bgzo-sandbox/hentai-daily.svg?style=for-the-badge)](https://github.com/bgzo-sandbox/hentai-daily/graphs/contributors)
+[![Forks](https://img.shields.io/github/forks/bgzo-sandbox/hentai-daily.svg?style=for-the-badge)](https://github.com/bgzo-sandbox/hentai-daily/network/members)
+[![Stargazers](https://img.shields.io/github/stars/bgzo-sandbox/hentai-daily.svg?style=for-the-badge)](https://github.com/bgzo-sandbox/hentai-daily/stargazers)
+[![Issues](https://img.shields.io/github/issues/bgzo-sandbox/hentai-daily.svg?style=for-the-badge)](https://github.com/bgzo-sandbox/hentai-daily/issues)
+[![Licence](https://img.shields.io/github/license/bgzo-sandbox/hentai-daily.svg?style=for-the-badge)](https://github.com/bgzo-sandbox/hentai-daily/blob/template/LICENCE)
 [![Telegram](https://img.shields.io/badge/-telegram-black.svg?style=for-the-badge&logo=telegram&colorB=555)](https://t.me/imbgzo)
 
 > [!WARNING]
@@ -72,7 +72,7 @@ Don't forget to give the project a star! Thanks again!
 
 Top contributors:
 
-<a href="https://github.com/bgzo/hentai-daily/graphs/contributors">
+<a href="https://github.com/bgzo-sandbox/hentai-daily/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=bgzo/hentai-daily" alt="contrib.rocks image" />
 </a>
 

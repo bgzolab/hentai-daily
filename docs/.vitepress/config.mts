@@ -8,12 +8,12 @@ export default defineConfig({
   description: "Hentai contents combined with multi sources",
   themeConfig: {
     socialLinks: [
-      { icon: "github", link: "https://github.com/bgzo/hentai-daily" },
+      { icon: "github", link: "https://github.com/bgzo-sandbox/hentai-daily" },
       { icon: "telegram", link: "https://t.me/imbgzo" },
     ],
     footer: {
       message:
-        'Found this useful? Give me a <a href="https://github.com/bgzo/hentai-daily">Ciallo ～(∠・ω< )⌒</a> ⭐',
+        'Found this useful? Give me a <a href="https://github.com/bgzo-sandbox/hentai-daily">Ciallo ～(∠・ω< )⌒</a> ⭐',
       copyright: "Copyright © 2023-present 華仔",
     },
     search: {
@@ -62,7 +62,7 @@ export default defineConfig({
         ],
         footer: {
           message:
-            '有帮到你吗? 鼓励一下我吧 <a href="https://github.com/bgzo/hentai-daily">Ciallo ～(∠・ω< )⌒</a> ⭐ ',
+            '有帮到你吗? 鼓励一下我吧 <a href="https://github.com/bgzo-sandbox/hentai-daily">Ciallo ～(∠・ω< )⌒</a> ⭐ ',
           copyright: "Copyright © 2023-present 華仔",
         },
       },
@@ -238,8 +238,8 @@ export default defineConfig({
 
         "/api": {
           // target: 'http://hentai.bgzo.cc', // 500 ERROR
-          // target: 'https://raw.githubusercontent.com/bgzo/hentai-daily/refs/heads/vitepress/',
-          // target: 'https://cdn.jsdelivr.net/gh/bgzo/hentai-daily@refs/heads/vitepress/',
+          // target: 'https://raw.githubusercontent.com/bgzo-sandbox/hentai-daily/refs/heads/vitepress/',
+          // target: 'https://cdn.jsdelivr.net/gh/bgzo-sandbox/hentai-daily@refs/heads/vitepress/',
           // target:  'http://192.168.31.20:8080',
           target: "http://127.0.0.1:8080",
           changeOrigin: true,

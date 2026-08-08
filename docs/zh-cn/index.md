@@ -15,7 +15,7 @@ hero:
       link: /zh-cn/today
     - theme: alt
       text: 我有更好的点子💡
-      link: https://github.com/bgzo/hentai-daily/issues
+      link: https://github.com/bgzo-sandbox/hentai-daily/issues
 
 features:
   - title: 足够 Hentai
