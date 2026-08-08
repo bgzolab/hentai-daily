@@ -374,6 +374,32 @@ const refreshToday = (timestamp?: number) => {
   fetchData();
 };
 
+const tryNavigateTo = (target: Date) => {
+  const targetDateStr = getCurrentDate(target);
+
+  if (!hasArchiveData(targetDateStr)) {
+    toast.info("No archived data for this day yet. Please try another date.");
+    return;
+  }
+
+  if (target.getFullYear() !== selectedYear.value) {
+    selectedYear.value = target.getFullYear();
+  }
+
+  refreshToday(target.getTime());
+};
+
+const navigateDay = (offset: number) => {
+  if (!currentDate.value) return;
+  const target = new Date(currentDate.value);
+  target.setDate(target.getDate() + offset);
+  tryNavigateTo(target);
+};
+
+const goToday = () => {
+  tryNavigateTo(new Date());
+};
+
 function createCalHeatmap() {
   const cal = new CalHeatmap();
   // 根据选中的年份计算起始和结束日期，显示整个年份的12个月
@@ -564,6 +590,20 @@ onMounted(async () => {
       </div>
     </aside>
   </div>
+
+  <nav class="date-nav" aria-label="Date navigation">
+    <button class="nav-btn" type="button" @click="navigateDay(-1)">
+      <span class="nav-arrow" aria-hidden="true">‹</span>
+      <span>Yesterday</span>
+    </button>
+    <button class="nav-btn nav-btn-today" type="button" @click="goToday">
+      Today
+    </button>
+    <button class="nav-btn" type="button" @click="navigateDay(1)">
+      <span>Tomorrow</span>
+      <span class="nav-arrow" aria-hidden="true">›</span>
+    </button>
+  </nav>
 </template>
 
 <style scoped>
@@ -749,5 +789,51 @@ onMounted(async () => {
 
 .show-more {
   margin-top: 8px;
+}
+
+.date-nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: 48px auto 24px;
+}
+
+.nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 9999px;
+  background-color: transparent;
+  color: var(--vp-c-text-1);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.nav-btn:hover {
+  border-color: var(--vp-c-brand-1);
+  color: var(--vp-c-brand-1);
+  transform: translateY(-1px);
+}
+
+.nav-btn-today {
+  background-color: var(--vp-c-brand-1);
+  border-color: var(--vp-c-brand-1);
+  color: #ffffff;
+}
+
+.nav-btn-today:hover {
+  filter: brightness(1.1);
+  color: #ffffff;
+}
+
+.nav-arrow {
+  font-size: 16px;
+  line-height: 1;
 }
 </style>
