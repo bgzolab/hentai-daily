@@ -24,7 +24,7 @@ features:
     details: GitHub Action + Cloudflare Worker，想方设法拉取，比 RSSHub 更加轻量，更少的429提示；不做链接提取，对上游友好；
   - title: 公开 API
     details: 提供对外封装好的 RSS 地址，支持外部重新订阅，自由使用本项目 API
-    link: /zh-cn/api
+    link: /zh-cn/rss
   - title: 翻译
     details: 支持日文到中文翻译，支持由 https://mymemory.translated.net 提供
   # - title: 集成 (Next)

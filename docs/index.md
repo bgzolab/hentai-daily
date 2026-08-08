@@ -24,7 +24,7 @@ features:
     details: Use GitHub + Cloudflare Worker, try best to fetch resource. More useful than RSSHub with response like `address no respon`, No link extraction, be friendly to upstream.
   - title: API and RSS public support
     details: Browser content via RSS reader. Feel free to use API for your own project.
-    link: /api
+    link: /rss
   - title: Translate
     details: Support Japanese to Chinese translation, support by  https://mymemory.translated.net
   # - title: Integration(Next)

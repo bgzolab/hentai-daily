@@ -4,7 +4,7 @@ Two independent halves in one repo — there is **no unified build**:
 - **Python data pipeline** (`src/`) — scrapes/fetches RSS + HTML/JSON sources and writes the committed `api/` data.
 - **VitePress docs site** (`docs/`) — the public web UI, built from that data.
 
-Generated data is **committed to git** and served directly from `api/` (see `docs/api.md`). Changing the pipeline usually means regenerating + committing data.
+Generated data is **committed to git** and served directly from `api/` (see `docs/rss.md`). Changing the pipeline usually means regenerating + committing data.
 
 ## Python pipeline (`src/`)
 

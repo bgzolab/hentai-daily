@@ -31,7 +31,7 @@ export default defineConfig({
         nav: [
           { text: "Home", link: "/" },
           { text: "Today", link: "/today" },
-          { text: "API", link: "/api" },
+          { text: "API / RSS", link: "/rss" },
           {
             text: "About",
             items: [
@@ -51,7 +51,7 @@ export default defineConfig({
         nav: [
           { text: "首页", link: "/zh-cn/" },
           { text: "日报", link: "/zh-cn/today" },
-          { text: "API", link: "/zh-cn/api" },
+          { text: "API / RSS", link: "/zh-cn/rss" },
           {
             text: "关于",
             items: [
