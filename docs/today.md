@@ -2,7 +2,7 @@
 title: Today
 outline: deep
 layout: doc
-update: 2026-08-19T12:30:14
+update: 2026-08-19T14:31:51
 ---
 
 <Today />
