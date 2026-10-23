@@ -31,12 +31,14 @@ jobs:
           timezoneWindows: "Singapore Standard Time"
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v7
         with:
-          python-version: 3.13.2
+          # 只指定 major.minor，让 setup-python 从版本清单中挑选当前 runner 可用的补丁版本。
+          # 固定到具体补丁（如 3.13.2）会在新 runner 镜像（Ubuntu 26.04）上找不到对应构建而失败。
+          python-version: "3.13"
 
       - name: Install Dependencies
         run: |
