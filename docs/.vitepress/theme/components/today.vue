@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from "vue";
+// d3@7.9.2 标记 sideEffects:false，会 tree-shake 掉 cal-heatmap 依赖的 selection.prototype.transition 补丁，需显式引入。
+import "d3-transition";
 import CalHeatmap from "cal-heatmap";
 import "cal-heatmap/cal-heatmap.css";
 import { useToast } from "vue-toastification";

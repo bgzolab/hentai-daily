@@ -10,7 +10,6 @@ docs/.vitepress/cache/
 docs/.vitepress/dist/
 
 assets/css/custom.css
-package-lock.json
 # package.json
 # tailwind.config.js
 # References via: https://github.com/github/gitignore
