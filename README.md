@@ -10,7 +10,7 @@
 >
 > Please read it with caution and discretion. If you are under 18 years old, please do not read this project. The author and publisher of this article do not take any responsibility for any consequences arising from reading this article.
 
-![](https://pub-89c11651a8434f18a530bd6f93e399da.r2.dev/2026/20260514220009609.webp)
+![](https://pub-89c11651a8434f18a530bd6f93e399da.r2.dev/2026/20261108150232762.webp)
 <!--
 ![](https://pub-89c11651a8434f18a530bd6f93e399da.r2.dev/2025/202506162245177.png)
 # Hentai Daily
