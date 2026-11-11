@@ -25,7 +25,7 @@ Generated data is **committed to git** and served directly from `api/` (see `doc
 - Offline pytest suite in `tests/`, using fixtures in `debug/` (`*.html`, `*.json`, `*.xml`) — no network. Tests inject `src/` into `sys.path` themselves.
 - Run: `python3 -m pytest tests/` (`.vscode` sets `python.testing.pytestArgs = ["tests"]`).
 - A few tests do real network + proxy (e.g. `test_dlsite.py::test_run_dlsite_ranking`) and can fail/hang without the proxy — skip `*_run_*` tests when iterating offline, e.g. `-k "not run_"`.
-- Convention (from `docs/memories/tech-stack.md`): every source change should ship with unit tests targeting ~100% coverage; refactor into modules, avoid monolith files.
+- Convention: every source change ships with unit tests targeting ~100% coverage; split code into modules, no monolith files. Keep artifacts in the repo — no `/tmp` black-box runs.
 
 ## Docs site (`docs/`)
 
@@ -34,9 +34,16 @@ Generated data is **committed to git** and served directly from `api/` (see `doc
   - `npm run docs:dev` — vitepress dev **plus** `http-server -p 8080`; the `/api` dev proxy targets `http://127.0.0.1:8080`, so keep both running for live API data.
   - `npm run docs:build` — `vitepress build docs && npm run copy-files` (copies `./api` into `docs/.vitepress/dist/`).
   - `npm run docs:preview` — preview the built site.
-- `docs/.vitepress/config.mts` excludes `memories/**` and `implement-plans/**` from the build (`srcExclude`) — they are design/context docs, not pages.
+- `docs/.vitepress/config.mts` excludes `implement-plans/**` from the build (`srcExclude`) — design/context docs, not pages.
 - `docs/today.md` and `docs/zh-cn/today.md` render the `<Today />` Vue component; the pipeline rewrites their `update:` frontmatter on each sync.
-- Today page UI lives in `docs/.vitepress/theme/components/today*.vue` + `today/summary.ts`. See `docs/memories/architecture.md` and `design.md` for the intended component boundaries (Resources/News = feed style, DLsite rankings = board style).
+- Today page UI — keep these component boundaries; the parent holds no visual styling:
+  - `today.vue` — data fetch, date switching, heatmap, layout, TOC only.
+  - `today/TodayFeedSection.vue` — section header, subscribe link, avatar placeholder for `Resources`/`News`.
+  - `today/TodayFeedItem.vue` — one feed item, flat 「朋友圈」 layout.
+  - `today/TodayRankingSection.vue` — the three rankings, Top 3 + list rows.
+  - `today/summary.ts` — first image + plain text out of summary HTML, so layout never touches raw HTML.
+  - Helpers: `avatar.ts`, `translation.ts`, `TodayInlineTranslation.vue`, `TodayPreviewImage.vue`.
+  - Style split: feed = 朋友圈式信息流, rankings = 榜单公告板; each evolves inside its own component on the shared archive data and anchor naming.
 
 ## CI / deployment
 
@@ -46,5 +53,4 @@ Generated data is **committed to git** and served directly from `api/` (see `doc
 - Commit style is conventional-ish: `ci(sync):`, `chore(docs):`, `feat(module): ...`, plus auto-generated `chore(ci): sync feed by GitHub actions` and `Sync feed`.
 
 ## Key instruction sources already in repo
-- `docs/memories/architecture.md`, `design.md`, `tech-stack.md` — authoritative architecture/design/tech conventions for LLM work.
 - `docs/implement-plans/*.md` — per-feature plans + verification tests (gitignored path but tracked).
