@@ -23,15 +23,15 @@ Hentai news all in one. Support RSS subscribe.
 > 2. RSSHub official instance had been banned or limit by many servers' provider. You could always get the response like: `address no respon`.
 > 3. Re-release the rss feed with custom function like translate / media replace / web-hook and more.
 
-I enjoy porn, but if I put it alongside other subscriptions, I definitely won't spend any more time exploring other people's blogs. Meanwhile, I'm easily aroused pron, so pron context needs to be kept separate for me.
+Pron is a time killer, making focus not consistence, needs to be separated.
 
-So why not just use RSShub and write your own rules in Python?
+What's different this with RSShub?
 
-1. Customization: I need to add additional logic to the downloaded sources, such as filters, preview image replacement, and hotlinking prevention.
-2. Copyright: RSShub is already a well-known project and is conservative about copyright-related PRs. Being a big name attracts attention; I think you understand.
-3. Development Cycle: The development cycle is often held up by RSShub's upstream infrastructure, or I need to deploy an RSShub instance locally, which is quite troublesome. Plus, I'm not very skilled, so I'll just treat it as practice.
+1. Customization: make source reachable, original image replace and hotlinking prevention.
+2. Copyright: RSShub is already a well-known project and is conservative about copyright-related PRs. Most instance banned request from them.
+3. Development: a RSSHub service self host is expansive.
 
-Of course, this project cannot be profitable, just for fun and love.
+Of course, this project is non-profitable, not host any resource file, just for fun and love.
 
 ## Getting Started
 
