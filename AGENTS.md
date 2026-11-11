@@ -36,6 +36,7 @@ Generated data is **committed to git** and served directly from `api/` (see `doc
   - `npm run docs:preview` — preview the built site.
 - `docs/.vitepress/config.mts` excludes `implement-plans/**` from the build (`srcExclude`) — design/context docs, not pages.
 - `docs/today.md` and `docs/zh-cn/today.md` render the `<Today />` Vue component; the pipeline rewrites their `update:` frontmatter on each sync.
+- `docs/rss.md` (copied verbatim to `docs/zh-cn/rss.md`) is the single source of truth for API/RSS docs — update it whenever a `/api` route or `api/feeds/*.xml` feed is added, removed or renamed.
 - Today page UI — keep these component boundaries; the parent holds no visual styling:
   - `today.vue` — data fetch, date switching, heatmap, layout, TOC only.
   - `today/TodayFeedSection.vue` — section header, subscribe link, avatar placeholder for `Resources`/`News`.

@@ -44,14 +44,7 @@ Of course, this project is non-profitable, not host any resource file, just for 
 
 ## API Usage
 
-Except the daily updates, the API also provides access to historical data and various filters for customizing your feed. See the `api/archives` folder for more details.
-
-And more, this project also provides a RSS fetch function, just like RSSHub, which including the website don't have RSS or close it. Check list in `api/feed` folder.
-
-| Name     | Route                                      | Description                    | Method | Note                                                                                                                                                                                                                                                          |
-| -------- | ------------------------------------------ | ------------------------------ | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Feed     | `/feeds/${tag_name_with_hyphen_and_lower}` | RSS feed, return xml           | `GET`  | `${tag_name_with_slash_and_lower}` is the url string handle by `lower()` and hyphen(`-`). <br/>For example, we have a `DLsite Game Ranking.xml` file in server, then the correct full url address will be `http://rss.bgzo.cc/feeds/alsite-game-ranking.xml`; |
-| Contents | `/archives/${year}/${month}/${day}.json`   | Contents, return JSON response | `GET`  | **NOTE**: The timezone of response is GMT, format it whatever you want                                                                                                                                                                                        |
+All API and RSS documentation lives in **[docs/rss.md](docs/rss.md)**.
 
 ## Contributing
 
