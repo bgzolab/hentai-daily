@@ -13,7 +13,7 @@ outline: deep
 
 非常抱歉给您带来不便。我今晚已经修好了，这个网站在Cloudflare/Vercel上的构建恢复正常了。
 
-伤心的事，过去三天，没人提醒我，跟以前一样，对吧？如果你发现了什么错误，请创建一个[ISSUE](https://github.com/bgzo-sandbox/hentai-daily/issues/new)或给我留言（snitch-bulk-caviar#duck.com）。
+伤心的事，过去三天，没人提醒我，跟以前一样，对吧？如果你发现了什么错误，请创建一个[ISSUE](https://github.com/bgzolab/hentai-daily/issues/new)或给我留言（snitch-bulk-caviar#duck.com）。
 
 我认为这个项目其实还有人在看吧，最近好像掉了一颗 Star 🌟，但也许无人在意？
 
@@ -73,7 +73,7 @@ outline: deep
 
 Favicon 和 logo 来自于 [@猛禽bot](https://weibo.com/n/%E7%8C%9B%E7%A6%BDbot) 的表情包；
 
-如果你对旧站点感兴趣，可以访问 https://github.com/bgzo-sandbox/hentai-daily/tree/v1.0
+如果你对旧站点感兴趣，可以访问 https://github.com/bgzolab/hentai-daily/tree/v1.0
 
 ## 20240121 ~ 20241123 项目存档
 

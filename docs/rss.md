@@ -1,13 +1,13 @@
 # API & RSS
 
-All data lives in the committed [`api/`](https://github.com/bgzo-sandbox/hentai-daily/tree/vitepress/api) folder and is served as-is by every deployment. Every route below is `GET`.
+All data lives in the committed [`api/`](https://github.com/bgzolab/hentai-daily/tree/vitepress/api) folder and is served as-is by every deployment. Every route below is `GET`.
 
 | Base URL | |
 | --- | --- |
 | `https://hentai.bgzo.cc/api` | primary |
 | `https://hentai-daily.vercel.app/api` | mirror |
 | `https://hentai-daily.lfh010618.workers.dev/api` | mirror |
-| `https://raw.githubusercontent.com/bgzo-sandbox/hentai-daily/refs/heads/vitepress/api` | raw GitHub |
+| `https://raw.githubusercontent.com/bgzolab/hentai-daily/refs/heads/vitepress/api` | raw GitHub |
 
 ## Archives
 

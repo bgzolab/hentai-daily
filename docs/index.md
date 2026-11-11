@@ -15,7 +15,7 @@ hero:
       link: /today
     - theme: alt
       text: Have questions?
-      link: https://github.com/bgzo-sandbox/hentai-daily/issues
+      link: https://github.com/bgzolab/hentai-daily/issues
 
 features:
   - title: ALl Hentai in one

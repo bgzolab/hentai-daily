@@ -13,7 +13,7 @@ Due some [reason](https://blog.bgzo.cc/20260516-mv-repo-to-github-organization),
 
 Very sorry for the inconvenience. I have fixed it tonight, and the build of this website on Cloudflare/Vercel is back to normal. 
 
-And past three days, nobody notice me, just like before, right? Very sad about that. If you found something mistake, please create a [issue](https://github.com/bgzo-sandbox/hentai-daily/issues/new) or drop me a line(snitch-bulk-caviar#duck.com).
+And past three days, nobody notice me, just like before, right? Very sad about that. If you found something mistake, please create a [issue](https://github.com/bgzolab/hentai-daily/issues/new) or drop me a line(snitch-bulk-caviar#duck.com).
 
 I thought this project is still being looked at, but maybe not?...
 
@@ -74,7 +74,7 @@ Rewrite UI/UX using vue to replace jekyll.
 
 Favicon & logo from meme created by [@猛禽bot](https://weibo.com/n/%E7%8C%9B%E7%A6%BDbot)
 
-Old site had archived on https://github.com/bgzo-sandbox/hentai-daily/tree/v1.0
+Old site had archived on https://github.com/bgzolab/hentai-daily/tree/v1.0
 
 ## 20240121 ~ 20241123 Project archivedc
 
