@@ -17,8 +17,33 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  guard:
+    name: Skip if synced recently
+    runs-on: ubuntu-latest
+    outputs:
+      skip: ${{ steps.check.outputs.skip }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+
+      - name: Check last commit age
+        id: check
+        run: |
+          # 本地 cron 也在跑同一套流程（scripts/local-sync.sh），
+          # 最近 2h 内已有提交就跳过，保证一边抓过另一边不再重复抓。
+          age=$(( $(date +%s) - $(git log -1 --format=%ct) ))
+          skip=false
+          if [ "${{ github.event_name }}" = "schedule" ] && [ "$age" -lt 7200 ]; then
+            skip=true
+          fi
+          echo "skip=$skip" >> "$GITHUB_OUTPUT"
+          echo "event=${{ github.event_name }} last-commit-age=${age}s skip=$skip"
+
   sync:
     name: Fetch items and update JSON files
+    needs: guard
+    if: needs.guard.outputs.skip != 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: write # 需要允许 git push 回仓库
