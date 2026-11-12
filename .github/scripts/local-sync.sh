@@ -3,7 +3,7 @@
 # It works in its own shallow clone, so the pipeline never touches your edits.
 set -euo pipefail
 
-REPO="$(cd "$(dirname "$0")/.." && pwd)"
+REPO="$(cd "$(dirname "$0")/../.." && pwd)"
 BRANCH=vitepress
 WORK="${XDG_DATA_HOME:-$HOME/.local/share}/hentai-daily-sync"
 STATE="${XDG_STATE_HOME:-$HOME/.local/state}/hentai-daily-sync"

@@ -30,7 +30,7 @@ jobs:
       - name: Check last commit age
         id: check
         run: |
-          # 本地 cron 也在跑同一套流程（scripts/local-sync.sh），
+          # 本地 cron 也在跑同一套流程（.github/scripts/local-sync.sh），
           # 最近 2h 内已有提交就跳过，保证一边抓过另一边不再重复抓。
           age=$(( $(date +%s) - $(git log -1 --format=%ct) ))
           skip=false
