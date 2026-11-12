@@ -51,7 +51,10 @@ if [ -z "$(git status --porcelain)" ]; then
   echo "no changes"
 else
   git add .
-  git commit -m "chore(ci): sync feed by local cron"
+  # 使用机器人提交
+  git -c user.name="local-cron[bot]" \
+      -c user.email="github-actions[bot]@users.noreply.github.com" \
+      commit -m "chore(ci): sync feed by local cron"
   git pull --rebase origin "$BRANCH"
   git push origin "HEAD:$BRANCH"
 fi
