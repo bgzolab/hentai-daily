@@ -48,7 +48,8 @@ Generated data is **committed to git** and served directly from `api/` (see `doc
 
 ## CI / deployment
 
-- `.github/workflows/sync.yml`: scheduled (Asia/Singapore, every 2h) + on push to `vitepress-dev`. Runs `sync.py` + `heatmap-count.py`, reformats all `api/archives/**/*.json` with `jq --indent 2`, then `git pull --rebase && git push` (concurrency group prevents overlapping syncs). Needs `contents: write` permission.
+- `.github/workflows/sync.yml`: scheduled (Asia/Singapore, every 2h) + on push to `vitepress-dev`. Runs `sync.py` + `heatmap-count.py`, reformats all `api/archives/**/*.json` with `jq --indent 2`, then `git pull --rebase && git push` (concurrency group prevents overlapping syncs). Needs `contents: write` permission. Scheduled runs exit early when the branch head commit is <2h old.
+- `scripts/local-sync.sh`: same pipeline from a local cron (every 30 min), in its own shallow clone at `~/.local/share/hentai-daily-sync` so it never touches a dirty working tree. Same 2h guard (commit age + `~/.local/state/hentai-daily-sync/last-run`), so only one side actually scrapes.
 - Deploy: Cloudflare Workers (`wrangler.jsonc`, assets from `docs/.vitepress/dist/`) and Vercel (`vercel.json`, `cleanUrls: true`).
 - Current working branch is `vitepress`; `main` is the release branch.
 - Commit style is conventional-ish: `ci(sync):`, `chore(docs):`, `feat(module): ...`, plus auto-generated `chore(ci): sync feed by GitHub actions` and `Sync feed`.
