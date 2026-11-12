@@ -221,6 +221,8 @@ const loadAvailableHeatmapDates = async () => {
       countDataPromise = (async () => {
         const response = await fetch(COUNT_JSON_URL, {
           method: "GET",
+          // http-server 默认 max-age=3600，同步后最多一小时都拿不到当天的计数
+          cache: "no-cache",
           headers: {
             "Content-Type": "application/json",
           },
