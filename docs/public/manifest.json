@@ -1,7 +1,7 @@
 {
-  "name": "My App",
-  "description": "My App description",
-  "short_name": "My App",
+  "name": "Hentai Daily",
+  "description": "A hentai daily paper combined with multi sources",
+  "short_name": "Hentai Daily",
   "icons": [
     {
       "src": "/favicon-72x72.png",
